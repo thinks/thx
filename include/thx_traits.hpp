@@ -387,11 +387,11 @@ private:	// Non-constructible.
 	traits<int32>& operator=(const traits<int32>&);
 };
 
-//=============================================================================
+//------------------------------------------------------------------------------
 
+// traits<int64>
 //--------------
-// int64
-//--------------
+//! Traits for int64 scalar type.
 
 template <>
 class traits<int64> 
@@ -402,14 +402,29 @@ public:
 	enum { is_integer  = 1 };
 	enum { is_signed   = 1 };
 
-	static const int64 zero()  { return  0; }
-	static const int64 one()   { return  1; }
-	static const int64 m_one() { return -1; }
+	static int64 
+	zero()  
+	{ return  0; }
 
-	static const int64 epsilon() { return 0; }
+	static int64 
+	one()   
+	{ return  1; }
 
-	static int64 abs(const int64 x)  { return _abs64(x); }
-	static int64 flip(const int64 x) { return -x; }
+	static int64 
+	m_one() 
+	{ return -1; }
+
+	static int64 
+	epsilon() 
+	{ return 0; }
+
+	static int64 
+	abs(const int64 x)  
+	{ return _abs64(x); }
+
+	static int64 
+	flip(const int64 x) 
+	{ return -x; }
 
 private:	// Non-constructible.
 
@@ -419,11 +434,12 @@ private:	// Non-constructible.
 	traits<int64>& operator=(const traits<int64>&);
 };
 
-//=============================================================================
+//------------------------------------------------------------------------------
 
+// traits<uint8>
 //--------------
-// uint8
-//--------------
+//! Traits for uint8 scalar type.
+
 
 template <>
 class traits<uint8> 
@@ -434,10 +450,17 @@ public:
 	enum { is_integer  = 1 };
 	enum { is_signed   = 0 };
 
-	static const uint8 zero() { return 0; }
-	static const uint8 one()  { return 1; }
+	static uint8 
+	zero() 
+	{ return 0; }
 
-	static const uint8 epsilon() { return 0; }
+	static uint8 
+	one()  
+	{ return 1; }
+
+	static uint8 
+	epsilon() 
+	{ return 0; }
 
 private:	// Non-constructible.
 
@@ -447,11 +470,11 @@ private:	// Non-constructible.
 	traits<uint8>& operator=(const traits<uint8>&);
 };
 
-//=============================================================================
+//------------------------------------------------------------------------------
 
+// traits<uint16>
 //---------------
-// uint16
-//---------------
+//! Traits for uint16 scalar type.
 
 template <>
 class traits<uint16> 
@@ -462,10 +485,17 @@ public:
 	enum { is_integer  = 1 };
 	enum { is_signed   = 0 };
 
-	static const uint16 zero() { return 0; }
-	static const uint16 one()  { return 1; }
+	static uint16 
+	zero() 
+	{ return 0; }
 
-	static const uint16 epsilon() { return 0; }
+	static uint16 
+	one()  
+	{ return 1; }
+
+	static uint16 
+	epsilon() 
+	{ return 0; }
 
 private:	// Non-constructible.
 
@@ -475,11 +505,11 @@ private:	// Non-constructible.
 	traits<uint16>& operator=(const traits<uint16>&);
 };
 
-//=============================================================================
+//------------------------------------------------------------------------------
 
-//--------------
-// uint32
-//--------------
+// traits<uint32>
+//---------------
+//! Traits for uint32 scalar type.
 
 template <>
 class traits<uint32> 
@@ -490,10 +520,17 @@ public:
 	enum { is_integer  = 1 };
 	enum { is_signed   = 0 };
 
-	static const uint32 zero() { return 0; }
-	static const uint32 one()  { return 1; }
+	static uint32 
+	zero() 
+	{ return 0; }
 
-	static const uint32 epsilon() { return 0; }
+	static uint32 
+	one()  
+	{ return 1; }
+
+	static uint32 
+	epsilon() 
+	{ return 0; }
 
 	// Round integer up to nearest power of 2.
 	//	
@@ -518,6 +555,42 @@ private:	// Non-constructible.
 	traits(const traits<uint32>&);
 	~traits();
 	traits<uint32>& operator=(const traits<uint32>&);
+};
+
+
+//------------------------------------------------------------------------------
+
+// traits<uint64>
+//---------------
+//! Traits for uint64 scalar type.
+
+template <>
+class traits<uint64> 
+{
+public:
+
+	enum { is_floating = 0 };
+	enum { is_integer  = 1 };
+	enum { is_signed   = 0 };
+
+	static uint64 
+	zero() 
+	{ return 0; }
+
+	static uint64 
+	one()  
+	{ return 1; }
+
+	static uint64 
+	epsilon() 
+	{ return 0; }
+
+private:	// Non-constructible.
+
+	traits();
+	traits(const traits<uint64>&);
+	~traits();
+	traits<uint64>& operator=(const traits<uint64>&);
 };
 
 }	// Namespace: thx.
