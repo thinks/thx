@@ -17,13 +17,12 @@
 namespace thx
 {
 
-template<int64 N, typename S, class T = traits<S> >
+template<int64 N, typename S>
 class vec
 {
 public:
 
-	typedef S value_type;
-	typedef T traits_type;
+	typedef S	  value_type;
 
 	static const int64 dim = N;
 
@@ -34,20 +33,21 @@ public:		// CTOR/DTOR.
 	vec() 
 	{}	
 
+	//! Copy CTOR.
 	explicit
-	vec(const vec<N,S,T> &rhs)
+	vec(const vec<N,S> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = rhs[i]; 
 		}
 	}
 
-	template<typename S2, class T2>
+	template<typename S2>
 	explicit
-	vec(const vec<N,S2,T2> &rhs)
+	vec(const vec<N,S2> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] = static_cast<S>(rhs[i]); 
+			_v[i] = traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
 	}
 
@@ -63,7 +63,7 @@ public:		// CTOR/DTOR.
 	explicit
 	vec(const S2 v)
 	{
-		const v2(static_cast<S>(v));
+		const v2(traits<S>::scalar_cast<S2>(v));
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = v2; 
 		}
@@ -78,10 +78,11 @@ public:		// CTOR/DTOR.
 	}
 
 	template<typename S2>
+	explicit
 	vec(const S2 *v)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] = static_cast<S>(v[i]); 
+			_v[i] = traits<S>::scalar_cast<S2>(v[i]); 
 		}
 	}
 
@@ -91,8 +92,8 @@ public:		// CTOR/DTOR.
 
 public:
 
-	vec<N,S,T>& 
-	operator=(const vec<N,S,T> &rhs)
+	vec<N,S>& 
+	operator=(const vec<N,S> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = rhs[i]; 
@@ -101,20 +102,20 @@ public:
 		return *this;
 	}
 
-	template<typename S2, typename T2>
-	vec<N,S,T>& 
-	operator=(const vec<N,S2,T2> &rhs)
+	template<typename S2>
+	vec<N,S>& 
+	operator=(const vec<N,S2> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] = static_cast<S>(rhs[i]); 
+			_v[i] = traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
 
 		return *this;
 	}
 
 
-	vec<N,S,T>& 
-	operator+=(const vec<N,S,T> &rhs)
+	vec<N,S>& 
+	operator+=(const vec<N,S> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] += rhs[i]; 
@@ -124,20 +125,20 @@ public:
 	}
 
 
-	template<typename S2, typename T2>
-	vec<N,S,T>& 
-	operator+=(const vec<N,S2,T2> &rhs)
+	template<typename S2>
+	vec<N,S>& 
+	operator+=(const vec<N,S2> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] += static_cast<S>(rhs[i]); 
+			_v[i] += traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
 
 		return *this;
 	}
 
 
-	vec<N,S,T>& 
-	operator-=(const vec<N,S,T> &rhs)
+	vec<N,S>& 
+	operator-=(const vec<N,S> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] -= rhs[i]; 
@@ -146,19 +147,19 @@ public:
 		return *this;
 	}
 
-	template<typename S2, typename T2>
-	vec<N,S,T>& 
-	operator-=(const vec<N,S2,T2> &rhs)
+	template<typename S2>
+	vec<N,S>& 
+	operator-=(const vec<N,S2> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] -= static_cast<S>(rhs[i]); 
+			_v[i] -= traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
 
 		return *this;
 	}
 
 
-	vec<N,S,T>& 
+	vec<N,S>& 
 	operator*=(const S rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
@@ -169,32 +170,11 @@ public:
 	}
 
 	template<typename S2>
-	vec<N,S,T>& 
+	vec<N,S>& 
 	operator*=(const S2 rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			v[i] *= static_cast<S>(rhs); 
-		}
-
-		return *this;
-	}
-
-	vec<N,S,T>& 
-	operator/=(const S rhs)
-	{
-		assert(!is_zero(rhs));
-		if (T::is_floating) {
-			// Compile-time branching.
- 
-			const S inv_fact(T::one()/rhs);
-			for(int64 i(0); i < N; ++i) { 
-				v[i] *= inv_fact; 
-			}		
-		}
-		else {
-			for(int64 i(0); i < N; ++i) { 
-				v[i] /= rhs; 
-			}		
+			v[i] *= traits<S>::scalar_cast<S2>(rhs); 
 		}
 
 		return *this;

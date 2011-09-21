@@ -19,8 +19,8 @@
 //#include "thx_hplane.hpp"
 //#include "thx_io.hpp"
 //#include "thx_line_fit.hpp"
-//#include "thx_mat.hpp"			// Matrices
-//#include "thx_mat_utils.hpp"
+#include "thx_mat.hpp"			// Matrices
+#include "thx_mat_utils.hpp"
 //#include "thx_plane_fit.hpp"
 //#include "thx_quaternion.hpp"
 #include "thx_static_assert.hpp"
@@ -30,6 +30,7 @@
 #include "thx_types.hpp"
 #include "thx_utils.hpp"
 #include "thx_vec.hpp"			// Vectors
+#include "thx_vec_operators.hpp"
 #include "thx_vec_utils.hpp"
 
 #endif // THX_HPP_INCLUDED

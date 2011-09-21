@@ -126,6 +126,13 @@ public:
 	//	return ((*(reinterpret_cast<int*>(&x))) >> 23) - 127;
 	//}
 
+public:
+
+	template<typename S>
+	static float32
+	scalar_cast(const S x)
+	{ return static_cast<float32>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -226,6 +233,13 @@ public:
 	flip(const float64 x) 
 	{ return -x; }
 
+public:
+
+	template<typename S>
+	static float64
+	scalar_cast(const S x)
+	{ return static_cast<float64>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -270,6 +284,13 @@ public:
 
 	static int8 
 	flip(const int8 x)	{ return -x; }
+
+public:
+
+	template<typename S>
+	static int8
+	scalar_cast(const S x)
+	{ return static_cast<int8>(x); }
 
 private:	// Non-constructible.
 
@@ -317,6 +338,13 @@ public:
 	static int16 
 	flip(const int16 x) 
 	{ return -x; }
+
+public:
+
+	template<typename S>
+	static int16
+	scalar_cast(const S x)
+	{ return static_cast<int16>(x); }
 
 private:	// Non-constructible.
 
@@ -379,6 +407,13 @@ public:
 	//	return a;
 	//}
 
+public:
+
+	template<typename S>
+	static int32
+	scalar_cast(const S x)
+	{ return static_cast<int32>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -426,6 +461,13 @@ public:
 	flip(const int64 x) 
 	{ return -x; }
 
+public:
+
+	template<typename S>
+	static int64
+	scalar_cast(const S x)
+	{ return static_cast<int64>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -462,6 +504,13 @@ public:
 	epsilon() 
 	{ return 0; }
 
+public:
+
+	template<typename S>
+	static uint8
+	scalar_cast(const S x)
+	{ return static_cast<uint8>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -496,6 +545,13 @@ public:
 	static uint16 
 	epsilon() 
 	{ return 0; }
+
+public:
+
+	template<typename S>
+	static uint16
+	scalar_cast(const S x)
+	{ return static_cast<uint16>(x); }
 
 private:	// Non-constructible.
 
@@ -549,6 +605,13 @@ public:
 	//	return val+1;
 	//}
 
+public:
+
+	template<typename S>
+	static int32
+	scalar_cast(const S x)
+	{ return static_cast<int32>(x); }
+
 private:	// Non-constructible.
 
 	traits();
@@ -584,6 +647,13 @@ public:
 	static uint64 
 	epsilon() 
 	{ return 0; }
+
+public:
+
+	template<typename S>
+	static uint64
+	scalar_cast(const S x)
+	{ return static_cast<uint64>(x); }
 
 private:	// Non-constructible.
 
