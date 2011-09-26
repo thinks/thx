@@ -8,7 +8,6 @@
 #ifndef THX_VEC_HPP_INCLUDED
 #define THX_VEC_HPP_INCLUDED
 
-#include "thx_traits.hpp"
 #include "thx_types.hpp"
 #include <cassert>
 
@@ -90,7 +89,7 @@ public:		// CTOR/DTOR.
 	~vec()
 	{}
 
-public:
+public:		// Operators.
 
 	vec<N,S>& 
 	operator=(const vec<N,S> &rhs)
@@ -98,7 +97,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = rhs[i]; 
 		}
-
 		return *this;
 	}
 
@@ -109,7 +107,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
-
 		return *this;
 	}
 
@@ -120,7 +117,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] += rhs[i]; 
 		}
-
 		return *this;
 	}
 
@@ -132,7 +128,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] += traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
-
 		return *this;
 	}
 
@@ -143,7 +138,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] -= rhs[i]; 
 		}
-
 		return *this;
 	}
 
@@ -154,7 +148,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] -= traits<S>::scalar_cast<S2>(rhs[i]); 
 		}
-
 		return *this;
 	}
 
@@ -165,7 +158,6 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			v[i] *= rhs; 
 		}
-
 		return *this;
 	}
 
@@ -176,11 +168,10 @@ public:
 		for (int64 i(0); i < N; ++i) { 
 			v[i] *= traits<S>::scalar_cast<S2>(rhs); 
 		}
-
 		return *this;
 	}
 
-public:		// Access operators.
+	// Access operators.
 
 	S 
 	operator[](const int64 i) const

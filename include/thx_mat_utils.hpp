@@ -16,6 +16,47 @@ namespace thx
 {
 //==============================================================================
 
+
+	explicit
+	mat(const quaternion<S,T>& q)
+	{
+		m[0][0] = T::one() - static_cast<S>(2)*(q.v.z*q.v.z + q.v.w*q.v.w);
+        m[0][1] =		     static_cast<S>(2)*(q.v.y*q.v.z + q.v.w*q.v.x);
+        m[0][2] =		     static_cast<S>(2)*(q.v.y*q.v.w - q.v.z*q.v.x);
+        
+        m[1][0] =		     static_cast<S>(2)*(q.v.y*q.v.z - q.v.w*q.v.x);
+        m[1][1] = T::one() - static_cast<S>(2)*(q.v.w*q.v.w + q.v.y*q.v.y);
+        m[1][2] =		     static_cast<S>(2)*(q.v.z*q.v.w + q.v.y*q.v.x);
+        
+        m[2][0] =		     static_cast<S>(2)*(q.v.w*q.v.y + q.v.z*q.v.x);
+        m[2][1] =		     static_cast<S>(2)*(q.v.z*q.v.w - q.v.y*q.v.x);
+        m[2][2] = T::one() - static_cast<S>(2)*(q.v.z*q.v.z + q.v.y*q.v.y);
+	}
+
+		explicit
+	mat(const quaternion<S,T>& q)
+	{
+		m[0][0] = T::one() - static_cast<S>(2)*(q.v.z*q.v.z + q.v.w*q.v.w);
+        m[0][1] =		     static_cast<S>(2)*(q.v.y*q.v.z + q.v.w*q.v.x);
+        m[0][2] =		     static_cast<S>(2)*(q.v.y*q.v.w - q.v.z*q.v.x);
+		m[0][3] = T::zero();
+        
+        m[1][0] =		     static_cast<S>(2)*(q.v.y*q.v.z - q.v.w*q.v.x);
+        m[1][1] = T::one() - static_cast<S>(2)*(q.v.w*q.v.w + q.v.y*q.v.y);
+        m[1][2] =		     static_cast<S>(2)*(q.v.z*q.v.w + q.v.y*q.v.x);
+        m[1][3] = T::zero();
+        
+        m[2][0] =		     static_cast<S>(2)*(q.v.w*q.v.y + q.v.z*q.v.x);
+        m[2][1] =		     static_cast<S>(2)*(q.v.z*q.v.w - q.v.y*q.v.x);
+        m[2][2] = T::one() - static_cast<S>(2)*(q.v.z*q.v.z + q.v.y*q.v.y);
+        m[2][3] = T::zero();
+        
+        m[3][0] = T::zero();
+        m[3][1] = T::zero();
+        m[3][2] = T::zero();
+        m[3][3] = T::one();
+	}
+
 // Function declarations.
 
 template<typename S, class T> S determinant(const mat<2,2,S,T>& m);
