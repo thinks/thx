@@ -8,10 +8,12 @@
 #ifndef THX_VEC_OPERATORS_HPP_INCLUDED
 #define THX_VEC_OPERATORS_HPP_INCLUDED
 
-namespace thx 
-{
+#include "thx_vec.hpp"
 
 //------------------------------------------------------------------------------
+
+namespace thx 
+{
 
 // Unary operator: -vec
 
