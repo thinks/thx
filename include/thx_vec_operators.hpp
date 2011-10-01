@@ -165,7 +165,7 @@ operator-(const vec<N,S> &u, const vec<N,S> &v)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: scalar*vec
+// Binary operator: scalar * vec
 
 template<typename S>
 vec<2,S>
@@ -193,7 +193,7 @@ operator*(const S s, const vec<N,S> &v)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: vec*scalar
+// Binary operator: vec * scalar
 
 template<typename S>
 vec<2,S>

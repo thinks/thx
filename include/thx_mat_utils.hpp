@@ -9,7 +9,6 @@
 #define THX_MAT_UTILS_HPP_INCLUDED
 
 #include "thx_mat.hpp"
-#include "thx_vec.hpp"
 #include "thx_utils.hpp"
 #include <cassert>
 
@@ -60,32 +59,7 @@ namespace thx
         m[3][3] = T::one();
 	}
 
-// Function declarations.
 
-template<typename S, class T> S determinant(const mat<2,2,S,T>& m);
-template<typename S, class T> S determinant(const mat<3,3,S,T>& m);
-template<typename S, class T> S determinant(const mat<4,4,S,T>& m);
-
-template<typename S, class T> void transpose(mat<2,2,S,T>* m);
-template<typename S, class T> void transpose(mat<3,3,S,T>* m);
-template<typename S, class T> void transpose(mat<4,4,S,T>* m);
-
-template<typename S, class T> mat<2,2,S,T> transposed(const mat<2,2,S,T>& m);
-template<typename S, class T> mat<3,3,S,T> transposed(const mat<3,3,S,T>& m);
-template<typename S, class T> mat<4,4,S,T> transposed(const mat<4,4,S,T>& m);
-
-template<typename S, class T> void invert(mat<2,2,S,T>* m);
-template<typename S, class T> void invert(mat<3,3,S,T>* m);
-template<typename S, class T> void invert(mat<4,4,S,T>* m);
-
-template<typename S, class T> mat<2,2,S,T> inverted(const mat<2,2,S,T>& m);
-template<typename S, class T> mat<3,3,S,T> inverted(const mat<3,3,S,T>& m);
-template<typename S, class T> mat<4,4,S,T> inverted(const mat<4,4,S,T>& m);
-
-
-//==============================================================================
-
-// Function definitions
 
 //------------------------------------------------------------------------------
 
@@ -217,33 +191,46 @@ template<typename S>
 void 
 invert(mat<2,2,S> &m)
 {
-	assert(!is_zero(determinant(*m)));
-	const S inv_det(T::one()/determinant(*m));
-	const S c0r0_tmp((*m)[0][0]);
-	(*m)[0][0]  =  inv_det*(*m)[1][1];
-	(*m)[0][1] *= -inv_det;
-	(*m)[1][0] *= -inv_det;
-	(*m)[1][1]  =  inv_det*c0r0_tmp;
+    THX_STATIC_ASSERT(traits<S>::is_floating);
+	assert(!is_zero(determinant(m)));
+    
+    const S inv_det(1/determinant(m));
+
+    // Swap diagonal elements.
+
+    const S tmp(m[0][0]);
+    m[0][0] = inv_det*m[1][1];
+    m[1][1] = inv_det*tmp;
+
+    // Negate off-diagonal elements.
+
+	m[0][1] = -inv_det*m[0][1];
+	m[1][0] = -inv_det*m[1][0];
 }
 
-template<typename S, class T> 
+template<typename S> 
 void 
-invert(mat<3,3,S,T>* m)
-{	// Compute inverse by method of sub-determinants.
-	//
-	assert(0 != m);
+invert(mat<3,3,S> &m)
+{	
+    THX_STATIC_ASSERT(traits<S>::is_floating);
 	assert(!is_zero(determinant(*m)));
-	const mat<3,3,S,T> b(*m);
+
+    // Compute inverse by method of sub-determinants.
+
 	const S inv_det(T::one()/determinant(*m));
-	(*m)[0][0] = inv_det*(b[1][1]*b[2][2] - b[2][1]*b[1][2]);	
-	(*m)[0][1] = inv_det*(b[2][1]*b[0][2] - b[0][1]*b[2][2]);	
-	(*m)[0][2] = inv_det*(b[0][1]*b[1][2] - b[1][1]*b[0][2]);	
-	(*m)[1][0] = inv_det*(b[2][0]*b[1][2] - b[1][0]*b[2][2]);	
-	(*m)[1][1] = inv_det*(b[0][0]*b[2][2] - b[2][0]*b[0][2]);	
-	(*m)[1][2] = inv_det*(b[1][0]*b[0][2] - b[0][0]*b[1][2]);	
-	(*m)[2][0] = inv_det*(b[1][0]*b[2][1] - b[2][0]*b[1][1]);	
-	(*m)[2][1] = inv_det*(b[2][0]*b[0][1] - b[0][0]*b[2][1]);	
-	(*m)[2][2] = inv_det*(b[0][0]*b[1][1] - b[1][0]*b[0][1]);	
+
+    const mat<3,3,S> b(
+	    inv_det*(m[1][1]*m[2][2] - m[2][1]*m[1][2]),	
+	    inv_det*(m[2][1]*m[0][2] - m[0][1]*m[2][2]),	
+	    inv_det*(m[0][1]*m[1][2] - m[1][1]*m[0][2]),	
+	    inv_det*(m[2][0]*m[1][2] - m[1][0]*m[2][2]),
+	    inv_det*(m[0][0]*m[2][2] - m[2][0]*m[0][2]),	
+	    inv_det*(m[1][0]*m[0][2] - m[0][0]*m[1][2]),	
+	    inv_det*(m[1][0]*m[2][1] - m[2][0]*m[1][1]),	
+	    inv_det*(m[2][0]*m[0][1] - m[0][0]*m[2][1]),	
+	    inv_det*(m[0][0]*m[1][1] - m[1][0]*m[0][1]));	
+
+    m = b;
 }
 
 template<typename S, class T>
@@ -361,41 +348,45 @@ invert(mat<4,4,S,T>* m)
 
 //==============================================================================
 
-template<typename S, class T> 
-mat<2,2,S,T> 
-inverted(const mat<2,2,S,T>& m)
+template<typename S> 
+mat<2,2,S> 
+inverted(const mat<2,2,S> &m)
 {
+    THX_STATIC_ASSERT(traits<S>::is_floating);
 	assert(!is_zero(determinant(m)));
-	const S inv_det(T::one()/determinant(m));
-	return mat<2,2,S,T>( inv_det*m[1][1], -inv_det*m[1][0],
-						-inv_det*m[0][1],  inv_det*m[0][0]);
+
+	const S inv_det(1/determinant(m));
+	return mat<2,2,S>(
+         inv_det*m[1][1], -inv_det*m[1][0],
+  	    -inv_det*m[0][1],  inv_det*m[0][0]);
 }
 
-template<typename S, class T> 
-mat<3,3,S,T> 
-inverted(const mat<3,3,S,T>& m)
+template<typename S> 
+mat<3,3,S> 
+inverted(const mat<3,3,S>& m)
 {
+    THX_STATIC_ASSERT(traits<S>::is_floating);
 	assert(!is_zero(determinant(m)));
-	//const mat<3,3,S,T> b(m);
-	const S i(T::one()/determinant(m));
-	return 
-	  mat<3,3,S,T>(i*(m[1][1]*m[2][2] - m[2][1]*m[1][2]), 
-				   i*(m[2][0]*m[1][2] - m[1][0]*m[2][2]), 
-				   i*(m[1][0]*m[2][1] - m[2][0]*m[1][1]),
-				   i*(m[2][1]*m[0][2] - m[0][1]*m[2][2]), 
-				   i*(m[0][0]*m[2][2] - m[2][0]*m[0][2]), 
-				   i*(m[2][0]*m[0][1] - m[0][0]*m[2][1]),
-				   i*(m[0][1]*m[1][2] - m[1][1]*m[0][2]), 
-				   i*(m[1][0]*m[0][2] - m[0][0]*m[1][2]), 
-				   i*(m[0][0]*m[1][1] - m[1][0]*m[0][1]));
+
+	const S inv_det(1/determinant(m));
+	return mat<3,3,S>(
+        inv_det*(m[1][1]*m[2][2] - m[2][1]*m[1][2]), 
+        inv_det*(m[2][0]*m[1][2] - m[1][0]*m[2][2]), 
+        inv_det*(m[1][0]*m[2][1] - m[2][0]*m[1][1]),
+        inv_det*(m[2][1]*m[0][2] - m[0][1]*m[2][2]), 
+        inv_det*(m[0][0]*m[2][2] - m[2][0]*m[0][2]), 
+        inv_det*(m[2][0]*m[0][1] - m[0][0]*m[2][1]),
+        inv_det*(m[0][1]*m[1][2] - m[1][1]*m[0][2]), 
+        inv_det*(m[1][0]*m[0][2] - m[0][0]*m[1][2]), 
+        inv_det*(m[0][0]*m[1][1] - m[1][0]*m[0][1]));
 }
 
-template<typename S, class T> 
-mat<4,4,S,T> 
-inverted(const mat<4,4,S,T>& m)
+template<typename S> 
+mat<4,4,S> 
+inverted(const mat<4,4,S> &m)
 {
-	mat<4,4,S,T> b(m);
-	invert(&b);
+	mat<4,4,S> b(m);
+	invert(b);
 	return b;
 }
 
