@@ -10,5 +10,8 @@
 *.suo
 *.user
 *.ncb 
+*.opensdf
+*.sdf
+ipch/
 [Dd]ebug*/
 [Rr]elease*/
