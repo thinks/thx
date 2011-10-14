@@ -15,18 +15,17 @@
 namespace thx 
 {
 
-// Binary operator: mat == mat
-
-template<int64 C, int64 R, typename S>
+//! Binary operator: mat == mat
+template<int64 N, typename S>
 bool
-operator==(const mat<C,R,S> &a, const mat<C,R,S> &b)
+operator==(const mat<N,S> &a, const mat<N,S> &b)
 {
 	const S *pa(a[0]);
 	const S *pb(b[0]);
 
 	bool t(pa[0] == pb[0]);
 	int64 i(1);
-	while (i < (C*R) && t) {
+	while (i < N && t) {
 		t = (t && (pa[i] == pb[i])); 
 		++i;
 	}
@@ -35,7 +34,7 @@ operator==(const mat<C,R,S> &a, const mat<C,R,S> &b)
 
 template<typename S>
 bool 
-operator==(const mat<2,2,S> &a, const mat<2,2,S> &b)
+operator==(const mat<2,S> &a, const mat<2,S> &b)
 {
 	return (a[0][0] == b[0][0] &&  
 			a[0][1] == b[0][1] &&  
@@ -45,7 +44,7 @@ operator==(const mat<2,2,S> &a, const mat<2,2,S> &b)
 
 template<typename S>
 bool 
-operator==(const mat<3,3,S> &a, const mat<3,3,S> &b)
+operator==(const mat<3,S> &a, const mat<3,S> &b)
 {
 	return (a[0][0] == b[0][0] &&  
 			a[0][1] == b[0][1] &&  
@@ -60,7 +59,7 @@ operator==(const mat<3,3,S> &a, const mat<3,3,S> &b)
 
 template<typename S>
 bool 
-operator==(const mat<4,4,S> &a, const mat<4,4,S> &b)
+operator==(const mat<4,S> &a, const mat<4,S> &b)
 {
 	return (a[0][0] == b[0][0] &&  
 			a[0][1] == b[0][1] &&  
@@ -82,18 +81,17 @@ operator==(const mat<4,4,S> &a, const mat<4,4,S> &b)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat != mat
-
-template<int64 C, int64 R, typename S>
+//! Binary operator: mat != mat
+template<int64 N, typename S>
 bool
-operator!=(const mat<C,R,S> &a, const mat<C,R,S> &b)
+operator!=(const mat<N,S> &a, const mat<N,S> &b)
 {
 	const S *pa(a[0]);
 	const S *pb(b[0]);
 
 	bool t(pa[0] != pb[0]);
 	int64 i(1);
-	while (i < (C*R) && !t) {
+	while (i < N && !t) {
 		t = (t && (pa[i] != pb[i])); 
 		++i;
 	}
@@ -102,68 +100,51 @@ operator!=(const mat<C,R,S> &a, const mat<C,R,S> &b)
 
 template<typename S>
 bool 
-operator!=(const mat<2,2,S> &a, const mat<2,2,S> &b)
-{
-	return !(a == b);
-}
+operator!=(const mat<2,S> &a, const mat<2,S> &b)
+{ return !(a == b); }
 
 template<typename S>
 bool 
-operator!=(const mat<3,3,S> &a, const mat<3,3,S> &b)
-{
-	return !(a == b);
-}
+operator!=(const mat<3,S> &a, const mat<3,S> &b)
+{ return !(a == b); }
 
 template<typename S>
 bool 
-operator!=(const mat<4,4,S> &a, const mat<4,4,S> &b)
-{
-	return !(a == b);
-}
+operator!=(const mat<4,S> &a, const mat<4,S> &b)
+{ return !(a == b); }
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat + mat
- 
-template<int64 C, int64 R, typename S>
+//! Binary operator: mat + mat
+template<int64 N, typename S>
 bool
-operator+(const mat<C,R,S> &a, const mat<C,R,S> &b)
-{
-	const S *pa(a[0]);
-	const S *pb(b[0]);
-    mat<C,R,S> c;
-    S* pc(c[0]);
-
-    for (int i(0); i < (C*R); ++i) {
-        pc[i] = pa[i] + pb[i];
-    }
-    return c;
-}
+operator+(const mat<N,S> &a, const mat<N,S> &b)
+{ return (mat<N,S>(a) += b); }
 
 template<typename S> 
-mat<2,2,S> 
-operator+(const mat<2,2,S> &a, const mat<2,2,S> &b)
+mat<2,S> 
+operator+(const mat<2,S> &a, const mat<2,S> &b)
 {
-	return mat<2,2,S>(
+	return mat<2,S>(
         a[0][0] + b[0][0], a[1][0] + b[1][0],
 		a[0][1] + b[0][1], a[1][1] + b[1][1]);
 }
 
 template<typename S>
-mat<3,3,S> 
-operator+(const mat<3,3,S> &a, const mat<3,3,S> &b)
+mat<3,S> 
+operator+(const mat<3,S> &a, const mat<3,S> &b)
 {
-	return mat<3,3,S>(
+	return mat<3,S>(
 	    a[0][0] + b[0][0], a[1][0] + b[1][0], a[2][0] + b[2][0], 
 	    a[0][1] + b[0][1], a[1][1] + b[1][1], a[2][1] + b[2][1], 
 	    a[0][2] + b[0][2], a[1][2] + b[1][2], a[2][2] + b[2][2]);
 }
 
 template<typename S>
-mat<4,4,S> 
-operator+(const mat<4,4,S> &a, const mat<4,4,S,T> &b)
+mat<4,S> 
+operator+(const mat<4,S> &a, const mat<4,S> &b)
 {
-	return mat<4,4,S>(
+	return mat<4,S>(
         a[0][0]+b[0][0], a[1][0]+b[1][0], a[2][0]+b[2][0], a[3][0]+b[3][0], 
         a[0][1]+b[0][1], a[1][1]+b[1][1], a[2][1]+b[2][1], a[3][1]+b[3][1], 
         a[0][2]+b[0][2], a[1][2]+b[1][2], a[2][2]+b[2][2], a[3][2]+b[3][2], 
@@ -172,47 +153,36 @@ operator+(const mat<4,4,S> &a, const mat<4,4,S,T> &b)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat - mat
-
-template<int64 C, int64 R, typename S>
+//! Binary operator: mat - mat
+template<int64 N, typename S>
 bool
-operator+(const mat<C,R,S> &a, const mat<C,R,S> &b)
-{
-	const S *pa(a[0]);
-	const S *pb(b[0]);
-    mat<C,R,S> c;
-    S* pc(c[0]);
-
-    for (int i(0); i < (C*R); ++i) {
-        pc[i] = pa[i] - pb[i];
-    }
-    return c;
-}
+operator-(const mat<N,S> &a, const mat<N,S> &b)
+{ return (mat<N,S>(a) -= b); }
 
 template<typename S>
-mat<2,2,S> 
-operator-(const mat<2,2,S> &a, const mat<2,2,S> &b)
+mat<2,S> 
+operator-(const mat<2,S> &a, const mat<2,S> &b)
 {
-	return mat<2,2,S>(
+	return mat<2,S>(
         a[0][0] - b[0][0], a[1][0] - b[1][0],
 		a[0][1] - b[0][1], a[1][1] - b[1][1]);
 }
 
 template<typename S>
-mat<3,3,S> 
-operator-(const mat<3,3,S> &a, const mat<3,3,S> &b)
+mat<3,S> 
+operator-(const mat<3,S> &a, const mat<3,S> &b)
 {
-	return mat<3,3,S>(
+	return mat<3,S>(
 		a[0][0] - b[0][0], a[1][0] - b[1][0], a[2][0] - b[2][0], 
 		a[0][1] - b[0][1], a[1][1] - b[1][1], a[2][1] - b[2][1], 
 		a[0][2] - b[0][2], a[1][2] - b[1][2], a[2][2] - b[2][2]);
 }
 
 template<typename S>
-mat<4,4,S> 
-operator-(const mat<4,4,S> &a, const mat<4,4,S> &b)
+mat<4,S> 
+operator-(const mat<4,S> &a, const mat<4,S> &b)
 {
-	return mat<4,4,S,T>(
+	return mat<4,S>(
 		a[0][0]-b[0][0], a[1][0]-b[1][0], a[2][0]-b[2][0], a[3][0]-b[3][0], 
 		a[0][1]-b[0][1], a[1][1]-b[1][1], a[2][1]-b[2][1], a[3][1]-b[3][1], 
 		a[0][2]-b[0][2], a[1][2]-b[1][2], a[2][2]-b[2][2], a[3][2]-b[3][2], 
@@ -221,96 +191,87 @@ operator-(const mat<4,4,S> &a, const mat<4,4,S> &b)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: scalar * mat
-
-template<int64 C, int64 R, typename S>
+//! Binary operator: scalar * mat
+template<int64 N, typename S>
 bool
-operator*(const S a, const mat<C,R,S> &b)
-{
-	const S *pb(b[0]);
-    mat<C,R,S> c;
-    S* pc(c[0]);
+operator*(const S s, const mat<N,S> &a)
+{ return (mat<N,S>(a) *= s); }
 
-    for (int i(0); i < (C*R); ++i) {
-        pc[i] = a*pb[i];
-    }
-    return c;
+template<typename S>
+mat<2,S> 
+operator*(const S s, const mat<2,S> &a)
+{
+	return mat<2,S>(
+        s*a[0][0], s*a[1][0], 
+		s*a[0][1], s*a[1][1]);
 }
 
 template<typename S>
-mat<2,2,S> 
-operator*(const S a, const mat<2,2,S> &b)
+mat<3,S> 
+operator*(const S s, const mat<3,S> &a)
 {
-	return mat<2,2,S>(
-        a*b[0][0], a*b[1][0], 
-		a*b[0][1], a*b[1][1]);
+	return mat<3,S>(
+		s*a[0][0], s*a[1][0], s*a[2][0], 
+		s*a[0][1], s*a[1][1], s*a[2][1], 
+		s*a[0][2], s*a[1][2], s*a[2][2]);
 }
 
 template<typename S>
-mat<3,3,S> 
-operator*(const S a, const mat<3,3,S> &b)
-{
-	return mat<3,3,S>(
-		a*b[0][0], a*b[1][0], a*b[2][0], 
-		a*b[0][1], a*b[1][1], a*b[2][1], 
-		a*b[0][2], a*b[1][2], a*b[2][2]);
-}
-
-template<typename S>
-mat<4,4,S> 
-operator*(const S a, const mat<4,4,S> &b)
+mat<4,S> 
+operator*(const S s, const mat<4,S> &a)
 {
 	return mat<4,4,S>(
-		a*b[0][0], a*b[1][0], a*b[2][0], a*b[3][0], 
-		a*b[0][1], a*b[1][1], a*b[2][1], a*b[3][1], 
-		a*b[0][2], a*b[1][2], a*b[2][2], a*b[3][2], 
-		a*b[0][3], a*b[1][3], a*b[2][3], a*b[3][3]);
+		s*a[0][0], s*a[1][0], s*a[2][0], s*a[3][0], 
+		s*a[0][1], s*a[1][1], s*a[2][1], s*a[3][1], 
+		s*a[0][2], s*a[1][2], s*a[2][2], s*a[3][2], 
+		s*a[0][3], s*a[1][3], s*a[2][3], s*a[3][3]);
 }
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat * scalar
-
-template<int64 C, int64 R, typename S>
-bool
-operator*(const mat<C,R,S> &a, const S b)
+//! Binary operator: mat * scalar
+template<int64 N, typename S>
+mat<N,S>
+operator*(const mat<N,S> &a, const S b)
 { return b*a; }
 
 template<typename S>
-mat<2,2,S> 
-operator*(const mat<2,2,S> &a, const S b)
+mat<2,S> 
+operator*(const mat<2,S> &a, const S b)
 { return b*a; }
 
 template<typename S>
-mat<3,3,S> 
-operator*(const mat<3,3,S> &a, const S b)
+mat<3,S> 
+operator*(const mat<3,S> &a, const S b)
 { return b*a; }
 
 template<typename S>
-mat<4,4,S> 
-operator*(const mat<4,4,S> &a, const S b)
+mat<4,S> 
+operator*(const mat<4,S> &a, const S b)
 { return b*a; }
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat * mat
-
-// TODO: <C,R,S>
+//! Binary operator: mat * mat
+template<int64 N, typename S>
+mat<N,S>
+operator*(const mat<N,S> &a, const mat<N,S> &b)
+{ return mat<N,S>(a) *= b; }
 
 template<typename S>
-mat<2,2,S> 
-operator*(const mat<2,2,S> &a, const mat<2,2,S> &b)
+mat<2,S> 
+operator*(const mat<2,S> &a, const mat<2,S> &b)
 {	
-	return mat<2,2,S>(
+	return mat<2,S>(
 		a[0][0]*b[0][0] + a[1][0]*b[0][1], a[0][0]*b[1][0] + a[1][0]*b[1][1],
 		a[0][1]*b[0][0] + a[1][1]*b[0][1], a[0][1]*b[1][0] + a[1][1]*b[1][1]);
 }
 
 template<typename S>
-mat<3,3,S> 
-operator*(const mat<3,3,S> &a, const mat<3,3,S> &b)
+mat<3,S> 
+operator*(const mat<3,S> &a, const mat<3,S> &b)
 {	
-	return mat<3,3,S,T>(
+	return mat<3,S>(
 		a[0][0]*b[0][0] + a[1][0]*b[0][1] + a[2][0]*b[0][2],
 		a[0][0]*b[1][0] + a[1][0]*b[1][1] + a[2][0]*b[1][2], 
 		a[0][0]*b[2][0] + a[1][0]*b[2][1] + a[2][0]*b[2][2],
@@ -323,10 +284,10 @@ operator*(const mat<3,3,S> &a, const mat<3,3,S> &b)
 }
 
 template<typename S>
-mat<4,4,S> 
-operator*(const mat<4,4,S> &a, const mat<4,4,S> &b)
+mat<4,S> 
+operator*(const mat<4,S> &a, const mat<4,S> &b)
 {	
-	return mat<4,4,S,T>(
+	return mat<4,S>(
         a[0][0]*b[0][0] + a[1][0]*b[0][1] + a[2][0]*b[0][2] + a[3][0]*b[0][3],
         a[0][0]*b[1][0] + a[1][0]*b[1][1] + a[2][0]*b[1][2] + a[3][0]*b[1][3],
         a[0][0]*b[2][0] + a[1][0]*b[2][1] + a[2][0]*b[2][2] + a[3][0]*b[2][3],
@@ -347,70 +308,99 @@ operator*(const mat<4,4,S> &a, const mat<4,4,S> &b)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: mat * vec
+//! Binary operator: mat * vec
+template<int64 N, typename S>
+vec<N,S>
+operator*(const mat<N,S> &a, const vec<N,S> &v)
+{ 
+    /*
+// TODO: <N,S>
+	const vec<R,S> u(v);
+	int j(0), k(0);
+	int sum(0);
+	for (int i(0); i < cols; ++i) {
+		for (j = 0; j < rows; ++j) {
+			sum = 0;
+			for (k = 0; k < cols; ++k) {
+				sum += a[i][k]*b[k][j];
+			}
+			_v[i][j] = sum;
+		}
 
-// TODO: <C,R,S>
+	}
+	return *this;
+    */
+}
 
 template<typename S>
 vec<2,S> 
-operator*(const mat<2,2,S> &a, const vec<2,S> &b)
+operator*(const mat<2,S> &a, const vec<2,S> &v)
 {	
-    return vec<2,S>(a[0][0]*b[0] + a[1][0]*b[1], a[0][1]*b[0] + a[1][1]*b[1]);
+    return vec<2,S>(
+        a[0][0]*v[0] + a[1][0]*v[1], 
+        a[0][1]*v[0] + a[1][1]*v[1]);
 }
 
 template<typename S>
 vec<3,S> 
-operator*(const mat<3,3,S> &a, const vec<3,S> &b)
+operator*(const mat<3,S> &a, const vec<3,S> &v)
 {	
-	return vec<3,S,T>(
-        a[0][0]*b[0] + a[1][0]*b[1] + a[2][0]*b[2], 
-        a[0][1]*b[0] + a[1][1]*b[1] + a[2][1]*b[2],
-        a[0][2]*b[0] + a[1][2]*b[1] + a[2][2]*b[2]);
+	return vec<3,S>(
+        a[0][0]*v[0] + a[1][0]*v[1] + a[2][0]*v[2], 
+        a[0][1]*v[0] + a[1][1]*v[1] + a[2][1]*v[2],
+        a[0][2]*v[0] + a[1][2]*v[1] + a[2][2]*v[2]);
 }
 
 template<typename S>
 vec<4,S> 
-operator*(const mat<4,4,S> &a, const vec<4,S> &b)
+operator*(const mat<4,S> &a, const vec<4,S> &v)
 {	
-    return vec<4,S,T>(
-        a[0][0]*b[0] + a[1][0]*b[1] + a[2][0]*b[2] + a[3][0]*b[3], 
-        a[0][1]*b[0] + a[1][1]*b[1] + a[2][1]*b[2] + a[3][1]*b[3],
-        a[0][2]*b[0] + a[1][2]*b[1] + a[2][2]*b[2] + a[3][2]*b[3],
-        a[0][3]*b[0] + a[1][3]*b[1] + a[2][3]*b[2] + a[3][3]*b[3]);
+    return vec<4,S>(
+        a[0][0]*v[0] + a[1][0]*v[1] + a[2][0]*v[2] + a[3][0]*v[3], 
+        a[0][1]*v[0] + a[1][1]*v[1] + a[2][1]*v[2] + a[3][1]*v[3],
+        a[0][2]*v[0] + a[1][2]*v[1] + a[2][2]*v[2] + a[3][2]*v[3],
+        a[0][3]*v[0] + a[1][3]*v[1] + a[2][3]*v[2] + a[3][3]*v[3]);
 }
 
 //------------------------------------------------------------------------------
 
 // Binary operator: vec * mat
+template<int64 N, typename S>
+vec<N,S>
+operator*(const vec<N,S> &v, const mat<N,S> &a)
+{ 
+// TODO: <N,S>
 
-// TODO: <C,R,S>
+}
 
 template<typename S>
 vec<2,S> 
-operator*(const vec<2,S> &a, const mat<2,2,S> &b)
+operator*(const vec<2,S> &v, const mat<2,S> &a)
 {	
-    return vec<2,S>(a[0]*b[0][0] + a[1]*b[0][1], a[0]*b[1][0] + a[1]*b[1][1]);
+    return vec<2,S>(
+        v[0]*a[0][0] + v[1]*a[0][1], 
+        v[0]*a[1][0] + v[1]*a[1][1]);
 }
 
 template<typename S>
 vec<3,S> 
-operator*(const vec<3,S> &a, const mat<3,3,S> &b)
+operator*(const vec<3,S> &v, const mat<3,S> &a)
 {	
-	return vec<3,S,T>(
-        a[0]*b[0][0] + a[1]*b[0][1] + a[2]*b[0][2],
-        a[0]*b[1][0] + a[1]*b[1][1] + a[2]*b[1][2],
-        a[0]*b[2][0] + a[1]*b[2][1] + a[2]*b[2][2]);
+	return vec<3,S>(
+        v[0]*a[0][0] + v[1]*a[0][1] + v[2]*a[0][2],
+        v[0]*a[1][0] + v[1]*a[1][1] + v[2]*a[1][2],
+        v[0]*a[2][0] + v[1]*a[2][1] + v[2]*a[2][2]);
 }
 
-template<typename S, class T>
-vec<4,S,T> 
-operator*(const vec<4,S,T>& a, const mat<4,4,S,T>& b)
+template<typename S>
+vec<4,S> 
+operator*(const vec<4,S> &v, const mat<4,S> &a)
 {	
-    return vec<4,S,T>(
-		a[0]*b[0][0] + a[1]*b[0][1] + a[2]*b[0][2] + a[3]*b[0][3],
-		a[0]*b[1][0] + a[1]*b[1][1] + a[2]*b[1][2] + a[3]*b[1][3],
-		a[0]*b[2][0] + a[1]*b[2][1] + a[2]*b[2][2] + a[3]*b[2][3],
-		a[0]*b[3][0] + a[1]*b[3][1] + a[2]*b[3][2] + a[3]*b[3][3]);
+    return vec<4,S>(
+		v[0]*a[0][0] + v[1]*a[0][1] + v[2]*a[0][2] + v[3]*a[0][3],
+		v[0]*a[1][0] + v[1]*a[1][1] + v[2]*a[1][2] + v[3]*a[1][3],
+		v[0]*a[2][0] + v[1]*a[2][1] + v[2]*a[2][2] + v[3]*a[2][3],
+		v[0]*a[3][0] + v[1]*a[3][1] + v[2]*a[3][2] + v[3]*a[3][3]);
 }
 
 }	// Namespace: thx.

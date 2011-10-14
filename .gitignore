@@ -1,0 +1,14 @@
+#
+# OS junk
+#
+[Tt]humbs.db
+*.DS_Store
+
+#
+# MSVC files
+#
+*.suo
+*.user
+*.ncb 
+[Dd]ebug*/
+[Rr]elease*/

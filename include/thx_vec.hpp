@@ -9,65 +9,56 @@
 #define THX_VEC_HPP_INCLUDED
 
 #include "thx_types.hpp"
-#include <cassert>
 
 //------------------------------------------------------------------------------
 
 namespace thx
 {
 
+// vec<N,S> anatomy:
+// * Empty CTOR
+// * Copy CTOR
+// * Array CTOR
+// * Value CTOR (for specializations only)
+// * All vec's have default DTOR.
+//
+// * operator=
+// * operator+=
+// * operator-=
+// * operator*=(scalar)
+//
+// * operator[] const
+// * operator[]
+
 template<int64 N, typename S>
 class vec
 {
 public:
 
-	typedef S	  value_type;
-
+	typedef S value_type;
 	static const int64 dim = N;
 
 public:		// CTOR/DTOR.
 
-	//! CTOR. NB: Uninitialized!
-	explicit
-	vec() 
-	{}	
+    //! Empty CTOR.
+    explicit 
+	vec(const S s = 0)
+    { 
+		for (int64 i(0); i < N; ++i) { 
+			_v[i] = s; 
+		}
+	}
 
 	//! Copy CTOR.
-	explicit
+	//explicit
 	vec(const vec<N,S> &rhs)
 	{
 		for (int64 i(0); i < N; ++i) { 
 			_v[i] = rhs[i]; 
 		}
 	}
-
-	template<typename S2>
-	explicit
-	vec(const vec<N,S2> &rhs)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] = traits<S>::scalar_cast<S2>(rhs[i]); 
-		}
-	}
-
-    explicit 
-	vec(const S v)
-    { 
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] = v; 
-		}
-	}
-
-	template<typename S2>
-	explicit
-	vec(const S2 v)
-	{
-		const v2(traits<S>::scalar_cast<S2>(v));
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] = v2; 
-		}
-	}	
     
+    //! Array CTOR.
     explicit 
 	vec(const S *v)
     { 
@@ -76,120 +67,382 @@ public:		// CTOR/DTOR.
 		}
 	}
 
-	template<typename S2>
-	explicit
-	vec(const S2 *v)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] = traits<S>::scalar_cast<S2>(v[i]); 
-		}
-	}
-
-	//! DTOR.
-	~vec()
-	{}
-
 public:		// Operators.
 
+    //! Assignment.
 	vec<N,S>& 
-	operator=(const vec<N,S> &rhs)
+	operator=(const vec<N,S> &u)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] = rhs[i]; 
+			_v[i] = u[i]; 
 		}
 		return *this;
 	}
 
-	template<typename S2>
 	vec<N,S>& 
-	operator=(const vec<N,S2> &rhs)
+	operator+=(const vec<N,S> &u)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] = traits<S>::scalar_cast<S2>(rhs[i]); 
+			_v[i] += u[i]; 
 		}
 		return *this;
 	}
 
-
 	vec<N,S>& 
-	operator+=(const vec<N,S> &rhs)
+	operator-=(const vec<N,S> &u)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] += rhs[i]; 
+			_v[i] -= u[i]; 
 		}
 		return *this;
 	}
 
-
-	template<typename S2>
+    //! Scalar multiplication.
 	vec<N,S>& 
-	operator+=(const vec<N,S2> &rhs)
+	operator*=(const S s)
 	{
 		for (int64 i(0); i < N; ++i) { 
-			_v[i] += traits<S>::scalar_cast<S2>(rhs[i]); 
+			v[i] *= s; 
 		}
 		return *this;
 	}
 
+public:     // Access operators.
 
-	vec<N,S>& 
-	operator-=(const vec<N,S> &rhs)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] -= rhs[i]; 
-		}
-		return *this;
-	}
-
-	template<typename S2>
-	vec<N,S>& 
-	operator-=(const vec<N,S2> &rhs)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			_v[i] -= traits<S>::scalar_cast<S2>(rhs[i]); 
-		}
-		return *this;
-	}
-
-
-	vec<N,S>& 
-	operator*=(const S rhs)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			v[i] *= rhs; 
-		}
-		return *this;
-	}
-
-	template<typename S2>
-	vec<N,S>& 
-	operator*=(const S2 rhs)
-	{
-		for (int64 i(0); i < N; ++i) { 
-			v[i] *= traits<S>::scalar_cast<S2>(rhs); 
-		}
-		return *this;
-	}
-
-	// Access operators.
-
+    //! Return i'th component. No bounds checking!
 	S 
 	operator[](const int64 i) const
-	{
-		assert(0 <= i && i < dim);
-		return v[i];
-	}
+	{ return _v[i];	}
 
+    //! Return i'th component. No bounds checking!
 	S& 
 	operator[](const int64 i)
-	{
-		assert(0 <= i && i < dim);
-		return v[i];
-	}
+	{ return _v[i];	}
 
 private:	// Member variables.
 
 	S _v[N];
+};
+
+//------------------------------------------------------------------------------
+
+// vec2<S>
+
+template<typename S>
+class vec<2,S>
+{
+public:
+
+	typedef S value_type;
+	static const int64 dim = 2;
+
+public:		// CTOR/DTOR.
+
+	//! Empty CTOR.
+	explicit
+	vec(const S s = 0) 
+	{
+        _v[0] = s;
+        _v[1] = s;
+    }	
+
+	//! Copy CTOR.
+	//explicit
+	vec(const vec<2,S> &rhs)
+	{
+        _v[0] = rhs[0];
+        _v[1] = rhs[1];
+	}
+    
+    //! Array CTOR.
+    explicit 
+	vec(const S v[2])
+    { 
+        _v[0] = v[0];
+        _v[1] = v[1];
+	}
+
+    //! Value CTOR.
+    explicit 
+    vec(const S v0, const S v1)
+    {
+        _v[0] = v0;
+        _v[1] = v1;
+    }
+
+public:		// Operators.
+
+    //! Assignment.
+	vec<2,S>& 
+	operator=(const vec<2,S> &rhs)
+	{
+        _v[0] = u[0];
+        _v[1] = u[1];
+		return *this;
+	}
+
+	vec<2,S>& 
+	operator+=(const vec<2,S> &u)
+	{
+        _v[0] += u[0];
+        _v[1] += u[1];
+		return *this;
+	}
+
+	vec<2,S>& 
+	operator-=(const vec<2,S> &u)
+	{
+        _v[0] -= u[0];
+        _v[1] -= u[1];
+		return *this;
+	}
+
+    //! Scalar multiplication.
+	vec<2,S>& 
+	operator*=(const S s)
+	{
+        _v[0] *= s;
+        _v[1] *= s;
+		return *this;
+	}
+
+public:     // Access operators.
+
+    //! Return i'th component.
+	S 
+	operator[](const int64 i) const
+	{ return _v[i];	}
+
+    //! Return i'th component.
+	S& 
+	operator[](const int64 i)
+	{ return _v[i];	}
+
+private:	// Member variables.
+
+	S _v[2];
+};
+
+//------------------------------------------------------------------------------
+
+// vec3<S>
+
+template<typename S>
+class vec<3,S>
+{
+public:
+
+	typedef S value_type;
+	static const int64 dim = 3;
+
+public:		// CTOR/DTOR.
+
+	//! Empty CTOR. NB: Uninitialized!
+	explicit
+	vec(const S s = 0) 
+	{
+        _v[0] = s;
+        _v[1] = s;
+        _v[2] = s;
+    }	
+
+	//! Copy CTOR.
+	//explicit
+	vec(const vec<3,S> &rhs)
+	{
+        _v[0] = rhs[0];
+        _v[1] = rhs[1];
+        _v[2] = rhs[2];
+	}
+    
+    //! Array CTOR.
+    explicit 
+	vec(const S v[3])
+    { 
+        _v[0] = v[0];
+        _v[1] = v[1];
+        _v[2] = v[2];
+	}
+
+    //! Value CTOR.
+    explicit 
+    vec(const S v0, const S v1, const S v2)
+    {
+        _v[0] = v0;
+        _v[1] = v1;
+        _v[2] = v2;
+    }
+
+public:		// Operators.
+
+    //! Assignment.
+	vec<3,S>& 
+	operator=(const vec<3,S> &rhs)
+	{
+        _v[0] = rhs[0];
+        _v[1] = rhs[1];
+        _v[2] = rhs[2];
+		return *this;
+	}
+
+	vec<3,S>& 
+	operator+=(const vec<3,S> &u)
+	{
+        _v[0] += u[0];
+        _v[1] += u[1];
+		_v[2] += u[2];
+        return *this;
+	}
+
+	vec<3,S>& 
+	operator-=(const vec<3,S> &u)
+	{
+        _v[0] -= u[0];
+        _v[1] -= u[1];
+		_v[2] -= u[2];
+        return *this;
+	}
+
+    //! Scalar multiplication.
+	vec<3,S>& 
+	operator*=(const S s)
+	{
+        _v[0] *= s;
+        _v[1] *= s;
+        _v[2] *= s;
+		return *this;
+	}
+
+public:     // Access operators.
+
+    //! Return i'th component.
+	S 
+	operator[](const int64 i) const
+	{ return _v[i];	}
+
+    //! Return i'th component.
+	S& 
+	operator[](const int64 i)
+	{ return _v[i];	}
+
+private:	// Member variables.
+
+	S _v[3];
+};
+
+//------------------------------------------------------------------------------
+
+// vec4<S>
+
+template<typename S>
+class vec<4,S>
+{
+public:
+
+	typedef S value_type;
+	static const int64 dim = 4;
+
+public:		// CTOR/DTOR.
+
+	//! Empty CTOR.
+	explicit
+	vec(const S s = 0) 
+	{
+        _v[0] = s;
+        _v[1] = s;
+        _v[2] = s;
+        _v[3] = s;
+    }	
+
+	//! Copy CTOR.
+	//explicit
+	vec(const vec<4,S> &rhs)
+	{
+        _v[0] = rhs[0];
+        _v[1] = rhs[1];
+        _v[2] = rhs[2];
+        _v[3] = rhs[3];
+	}
+    
+    //! Array CTOR.
+    explicit 
+	vec(const S v[4])
+    { 
+        _v[0] = v[0];
+        _v[1] = v[1];
+        _v[2] = v[2];
+        _v[3] = v[3];
+	}
+
+    //! Value CTOR.
+    explicit 
+    vec(const S v0, const S v1, const S v2, const S v3)
+    {
+        _v[0] = v0;
+        _v[1] = v1;
+        _v[2] = v2;
+        _v[3] = v3;
+    }
+
+public:		// Operators.
+
+    //! Assignment.
+	vec<4,S>& 
+	operator=(const vec<4,S> &rhs)
+	{
+        _v[0] = rhs[0];
+        _v[1] = rhs[1];
+        _v[2] = rhs[2];
+        _v[3] = rhs[3];
+		return *this;
+	}
+
+	vec<4,S>& 
+	operator+=(const vec<4,S> &u)
+	{
+        _v[0] += u[0];
+        _v[1] += u[1];
+		_v[2] += u[2];
+        _v[3] += u[3];
+        return *this;
+	}
+
+	vec<4,S>& 
+	operator-=(const vec<4,S> &u)
+	{
+        _v[0] -= u[0];
+        _v[1] -= u[1];
+		_v[2] -= u[2];
+        _v[3] -= u[3];
+        return *this;
+	}
+
+    //! Scalar multiplication.
+	vec<4,S>& 
+	operator*=(const S s)
+	{
+        _v[0] *= s;
+        _v[1] *= s;
+        _v[2] *= s;
+        _v[3] *= s;
+		return *this;
+	}
+
+public:     // Access operators.
+
+    //! Return i'th component.
+	S 
+	operator[](const int64 i) const
+	{ return _v[i];	}
+
+    //! Return i'th component.
+	S& 
+	operator[](const int64 i)
+	{ return _v[i];	}
+
+private:	// Member variables.
+
+	S _v[4];
 };
 
 //------------------------------------------------------------------------------

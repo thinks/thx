@@ -10,12 +10,12 @@
 
 #include "thx_vec.hpp"
 #include "thx_mat.hpp"
+#include "thx_quat.hpp"
 
 //#include "thx_array1.hpp"
 //#include "thx_bbox2.hpp"
 //#include "thx_bbox3.hpp"
 //#include "thx_hplane.hpp"
-//#include "thx_quaternion.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -25,65 +25,64 @@
 namespace std
 {
 
-// vec<N,S>
-
+//! Binary operator: std::ostream << vec<N,S>
 template<thx::int64 N, typename S>
 ostream&
 operator<<(ostream& os, const thx::vec<N,S>& rhs)
 {
-	ios_base::fmtflags f0 = os.flags();
+	//ios_base::fmtflags f0 = os.flags();
 	os	<< "[";
-	os	<< fixed << right << setprecision(3);
+	//os	<< fixed << right << setprecision(3);
 	for (thx::int64 i(0); i < N; ++i) {
-		os << setw(8) << rhs[i] << (i != (N - 1)) ? ", " : "";
+		//os << setw(8) << rhs[i] << (i != (N - 1)) ? ", " : "";
+        os << rhs[i] << (i != (N - 1) ? ", " : "");
 	}
 	os << "]";
-	os.flags(f0);
+	//os.flags(f0);
 
 	return os;
 }
 
 //------------------------------------------------------------------------------
 
-// mat<C,R,S>
-
-template<thx::int64 C, thx::int64 R, typename S>
+//! Binary operator: ostream << mat<N,S>
+template<thx::int64 N, typename S>
 ostream&
-operator<<(ostream& os, const thx::mat<C,R,S>& rhs)
+operator<<(ostream& os, const thx::mat<N,S>& rhs)
 {
-	ios_base::fmtflags f0 = os.flags();
-	os	<< fixed << right << setprecision(3);
-	for(thx::int64 r(0); r < R; ++r) {
+	//ios_base::fmtflags f0 = os.flags();
+	//os	<< fixed << right << setprecision(3);
+	for(thx::int64 r(0); r < N; ++r) {
 		os	<< "[";
-		for (thx::int64 c(0); c < C; ++c) {
-			os	<< setw(8) << rhs[c][r] << (c != (C - 1)) ? ", " : "";
+		for (thx::int64 c(0); c < N; ++c) {
+			//os	<< setw(8) << rhs[c][r] << (c != (C - 1)) ? ", " : "";
+            os	<< rhs[c][r] << (c != (N - 1) ? ", " : "");
 		}
 		os << "]\n";
 	}
-	os.flags(f0);
+	//os.flags(f0);
 	return os;
 }
 
 //------------------------------------------------------------------------------
 
+//! Binary operator: std::ostream << quat<S>
+template<typename S>
+ostream&
+operator<<(ostream& os, const thx::quat<S>& rhs)
+{
 
+	os	<< "[" << rhs[0] 
+        << "(" << rhs[1] << ", " << rhs[2] << ", " << rhs[3] << ")]";
+    return os;
+}
 
 
 #if 0
 
-// Write to an ostream.
-//
 
-// array1
-//
-template<typename S, class T>
-ostream&
-operator<<(ostream& os, const thx::array1<S,T>& rhs)
-{
-	os	<< "array1::size:  " << rhs.size()		<< "\n"
-		<< "array1::mem:   " << rhs.mem_used()	<< " [bytes]\n";
-	return os;
-}
+
+
 
 //=============================================================================
 
@@ -135,13 +134,6 @@ operator<<(ostream& os, const thx::hplane<S,T>& rhs)
 
 //=============================================================================
 
-template<typename S, class T>
-ostream&
-operator<<(ostream& os, const thx::quaternion<S,T>& rhs)
-{
-	os << rhs.v;
-	return os;
-}
 
 #endif
 
