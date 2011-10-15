@@ -116,14 +116,13 @@ main(int argc, char* argv[])
                2.f, 6.f, -3.3f, 14.f,
                0.f, 0.f, 11.f, 150.f);
 
-    srand(1981);
-
-    mat<5,float32> m5;
-    for (int i(0); i < 5; ++i) {
-        for (int j(0); j < 5; ++j) {
-            m5[i][j] = static_cast<float32>(rand())/RAND_MAX;
-        }
-    }
+    //srand(1981);
+    //mat<5,float32> m5;
+    //for (int i(0); i < 5; ++i) {
+    //    for (int j(0); j < 5; ++j) {
+    //        m5[i][j] = static_cast<float32>(rand())/RAND_MAX;
+    //    }
+    //}
 
     cerr
         << "\n"
@@ -142,34 +141,35 @@ main(int argc, char* argv[])
         << "M*M_inv:\n"
         << m2*inverted(m2) << "\n"
         << "\n\n"
-        << "mat<3>:\n"
-        << m3 << "\n"
-        << "Transposed:\n"
-        << transposed(m3) << "\n"
-        << "Determinant:\n"
-        << determinant(m3) << "\n\n"
-        << "Inverted:\n"
-        << inverted(m3) << "\n"
-        << "M*M_inv:\n"
-        << m3*inverted(m3) << "\n"
-        << "\n\n"
-        << "mat<4>:\n"
-        << m4 << "\n"
-        << "Transposed:\n"
-        << transposed(m4) << "\n"
-        << "Determinant:\n"
-        << determinant(m4) << "\n\n"
-        << "Inverted:\n"
-        << inverted(m4) << "\n"
-        << "M*M_inv:\n"
-        << m4*inverted(m4) << "\n"
-        << "\n\n"
-        << "mat<5>:\n"
-        << m5 << "\n"
-        << "Inverted:\n"
-        << inverted(m5) << "\n"
-        << "M*M_inv:\n"
-        << m5*inverted(m5) << "\n";
+        //<< "mat<3>:\n"
+        //<< m3 << "\n"
+        //<< "Transposed:\n"
+        //<< transposed(m3) << "\n"
+        //<< "Determinant:\n"
+        //<< determinant(m3) << "\n\n"
+        //<< "Inverted:\n"
+        //<< inverted(m3) << "\n"
+        //<< "M*M_inv:\n"
+        //<< m3*inverted(m3) << "\n"
+        //<< "\n\n"
+        //<< "mat<4>:\n"
+        //<< m4 << "\n"
+        //<< "Transposed:\n"
+        //<< transposed(m4) << "\n"
+        //<< "Determinant:\n"
+        //<< determinant(m4) << "\n\n"
+        //<< "Inverted:\n"
+        //<< inverted(m4) << "\n"
+        //<< "M*M_inv:\n"
+        //<< m4*inverted(m4) << "\n"
+        //<< "\n\n"
+        //<< "mat<5>:\n"
+        //<< m5 << "\n"
+        //<< "Inverted:\n"
+        //<< inverted(m5) << "\n"
+        //<< "M*M_inv:\n"
+        //<< m5*inverted(m5) << "\n"
+        << "\n";
     }
 #endif
 

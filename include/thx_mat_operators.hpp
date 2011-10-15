@@ -36,25 +36,25 @@ template<typename S>
 bool 
 operator==(const mat<2,S> &a, const mat<2,S> &b)
 {
-    return (a[0][0] == b[0][0] &&  
-            a[0][1] == b[0][1] &&  
-            a[1][0] == b[1][0] &&
-            a[1][1] == b[1][1]);
+    return (a[0] == b[0] &&  
+            a[1] == b[1] &&  
+            a[2] == b[2] &&
+            a[3] == b[3]);
 }
 
 template<typename S>
 bool 
 operator==(const mat<3,S> &a, const mat<3,S> &b)
 {
-    return (a[0][0] == b[0][0] &&  
-            a[0][1] == b[0][1] &&  
-            a[0][2] == b[0][2] &&  
-            a[1][0] == b[1][0] &&
-            a[1][1] == b[1][1] &&
-            a[1][2] == b[1][2] &&
-            a[2][0] == b[2][0] &&
-            a[2][1] == b[2][1] &&
-            a[2][2] == b[2][2]);
+    return (a[0] == b[0] &&  
+            a[1] == b[1] &&  
+            a[2] == b[2] &&  
+            a[3] == b[3] &&
+            a[4] == b[4] &&
+            a[5] == b[5] &&
+            a[6] == b[6] &&
+            a[7] == b[7] &&
+            a[8] == b[8]);
 }
 
 template<typename S>
@@ -126,8 +126,8 @@ mat<2,S>
 operator+(const mat<2,S> &a, const mat<2,S> &b)
 {
     return mat<2,S>(
-        a[0][0] + b[0][0], a[1][0] + b[1][0],
-        a[0][1] + b[0][1], a[1][1] + b[1][1]);
+        a[0] + b[0], a[2] + b[2],
+        a[1] + b[1], a[3] + b[3]);
 }
 
 template<typename S>
@@ -164,8 +164,8 @@ mat<2,S>
 operator-(const mat<2,S> &a, const mat<2,S> &b)
 {
     return mat<2,S>(
-        a[0][0] - b[0][0], a[1][0] - b[1][0],
-        a[0][1] - b[0][1], a[1][1] - b[1][1]);
+        a[0] - b[0], a[2] - b[2],
+        a[1] - b[1], a[3] - b[3]);
 }
 
 template<typename S>
@@ -202,8 +202,8 @@ mat<2,S>
 operator*(const S s, const mat<2,S> &a)
 {
     return mat<2,S>(
-        s*a[0][0], s*a[1][0], 
-        s*a[0][1], s*a[1][1]);
+        s*a[0], s*a[2], 
+        s*a[1], s*a[3]);
 }
 
 template<typename S>
@@ -263,8 +263,8 @@ mat<2,S>
 operator*(const mat<2,S> &a, const mat<2,S> &b)
 {	
     return mat<2,S>(
-        a[0][0]*b[0][0] + a[1][0]*b[0][1], a[0][0]*b[1][0] + a[1][0]*b[1][1],
-        a[0][1]*b[0][0] + a[1][1]*b[0][1], a[0][1]*b[1][0] + a[1][1]*b[1][1]);
+        a(0,0)*b(0,0) + a(0,1)*b(1,0), a(0,0)*b(0,1) + a(0,1)*b(1,1),
+        a(1,0)*b(0,0) + a(1,1)*b(1,0), a(1,0)*b(0,1) + a(1,1)*b(1,1));
 }
 
 template<typename S>
@@ -328,8 +328,8 @@ vec<2,S>
 operator*(const mat<2,S> &a, const vec<2,S> &v)
 {	
     return vec<2,S>(
-        a[0][0]*v[0] + a[1][0]*v[1], 
-        a[0][1]*v[0] + a[1][1]*v[1]);
+        a(0,0)*v[0] + a(0,1)*v[1], 
+        a(1,0)*v[0] + a(1,1)*v[1]);
 }
 
 template<typename S>
@@ -376,8 +376,8 @@ vec<2,S>
 operator*(const vec<2,S> &v, const mat<2,S> &a)
 {	
     return vec<2,S>(
-        v[0]*a[0][0] + v[1]*a[0][1], 
-        v[0]*a[1][0] + v[1]*a[1][1]);
+        v[0]*a(0,0) + v[1]*a(1,0), 
+        v[0]*a(0,1) + v[1]*a(1,1));
 }
 
 template<typename S>

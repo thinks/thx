@@ -29,7 +29,7 @@ template<typename S>
 S 
 determinant(const mat<2,S> &a) 
 {
-    return (a[0][0]*a[1][1] - a[0][1]*a[1][0]);
+    return (a(0,0)*a(1,1) - a(1,0)*a(0,1));
 }
 
 template<typename S>	
@@ -142,8 +142,8 @@ template<typename S>
 mat<2,S> 
 transposed(const mat<2,S> &a)
 {
-    return mat<2,S>(a[0][0], a[0][1],
-                    a[1][0], a[1][1]);
+    return mat<2,S>(a(0,0), a(1,0),
+                    a(0,1), a(1,1));
 }
 
 template<typename S> 
@@ -334,8 +334,8 @@ inverted(const mat<2,S> &a)
 
     const S inv_det(1/determinant(a));
     return mat<2,S>(
-         inv_det*a[1][1], -inv_det*a[1][0],
-        -inv_det*a[0][1],  inv_det*a[0][0]);
+         inv_det*a(1,1), -inv_det*a(0,1),
+        -inv_det*a(1,0),  inv_det*a(0,0));
 }
 
 template<typename S> 
@@ -365,7 +365,7 @@ inverted(const mat<4,S> &a)
     THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
     assert(!is_zero(determinant(a)));
 
-    mat<4,4,S> b(m);
+    mat<4,S> b(a);
     invert(b);
     return b;
 }
