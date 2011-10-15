@@ -26,8 +26,8 @@ template<typename S>
 S
 clamp(const S x, const S low, const S high)
 {
-	assert(high >= low);
-	return (x <= low) ? low : ((x >= high) ? high : x);
+    assert(high >= low);
+    return (x <= low) ? low : ((x >= high) ? high : x);
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ template<typename S>
 S
 lerp(const S x0, const S x1, const S t)
 {
-	return (1 - t)*x0 + t*x1;
+    return (1 - t)*x0 + t*x1;
 }
 
 //------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ template<typename S>
 S
 smooth_step(const S t)
 {
-	return (t < 0) ? 0 : ((t > 1) ? 1 : t*t*t*(10 + t*(-15 + t*6)));
+    return (t < 0) ? 0 : ((t > 1) ? 1 : t*t*t*(10 + t*(-15 + t*6)));
 }
 
 //------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ template<typename S>
 S
 smooth_step(const S x0, const S x1, const S t, const S t0, const S t1)
 { 
-	return x0 + smooth_step((t - t0)/(t1 - t0))*(x1 - x0); 
+    return x0 + smooth_step((t - t0)/(t1 - t0))*(x1 - x0); 
 }
 
 //------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ template<typename S>
 S
 ramp(const S t)
 { 
-	return smooth_step(0.5*(t + 1))*2 - 1; 
+    return smooth_step(0.5*(t + 1))*2 - 1; 
 }
 
 //------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ template<typename S>
 S
 smooth_heaviside(const S t, const S w)
 { 
-	return smooth_step(t, -w, w, 0, 1); 
+    return smooth_step(t, -w, w, 0, 1); 
 }
 
 //------------------------------------------------------------------------------
@@ -105,13 +105,13 @@ template<typename S>
 S
 frac(const S x)
 {	
-	if (traits<S>::is_floating) { 
-		// Compile-time branching.
+    if (traits<S>::is_floating) { 
+        // Compile-time branching.
 
-		return (x - floor_int32(x)); 
-	}
+        return (x - floor_int32(x)); 
+    }
 
-	return 0; 
+    return 0; 
 }
 
 //------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ template<typename S>
 S
 log2(const S x)
 {
-	assert(0 < x);
-	static const S inv_log2(1/traits<S>::log(2));
-	return traits<S>::log(x)*inv_log2;
+    assert(0 < x);
+    static const S inv_log2(1/traits<S>::log(2));
+    return traits<S>::log(x)*inv_log2;
 }
 
 //------------------------------------------------------------------------------
@@ -139,16 +139,16 @@ template<typename S>
 bool 
 is_zero(const S x) 
 {
-	if (traits<S>::is_floating) { 
-		// Compile-time branching.
+    if (traits<S>::is_floating) { 
+        // Compile-time branching.
 
-		return (traits<S>::abs(x) < traits<S>::epsilon());
-	}
-	else {
-		// Integer.
+        return (traits<S>::abs(x) < traits<S>::epsilon());
+    }
+    else {
+        // Integer.
 
-		return (0 == x); 
-	}	
+        return (0 == x); 
+    }	
 }
 
 //------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ template<typename S>
 bool
 is_nan(const S x)
 { 
-	return (x != x); 
+    return (x != x); 
 }
 
 //------------------------------------------------------------------------------
@@ -174,8 +174,8 @@ template<typename S>
 bool   
 is_range_incl(const S x, const S low, const S high)
 {
-	assert(low <= high);
-	return (low <= x && x <= high);
+    assert(low <= high);
+    return (low <= x && x <= high);
 }
 
 //------------------------------------------------------------------------------
@@ -188,8 +188,8 @@ template<typename S>
 bool   
 is_range_excl(const S x, const S low, const S high)
 {
-	assert(low < high);
-	return (low < x && x < high);
+    assert(low < high);
+    return (low < x && x < high);
 }
 
 //------------------------------------------------------------------------------
@@ -202,16 +202,16 @@ template<typename S>
 bool 
 equal(const S x0, const S x1) 
 {
-	if (traits<S>::is_floating) {	
-		// Compile-time branching.
+    if (traits<S>::is_floating) {	
+        // Compile-time branching.
 
-		return (traits<S>::abs(x0 - x1) < traits<S>::epsilon());
-	}
-	else {
-		// Integer.
+        return (traits<S>::abs(x0 - x1) < traits<S>::epsilon());
+    }
+    else {
+        // Integer.
 
-		return (x0 == x1); 
-	}	
+        return (x0 == x1); 
+    }	
 }
 
 //------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ template<typename S>
 bool 
 equiv(const S x0, const S x1)
 {
-	return (!(x0 < x1) && !(x0 > x1));
+    return (!(x0 < x1) && !(x0 > x1));
 }
 
 //------------------------------------------------------------------------------
@@ -237,7 +237,7 @@ template<typename S>
 int64 
 sgn(const S x)
 {
-	return (is_zero(x) ? 0 : (x < 0 ? -1 : 1));
+    return (is_zero(x) ? 0 : (x < 0 ? -1 : 1));
 }
 
 //------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ template<typename S>
 S 
 deg2rad(const S deg)
 {
-	return (traits<S>::pi()/180)*deg; 
+    return (traits<S>::pi()/180)*deg; 
 }
 
 //------------------------------------------------------------------------------
@@ -263,7 +263,7 @@ template<typename S>
 S 
 rad2deg(const S rad)
 {
-	return (180/traits<S>::pi())*rad;
+    return (180/traits<S>::pi())*rad;
 }
 
 //------------------------------------------------------------------------------
@@ -276,20 +276,20 @@ template<typename S>
 int32
 round_int32(S x) 
 {
-	assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-	assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
 
-	const S round_to_nearest(static_cast<S>(0.5));
-	int32 i;
-	__asm
-	{
-		fld x
-		fadd st, st (0)
-		fadd round_to_nearest
-		fistp i
-		sar i, 1
-	}
-	return (i);
+    const S round_to_nearest(static_cast<S>(0.5));
+    int32 i;
+    __asm
+    {
+        fld x
+        fadd st, st (0)
+        fadd round_to_nearest
+        fistp i
+        sar i, 1
+    }
+    return (i);
 }
 
 //template<typename S>
@@ -316,21 +316,21 @@ template<typename S>
 int32
 ceil_int32(S x)
 {
-	assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-	assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
 
-	const S round_to_pos_inf(static_cast<S>(-0.5));
-	int32 i;
-	__asm
-	{
-		fld x
-		fadd st, st (0)
-		fsubr round_to_pos_inf
-		fistp i
-		sar i, 1
-	}
+    const S round_to_pos_inf(static_cast<S>(-0.5));
+    int32 i;
+    __asm
+    {
+        fld x
+        fadd st, st (0)
+        fsubr round_to_pos_inf
+        fistp i
+        sar i, 1
+    }
 
-	return (-i);
+    return (-i);
 }
 
 //template<typename S>
@@ -357,20 +357,20 @@ template<typename S>
 int32
 floor_int32(S x)
 {
-	assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-	assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
 
-	const S round_to_neg_inf(static_cast<S>(-0.5));
-	int32 i;
-	__asm
-	{
-		fld x
-		fadd st, st (0)
-		fadd round_to_neg_inf
-		fistp i
-		sar i, 1
-	}
-	return (i);
+    const S round_to_neg_inf(static_cast<S>(-0.5));
+    int32 i;
+    __asm
+    {
+        fld x
+        fadd st, st (0)
+        fadd round_to_neg_inf
+        fistp i
+        sar i, 1
+    }
+    return (i);
 }
 
 //template<typename S>
@@ -396,26 +396,26 @@ template<typename S>
 int32
 trunc_int32(S x)
 {
-	assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-	assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
 
-	const S round_towards_neg_inf(static_cast<S>(-0.5));
-	int32 i;
-	__asm
-	{
-		fld x
-		fadd st, st (0)
-		fabs
-		fadd round_towards_neg_inf
-		fistp i
-		sar i, 1
-	}
+    const S round_towards_neg_inf(static_cast<S>(-0.5));
+    int32 i;
+    __asm
+    {
+        fld x
+        fadd st, st (0)
+        fabs
+        fadd round_towards_neg_inf
+        fistp i
+        sar i, 1
+    }
 
-	if( x < 0 ) { 
-		i = -i; 
-	}
+    if( x < 0 ) { 
+        i = -i; 
+    }
 
-	return (i);
+    return (i);
 }
 
 //template<typename S>
@@ -439,7 +439,7 @@ template<typename S>
 S 
 sqr(const S x) 
 { 
-	return x*x; 
+    return x*x; 
 }
 
 //------------------------------------------------------------------------------
@@ -452,7 +452,7 @@ template<typename S>
 S 
 cube(const S x) 
 { 
-	return x*x*x; 
+    return x*x*x; 
 }
 
 //------------------------------------------------------------------------------
@@ -465,7 +465,7 @@ template<typename S>
 S
 min(const S x0, const S x1, const S x2)
 { 
-	return std::min<S>(x0, std::min<S>(x1, x2)); 
+    return std::min<S>(x0, std::min<S>(x1, x2)); 
 }
 
 //------------------------------------------------------------------------------
@@ -478,7 +478,7 @@ template<typename S>
 S
 min(const S x0, const S x1, const S x2, const S x3)
 { 
-	return std::min<S>(std::min<S>(x0, x1), std::min<S>(x2, x3)); 
+    return std::min<S>(std::min<S>(x0, x1), std::min<S>(x2, x3)); 
 }
 
 //------------------------------------------------------------------------------
@@ -491,7 +491,7 @@ template<typename S>
 S
 min(const S x0, const S x1, const S x2, const S x3, const S x4)
 { 
-	return min(std::min<S>(x0, x1), std::min<S>(x2, x3), x4); 
+    return min(std::min<S>(x0, x1), std::min<S>(x2, x3), x4); 
 }
 
 //------------------------------------------------------------------------------
@@ -504,7 +504,7 @@ template<typename S>
 S
 min(const S x0, const S x1, const S x2, const S x3, const S x4, const S x5)
 { 
-	return min(std::min<S>(x0, x1), std::min<S>(x2, x3), std::min<S>(x4, x5)); 
+    return min(std::min<S>(x0, x1), std::min<S>(x2, x3), std::min<S>(x4, x5)); 
 }
 
 //------------------------------------------------------------------------------
@@ -517,7 +517,7 @@ template<typename S>
 S
 max(const S x0, const S x1, const S x2)
 { 
-	return std::max<S>(x0, std::max<S>(x1, x2)); 
+    return std::max<S>(x0, std::max<S>(x1, x2)); 
 }
 
 //------------------------------------------------------------------------------
@@ -530,7 +530,7 @@ template<typename S>
 S
 max(const S x0, const S x1, const S x2, const S x3)
 { 
-	return std::max<S>(std::max<S>(x0, x1), std::max<S>(x2, x3)); 
+    return std::max<S>(std::max<S>(x0, x1), std::max<S>(x2, x3)); 
 }
 
 //------------------------------------------------------------------------------
@@ -543,7 +543,7 @@ template<typename S>
 S
 max(const S x0, const S x1, const S x2, const S x3, const S x4)
 { 
-	return max(std::max<S>(x0, x1), std::max<S>(x2, x3), x4); 
+    return max(std::max<S>(x0, x1), std::max<S>(x2, x3), x4); 
 }
 
 //------------------------------------------------------------------------------
@@ -556,7 +556,7 @@ template<typename S>
 S
 max(const S x0, const S x1, const S x2, const S x3, const S x4, const S x5)
 { 
-	return max(std::max<S>(x0, x1), std::max<S>(x2, x3), std::max<S>(x4, x5)); 
+    return max(std::max<S>(x0, x1), std::max<S>(x2, x3), std::max<S>(x4, x5)); 
 }
 
 //------------------------------------------------------------------------------
@@ -569,53 +569,53 @@ template<typename S>
 void
 sort(S* x0, S* x1, S* x2)
 {
-	assert(0 != x0 && 0 != x1 && 0 != x2);
+    assert(0 != x0 && 0 != x1 && 0 != x2);
 
     S tmp;
     if (*x0 < *x1) {
         if (*x0 < *x2) {
             if( *x2 < *x1 ) {	
-				// x0 < x2 < x1
+                // x0 < x2 < x1
 
-				tmp = *x2;
-				*x2 = *x1;
-				*x1 = tmp;
+                tmp = *x2;
+                *x2 = *x1;
+                *x1 = tmp;
             } 
-			// else: x0 < x1 < x2
+            // else: x0 < x1 < x2
         }
-		else {	
-			// x2 < x0 < x1
+        else {	
+            // x2 < x0 < x1
 
-			tmp = *x2;
-			*x2 = *x1;
-			*x1 = *x0;
-			*x0 = tmp;
+            tmp = *x2;
+            *x2 = *x1;
+            *x1 = *x0;
+            *x0 = tmp;
         }
     }
-	else {
+    else {
         if( *x1 < *x2) {
             if( *x0 < *x2) {	
-				// x1 < x0 < x2
+                // x1 < x0 < x2
 
-				tmp = *x1;
-				*x1 = *x0;
-				*x0 = tmp;
+                tmp = *x1;
+                *x1 = *x0;
+                *x0 = tmp;
             }
-			else {	
-				// x1 < x2 < x0
+            else {	
+                // x1 < x2 < x0
 
-				tmp = *x1;
-				*x1 = *x2;
-				*x2 = *x0;
-				*x0 = tmp;
+                tmp = *x1;
+                *x1 = *x2;
+                *x2 = *x0;
+                *x0 = tmp;
             }
         }
-		else {	
-			// x2 < x1 < x0
+        else {	
+            // x2 < x1 < x0
             
-			tmp = *x2;
-			*x2 = *x0;
-			*x0 = tmp;
+            tmp = *x2;
+            *x2 = *x0;
+            *x0 = tmp;
         }
     }
 }
@@ -630,30 +630,30 @@ template<typename S>
 void
 sort(S* x0, S* x1, S* x2, S* x3)
 {
-	assert(0 != x0 && 0 != x1 && 0 != x2 && 0 != x3);
+    assert(0 != x0 && 0 != x1 && 0 != x2 && 0 != x3);
 
-	sort(x0, x1, x2);
+    sort(x0, x1, x2);
 
-	S tmp;
+    S tmp;
     if( *x3 < *x1 ) {
         if( *x3 < *x0 ) {
             tmp = *x3; 
-			*x3 = *x2; 
-			*x2 = *x1; 
-			*x1 = *x0; 
-			*x0 = tmp;
+            *x3 = *x2; 
+            *x2 = *x1; 
+            *x1 = *x0; 
+            *x0 = tmp;
         }
-		else {
+        else {
             tmp = *x3; 
-			*x3 = *x2; 
-			*x2 = *x1; 
-			*x1 = tmp;
+            *x3 = *x2; 
+            *x2 = *x1; 
+            *x1 = tmp;
         }
     }
-	else if( *x3 < *x2) {
+    else if( *x3 < *x2) {
         tmp = *x3; 
-		*x3 = *x2; 
-		*x2 = tmp;
+        *x3 = *x2; 
+        *x2 = tmp;
     }
 }
 
@@ -668,13 +668,13 @@ template<typename S>
 S
 compact_gaussian(const S x, const S sigma)
 {
-	const S y(traits<S>::abs(x/sigma));
-	if (y < 2.5) { 
-		return 1 + y*y*(-0.5 + y*(0.144 - y*0.0032)); 
-	}
-	else { 
-		return 0; 
-	}
+    const S y(traits<S>::abs(x/sigma));
+    if (y < 2.5) { 
+        return 1 + y*y*(-0.5 + y*(0.144 - y*0.0032)); 
+    }
+    else { 
+        return 0; 
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -690,44 +690,44 @@ template<typename S>
 bool 
 quadratic(const S a, const S b, const S c, S* t0, S* t1)
 {	
-	// Find quadratic discriminant.
-	
-	const S discrim(b*b - 4*a*c);
+    // Find quadratic discriminant.
+    
+    const S discrim(b*b - 4*a*c);
 
-	if (discrim < 0) { 
-		return false; 
-	}
+    if (discrim < 0) { 
+        return false; 
+    }
 
-	const S root_discrim(traits<S>::sqrt(discrim));
+    const S root_discrim(traits<S>::sqrt(discrim));
 
-	// Compute quadratic t values.
-	
-	S q;
-	if( b < 0 )	{ 
-		q = -0.5*(b - root_discrim); 
-	}
-	else { 
-		q = -0.5*(b + root_discrim);	
-	}
+    // Compute quadratic t values.
+    
+    S q;
+    if( b < 0 )	{ 
+        q = -0.5*(b - root_discrim); 
+    }
+    else { 
+        q = -0.5*(b + root_discrim);	
+    }
 
-	if (is_zero(a) || is_zero(q)) { 
-		return false; 
-	}
+    if (is_zero(a) || is_zero(q)) { 
+        return false; 
+    }
 
-	if (0 != t0 && 0 != t1) {
-		*t0 = q/a;
-		*t1 = c/q;
+    if (0 != t0 && 0 != t1) {
+        *t0 = q/a;
+        *t1 = c/q;
 
-		if (*t0 > *t1) {	
-			// Swap.
-			
-			const S tmp0(*t0);
-			*t0 = *t1;
-			*t1 = tmp0;
-		}
-	}
+        if (*t0 > *t1) {	
+            // Swap.
+            
+            const S tmp0(*t0);
+            *t0 = *t1;
+            *t1 = tmp0;
+        }
+    }
 
-	return true;	// Real roots.
+    return true;	// Real roots.
 }
 
 }	// Namespace: thx.

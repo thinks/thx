@@ -25,11 +25,11 @@ template<int64 N, typename S>
 S
 dot(const vec<N,S> &u, const vec<N,S> &v)
 {
-	S d(u[0]*v[0]);
-	for (int64 i(1); i < N; ++i) { 
-		d += u[i]*v[i]; 
-	}
-	return d;
+    S d(u[0]*v[0]);
+    for (int64 i(1); i < N; ++i) { 
+        d += u[i]*v[i]; 
+    }
+    return d;
 }
 
 template<typename S>
@@ -118,9 +118,9 @@ template<typename S>
 vec<3,S>
 cross(const vec<3,S> &u, const vec<3,S> &v)
 { 
-	return vec<3,S>(u[1]*v[2] - u[2]*v[1], 
-					u[2]*v[0] - u[0]*v[2], 
-					u[0]*v[1] - u[1]*v[0]);
+    return vec<3,S>(u[1]*v[2] - u[2]*v[1], 
+                    u[2]*v[0] - u[0]*v[2], 
+                    u[0]*v[1] - u[1]*v[0]);
 }
 
 //------------------------------------------------------------------------------

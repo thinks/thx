@@ -20,11 +20,11 @@ template<int64 N, typename S>
 vec<N,S>
 operator-(const vec<N,S> &v)
 {
-	vec<N,S> r;
-	for (int64 i(0); i < N; ++i) {
-		r[i] = -v[i]; 
-	}
-	return r;
+    vec<N,S> r;
+    for (int64 i(0); i < N; ++i) {
+        r[i] = -v[i]; 
+    }
+    return r;
 }
 
 template<typename S>

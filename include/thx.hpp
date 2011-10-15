@@ -31,6 +31,7 @@
 #include "thx_mat.hpp"			// Matrices
 #include "thx_mat_operators.hpp"
 #include "thx_mat_utils.hpp"
+#include "thx_mat_transform.hpp"
 
 //#include "thx_plane_fit.hpp"
 //#include "thx_quaternion.hpp"
