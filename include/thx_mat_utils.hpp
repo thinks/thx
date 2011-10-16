@@ -23,7 +23,7 @@ namespace thx {
 //! Determinant. TODO
 template<int64 N, typename S>
 S
-determinant(const mat<N,S> &m);
+determinant(const mat<N,S> &a);
 
 template<typename S>	
 S 
@@ -36,23 +36,23 @@ template<typename S>
 S 
 determinant(const mat<3,S> &a) 
 {
-    return (a[0][0]*(a[1][1]*a[2][2] - a[2][1]*a[1][2]) - 
-            a[1][0]*(a[0][1]*a[2][2] - a[2][1]*a[0][2]) + 
-            a[2][0]*(a[0][1]*a[1][2] - a[1][1]*a[0][2]));
+    return (a(0,0)*(a(1,1)*a(2,2) - a(1,2)*a(2,1)) - 
+            a(0,1)*(a(1,0)*a(2,2) - a(1,2)*a(2,0)) + 
+            a(0,2)*(a(1,0)*a(2,1) - a(1,1)*a(2,0)));
 }
 
 template<typename S>	
 S 
 determinant(const mat<4,S> &a) 
 { 
-    return (a[0][0]*a[1][1]*a[2][2]*a[3][3] + 
-            a[1][0]*a[2][1]*a[3][2]*a[0][3] + 
-            a[2][0]*a[3][1]*a[0][2]*a[1][3] + 
-            a[3][0]*a[0][1]*a[1][2]*a[2][3] - 
-            a[0][0]*a[3][1]*a[2][2]*a[1][3] -
-            a[1][0]*a[0][1]*a[3][2]*a[2][3] -
-            a[2][0]*a[1][1]*a[0][2]*a[3][3] -
-            a[3][0]*a[2][1]*a[1][2]*a[0][3]);
+    return (a(0,0)*a(1,1)*a(2,2)*a(3,3) + 
+            a(0,1)*a(1,2)*a(2,3)*a(3,0) + 
+            a(0,2)*a(1,3)*a(2,0)*a(3,1) + 
+            a(0,3)*a(1,0)*a(2,1)*a(3,2) - 
+            a(0,0)*a(1,3)*a(2,2)*a(3,1) -
+            a(0,1)*a(1,0)*a(2,3)*a(3,2) -
+            a(0,2)*a(1,1)*a(2,0)*a(3,3) -
+            a(0,3)*a(1,2)*a(2,1)*a(3,0));
 }
 
 //------------------------------------------------------------------------------
@@ -61,70 +61,22 @@ determinant(const mat<4,S> &a)
 template<int64 N, typename S>
 void
 transpose(mat<N,S> &a)
-{
-    for (int64 i(0); i < N; ++i) {
-        for (int64 j(0); j < N; ++j) {
-            const S tmp(a[i][j]);   // Swap.
-            a[i][j] = a[j][i];
-            a[j][i] = tmp;
-        }
-    }
-}
+{ a = transposed(a); }
 
 template<typename S>	
 void 
 transpose(mat<2,S> &a) 
-{
-    const S tmp(a[0][1]);
-    a[0][1] = a[1][0];
-    a[1][0] = tmp;
-}
+{ a = transposed(a); }
 
 template<typename S>	
 void 
 transpose(mat<3,S> &a) 
-{
-    S tmp(a[1][0]);
-    a[1][0] = a[0][1];
-    a[0][1] = tmp;
-
-    tmp = a[2][0];
-    a[2][0] = a[0][2];
-    a[0][2] = tmp;
-
-    tmp = a[2][1];
-    a[2][1] = a[1][2];
-    a[1][2] = tmp;
-}
+{ a = transposed(a); }
 
 template<typename S>	
 void 
 transpose(mat<4,S> &a) 
-{
-    S tmp(a[1][0]);
-    a[1][0] = a[0][1];
-    a[0][1] = tmp;
-
-    tmp = a[2][0];
-    a[2][0] = a[0][2];
-    a[0][2] = tmp;
-
-    tmp = a[3][0];
-    a[3][0] = a[0][3];
-    a[0][3] = tmp;
-
-    tmp = a[2][1];
-    a[2][1] = a[1][2];
-    a[1][2] = tmp;
-
-    tmp = a[3][1];
-    a[3][1] = a[1][3];
-    a[1][3] = tmp;
-
-    tmp = a[3][2];
-    a[3][2] = a[2][3];
-    a[2][3] = tmp;
-}
+{ a = transposed(a); }
 
 //------------------------------------------------------------------------------
 
@@ -134,7 +86,13 @@ mat<N,S>
 transposed(const mat<N,S> &a)
 {
     mat<N,S> b(a);  // Copy.
-    transpose(b);
+    for (int64 i(0); i < N; ++i) {
+        for (int64 j(0); j < N; ++j) {
+            const S tmp(b(i,j));   // Swap.
+            b(i,j) = b(j,i);
+            b(j,i) = tmp;
+        }
+    }
     return b;
 }
 
@@ -150,19 +108,19 @@ template<typename S>
 mat<3,S> 
 transposed(const mat<3,S> &a)
 {
-    return mat<3,S>(a[0][0], a[0][1], a[0][2],
-                    a[1][0], a[1][1], a[1][2],
-                    a[2][0], a[2][1], a[2][2]);
+    return mat<3,S>(a(0,0), a(1,0), a(2,0),
+                    a(0,1), a(1,1), a(2,1),
+                    a(0,2), a(1,2), a(2,2));
 }
 
 template<typename S>
 mat<4,S> 
 transposed(const mat<4,S> &a)
 {
-    return mat<4,S>(a[0][0], a[0][1], a[0][2], a[0][3],
-                    a[1][0], a[1][1], a[1][2], a[1][3],
-                    a[2][0], a[2][1], a[2][2], a[2][3],
-                    a[3][0], a[3][1], a[3][2], a[3][3]);
+    return mat<4,S>(a(0,0), a(1,0), a(2,0), a(3,0),
+                    a(0,1), a(1,1), a(2,1), a(3,1),
+                    a(0,2), a(1,2), a(2,2), a(3,2),
+                    a(0,3), a(1,3), a(2,3), a(3,3));
 }
 
 //------------------------------------------------------------------------------
@@ -171,6 +129,7 @@ template<int64 N, typename S>
 void
 gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 {
+    /*
     THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
    
     int64 icol(0);
@@ -244,6 +203,7 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
             }
         }
     }
+    */
 }
 
 //------------------------------------------------------------------------------
@@ -252,66 +212,21 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 template<int64 N, typename S>
 void 
 invert(mat<N,S> &a)
-{ 
-    mat<N,S> b(1);  // Identity.
-    gauss_jacobi(a, b); 
-}
-
+{ a = inverted(a); }
 
 template<typename S> 
 void 
 invert(mat<2,S> &a)
-{
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-    assert(!is_zero(determinant(a)));
-    
-    const S inv_det(1/determinant(a));
-
-    // Swap and scale diagonal elements.
-
-    const S tmp(a[0][0]);
-    a[0][0] = inv_det*a[1][1];
-    a[1][1] = inv_det*tmp;
-
-    // Negate and scale off-diagonal elements.
-
-    a[0][1] = -inv_det*a[0][1];
-    a[1][0] = -inv_det*a[1][0];
-}
+{ a = inverted(a); }
 
 template<typename S> 
 void
 invert(mat<3,S> &a)
-{	
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-    assert(!is_zero(determinant(a)));
-
-    // Compute inverse by method of sub-determinants.
-
-    const S inv_det(1/determinant(m));
-
-    const mat<3,S> b(
-        inv_det*(a[1][1]*a[2][2] - a[2][1]*a[1][2]),	
-        inv_det*(a[2][1]*a[0][2] - a[0][1]*a[2][2]),	
-        inv_det*(a[0][1]*a[1][2] - a[1][1]*a[0][2]),	
-        inv_det*(a[2][0]*a[1][2] - a[1][0]*a[2][2]),
-        inv_det*(a[0][0]*a[2][2] - a[2][0]*a[0][2]),	
-        inv_det*(a[1][0]*a[0][2] - a[0][0]*a[1][2]),	
-        inv_det*(a[1][0]*a[2][1] - a[2][0]*a[1][1]),	
-        inv_det*(a[2][0]*a[0][1] - a[0][0]*a[2][1]),	
-        inv_det*(a[0][0]*a[1][1] - a[1][0]*a[0][1]));	
-
-    a = b;
-}
+{ a = inverted(a); }
 
 template<typename S>
 void 
-invert(mat<4,S> &a)
-{	
-    // TODO: Check Real-Time Rendering! Akenine et al.
-
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-}
+invert(mat<4,S> &a);	
 
 //------------------------------------------------------------------------------
 
@@ -320,9 +235,10 @@ template<int64 N, typename S>
 mat<N,S> 
 inverted(const mat<N,S> &a)
 {
-    mat<N,S> b(a);  // Copy.
-    invert(b);
-    return b;
+    mat<N,S> c(a);  // Copy.
+    mat<N,S> b(1);  // Identity.
+    gauss_jacobi(c, b); 
+    return c;
 }
 
 template<typename S> 
@@ -347,28 +263,20 @@ inverted(const mat<3,S> &a)
 
     const S inv_det(1/determinant(a));
     return mat<3,S>(
-        inv_det*(a[1][1]*a[2][2] - a[2][1]*a[1][2]), 
-        inv_det*(a[2][0]*a[1][2] - a[1][0]*a[2][2]), 
-        inv_det*(a[1][0]*a[2][1] - a[2][0]*a[1][1]),
-        inv_det*(a[2][1]*a[0][2] - a[0][1]*a[2][2]), 
-        inv_det*(a[0][0]*a[2][2] - a[2][0]*a[0][2]), 
-        inv_det*(a[2][0]*a[0][1] - a[0][0]*a[2][1]),
-        inv_det*(a[0][1]*a[1][2] - a[1][1]*a[0][2]), 
-        inv_det*(a[1][0]*a[0][2] - a[0][0]*a[1][2]), 
-        inv_det*(a[0][0]*a[1][1] - a[1][0]*a[0][1]));
+        inv_det*(a(1,1)*a(2,2) - a(1,2)*a(2,1)), 
+        inv_det*(a(0,2)*a(2,1) - a(0,1)*a(2,2)), 
+        inv_det*(a(0,1)*a(1,2) - a(0,2)*a(1,1)),
+        inv_det*(a(1,2)*a(2,0) - a(1,0)*a(2,2)), 
+        inv_det*(a(0,0)*a(2,2) - a(0,2)*a(2,0)), 
+        inv_det*(a(0,2)*a(1,0) - a(0,0)*a(1,2)),
+        inv_det*(a(1,0)*a(2,1) - a(1,1)*a(2,0)), 
+        inv_det*(a(0,1)*a(2,0) - a(0,0)*a(2,1)), 
+        inv_det*(a(0,0)*a(1,1) - a(0,1)*a(1,0)));
 }
 
 template<typename S> 
 mat<4,S> 
-inverted(const mat<4,S> &a)
-{
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-    assert(!is_zero(determinant(a)));
-
-    mat<4,S> b(a);
-    invert(b);
-    return b;
-}
+inverted(const mat<4,S> &a);
 
 }	// Namespace: thx.
 

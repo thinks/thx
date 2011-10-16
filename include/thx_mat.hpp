@@ -72,14 +72,14 @@ public:
     //! Copy CTOR.
     //explicit
     mat(const mat<N,S> &rhs)
-    { std::copy(_v, _v + size, rhs._v); }
+    { std::copy(rhs._v, rhs._v + size, _v); }
 
 public:		// Operators.
 
     mat<N,S>& 
     operator=(const mat<N,S> &rhs)
     {
-        std::copy(_v, _v + size, rhs._v);
+        std::copy(rhs._v, rhs._v + size, _v);
         return *this;
     }
 
