@@ -64,7 +64,7 @@ public:
     {
         for (int64 i(0); i < N; ++i) {
             for (int64 j(0); j < N; ++j) {
-                _at(i,j) = ((i == j) ? s : 0); // Set diagonal to value.
+                _v[i + N*j] = ((i == j) ? s : 0); // Set diagonal to value.
             }
         }
     }
@@ -117,9 +117,11 @@ public:		// Operators.
         const mat<N,S> a(*this);  // Deep copy.
         for (int64 i(0); i < N; ++i) {
             for (int64 j(0); j < N; ++j) {
-                _at(i,j) = 0;
+                //at(i,j) = 0;
+                _v[i + N*j] = 0;
                 for (int64 k(0); k < N; ++k) {
-                    _at(i,j) = _at(i,j) + a(i,k)*b(k,j);
+                    //at(i,j) = at(i,j) + a(i,k)*b(k,j);
+                    _v[i + N*j] += a[i + N*k]*b[k + N*j];
                 }
             }
         }
@@ -131,12 +133,12 @@ public:     // Access operators.
     //! Return element at row 'i' and column 'j'. No bounds checking!
     S&
     operator()(const int64 i, const int64 j)
-    { return _at(i,j); }
+    { return _v[i + N*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
-    { return _at(i,j); }
+    { return _v[i + N*j]; }
 
     //! Return i'th element. No bounds checking!
     S&
@@ -147,16 +149,6 @@ public:     // Access operators.
     S
     operator[](const int64 i) const
     { return _v[i]; }
-
-private:
-
-    S
-    _at(const int64 i, const int64 j) const
-    { return _v[i + N*j]; }
-
-    S&
-    _at(const int64 i, const int64 j)
-    { return _v[i + N*j]; }
 
 private:		// Member variables
 
@@ -184,41 +176,33 @@ public:
     explicit
     mat(const S v = 1)
     {
-        _v[0] = v;
-        _v[1] = 0;
-        _v[2] = 0;
-        _v[3] = v;
+        _v[0] = v; _v[2] = 0;
+        _v[1] = 0; _v[3] = v;
     }
 
     //! Copy CTOR.
     //explicit
     mat(const mat<2,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
+        _v[0] = rhs[0]; _v[2] = rhs[2];
+        _v[1] = rhs[1]; _v[3] = rhs[3];
     }
 
     //! Array CTOR - column-major.
     explicit
-    mat(const S a[4])
+    mat(const S v[4])
     {	
-        _v[0] = a[0];
-        _v[1] = a[1];
-        _v[2] = a[2];
-        _v[3] = a[3];
+        _v[0] = v[0]; _v[2] = v[2];
+        _v[1] = v[1]; _v[3] = v[3];
     }
 
     //! Value CTOR - column-major.
     explicit
-    mat(const S a0, const S a2,
-        const S a1, const S a3)
+    mat(const S v0, const S v2,
+        const S v1, const S v3)
     {	
-        _v[0] = a0;
-        _v[1] = a1;
-        _v[2] = a2;
-        _v[3] = a3;
+        _v[0] = v0; _v[2] = v2;
+        _v[1] = v1; _v[3] = v3;
     }
 
 public:		// Operators.
@@ -227,40 +211,32 @@ public:		// Operators.
     mat<2,S>& 
     operator=(const mat<2,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
+        _v[0] = rhs[0]; _v[2] = rhs[2];
+        _v[1] = rhs[1]; _v[3] = rhs[3];
         return *this;
     }
 
     mat<2,S>& 
     operator+=(const mat<2,S> &b)
     {
-        _v[0] += b[0];
-        _v[1] += b[1];
-        _v[2] += b[2];
-        _v[3] += b[3];
+        _v[0] += b[0]; _v[2] += b[2];
+        _v[1] += b[1]; _v[3] += b[3];
         return *this;
     }
 
     mat<2,S>& 
     operator-=(const mat<2,S> &b)
     {
-        _v[0] -= b[0];
-        _v[1] -= b[1];
-        _v[2] -= b[2];
-        _v[3] -= b[3];
+        _v[0] -= b[0]; _v[2] -= b[2];
+        _v[1] -= b[1]; _v[3] -= b[3];
         return *this;
     }
 
     mat<2,S>& 
     operator*=(const S s)
     {
-        _v[0] *= s;
-        _v[1] *= s;
-        _v[2] *= s;
-        _v[3] *= s;
+        _v[0] *= s; _v[2] *= s;
+        _v[1] *= s; _v[3] *= s;
         return *this;
     }
 
@@ -269,10 +245,10 @@ public:		// Operators.
     operator*=(const mat<2,S> &b)
     {	
         const mat<2,S> a(*this);
-        _at(0,0) = a(0,0)*b(0,0) + a(0,1)*b(1,0);
-        _at(0,1) = a(0,0)*b(0,1) + a(0,1)*b(1,1);
-        _at(1,0) = a(1,0)*b(0,0) + a(1,1)*b(1,0);
-        _at(1,1) = a(1,0)*b(0,1) + a(1,1)*b(1,1);
+        (*this)(0,0) = a(0,0)*b(0,0) + a(0,1)*b(1,0);
+        (*this)(0,1) = a(0,0)*b(0,1) + a(0,1)*b(1,1);
+        (*this)(1,0) = a(1,0)*b(0,0) + a(1,1)*b(1,0);
+        (*this)(1,1) = a(1,0)*b(0,1) + a(1,1)*b(1,1);
         return *this;
     }
 
@@ -281,12 +257,12 @@ public:     // Access operators.
     //! Return element at row 'i' and column 'j'. No bounds checking!
     S&
     operator()(const int64 i, const int64 j)
-    { return _at(i,j); }
+    { return _v[i + 2*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
-    { return _at(i,j); }
+    { return _v[i + 2*j]; }
 
     //! Return i'th element. No bounds checking!
     S&
@@ -297,16 +273,6 @@ public:     // Access operators.
     S
     operator[](const int64 i) const
     { return _v[i]; }
-
-private:
-
-    S
-    _at(const int64 i, const int64 j) const
-    { return _v[i + 2*j]; }
-
-    S&
-    _at(const int64 i, const int64 j)
-    { return _v[i + 2*j]; }
 
 private:		// Member variables
 
@@ -337,62 +303,38 @@ public:
     explicit
     mat(const S v = 1)
     {
-        _v[0] = v;
-        _v[1] = 0;
-        _v[2] = 0;
-        _v[3] = 0;
-        _v[4] = v;
-        _v[5] = 0;
-        _v[6] = 0;
-        _v[7] = 0;
-        _v[8] = v;
+        _v[0] = v; _v[3] = 0; _v[6] = 0;
+        _v[1] = 0; _v[4] = v; _v[7] = 0;
+        _v[2] = 0; _v[5] = 0; _v[8] = v;
     }
 
     //! Copy CTOR.
     //explicit
     mat(const mat<3,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
-        _v[4] = rhs[4];
-        _v[5] = rhs[5];
-        _v[6] = rhs[6];
-        _v[7] = rhs[7];
-        _v[8] = rhs[8];
+        _v[0] = rhs[0]; _v[3] = rhs[3]; _v[6] = rhs[6];
+        _v[1] = rhs[1]; _v[4] = rhs[4]; _v[7] = rhs[7];
+        _v[2] = rhs[2]; _v[5] = rhs[5]; _v[8] = rhs[8];
     }
 
     //! Array CTOR - column-major.
     explicit
-    mat(const S a[9])
+    mat(const S v[9])
     {	
-        _v[0] = a[0];
-        _v[1] = a[1];
-        _v[2] = a[2];
-        _v[3] = a[3];
-        _v[4] = a[4];
-        _v[5] = a[5];
-        _v[6] = a[6];
-        _v[7] = a[7];
-        _v[8] = a[8];
+        _v[0] = v[0]; _v[3] = v[3]; _v[6] = v[6];
+        _v[1] = v[1]; _v[4] = v[4]; _v[7] = v[7];
+        _v[2] = v[2]; _v[5] = v[5]; _v[8] = v[8];
     }
 
     //! Value CTOR - column-major.
     explicit
-    mat(const S a0, const S a3, const S a6,
-        const S a1, const S a4, const S a7,
-        const S a2, const S a5, const S a8)
+    mat(const S v0, const S v3, const S v6,
+        const S v1, const S v4, const S v7,
+        const S v2, const S v5, const S v8)
     {	
-        _v[0] = a0;
-        _v[1] = a1;
-        _v[2] = a2;
-        _v[3] = a3;
-        _v[4] = a4;
-        _v[5] = a5;
-        _v[6] = a6;
-        _v[7] = a7;
-        _v[8] = a8;
+        _v[0] = v0; _v[3] = v3; _v[6] = v6;
+        _v[1] = v1; _v[4] = v4; _v[7] = v7;
+        _v[2] = v2; _v[5] = v5; _v[8] = v8;
     }
 
 public:		// Operators.
@@ -401,60 +343,36 @@ public:		// Operators.
     mat<3,S>& 
     operator=(const mat<3,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
-        _v[4] = rhs[4];
-        _v[5] = rhs[5];
-        _v[6] = rhs[6];
-        _v[7] = rhs[7];
-        _v[8] = rhs[8];
+        _v[0] = rhs[0]; _v[3] = rhs[3]; _v[6] = rhs[6];
+        _v[1] = rhs[1]; _v[4] = rhs[4]; _v[7] = rhs[7];
+        _v[2] = rhs[2]; _v[5] = rhs[5]; _v[8] = rhs[8];
         return *this;
     }
 
     mat<3,S>& 
     operator+=(const mat<3,S> &b)
     {
-        _v[0] += b[0];
-        _v[1] += b[1];
-        _v[2] += b[2];
-        _v[3] += b[3];
-        _v[4] += b[4];
-        _v[5] += b[5];
-        _v[6] += b[6];
-        _v[7] += b[7];
-        _v[8] += b[8];
+        _v[0] += b[0]; _v[3] += b[3]; _v[6] += b[6];
+        _v[1] += b[1]; _v[4] += b[4]; _v[7] += b[7];
+        _v[2] += b[2]; _v[5] += b[5]; _v[8] += b[8];
         return *this;
     }
 
     mat<3,S>& 
     operator-=(const mat<3,S> &b)
     {
-        _v[0] -= b[0];
-        _v[1] -= b[1];
-        _v[2] -= b[2];
-        _v[3] -= b[3];
-        _v[4] -= b[4];
-        _v[5] -= b[5];
-        _v[6] -= b[6];
-        _v[7] -= b[7];
-        _v[8] -= b[8];
+        _v[0] -= b[0]; _v[3] -= b[3]; _v[6] -= b[6];
+        _v[1] -= b[1]; _v[4] -= b[4]; _v[7] -= b[7];
+        _v[2] -= b[2]; _v[5] -= b[5]; _v[8] -= b[8];
         return *this;
     }
 
     mat<3,S>& 
     operator*=(const S s)
     {
-        _v[0] *= s;
-        _v[1] *= s;
-        _v[2] *= s;
-        _v[3] *= s;
-        _v[4] *= s;
-        _v[5] *= s;
-        _v[6] *= s;
-        _v[7] *= s;
-        _v[8] *= s;
+        _v[0] *= s; _v[3] *= s; _v[6] *= s;
+        _v[1] *= s; _v[4] *= s; _v[7] *= s;
+        _v[2] *= s; _v[5] *= s; _v[8] *= s;
         return *this;
     }
 
@@ -462,31 +380,30 @@ public:		// Operators.
     mat<3,S>& 
     operator*=(const mat<3,S> &b)
     {	
-        _at(0,0) = a(0,0)*b(0,0) + a(0,1)*b(1,0) + a(0,2)*b(2,0);
-        _at(0,1) = a(0,0)*b(0,1) + a(0,1)*b(1,1);
-        _at(1,0) = a(1,0)*b(0,0) + a(1,1)*b(1,0);
-        _at(1,1) = a(1,0)*b(0,1) + a(1,1)*b(1,1);
-
-
         const mat<3,S> a(*this);    // Copy.
-
-        _at(0,0) = a(0,0)*b(0,0) + a(0,1)*b(1,0) + a(0,2)*b(2,0);
-        _at(0,1) = a(0,0)*b(0,1) + a(0,1)*b(1,1) + a(0,2)*b(2,1);
-        _at(0,2) = a(0,0)*b(0,2) + a(0,1)*b(1,2) + a(0,2)*b(2,2)
-
-        _v[0][0] = a[0][0]*b[0][0] + a[1][0]*b[0][1] + a[2][0]*b[0][2];
-        _v[0][1] = a[0][1]*b[0][0] + a[1][1]*b[0][1] + a[2][1]*b[0][2];
-        _v[0][2] = a[0][2]*b[0][0] + a[1][2]*b[0][1] + a[2][2]*b[0][2];
-        _v[1][0] = a[0][0]*b[1][0] + a[1][0]*b[1][1] + a[2][0]*b[1][2];
-        _v[1][1] = a[0][1]*b[1][0] + a[1][1]*b[1][1] + a[2][1]*b[1][2];
-        _v[1][2] = a[0][2]*b[1][0] + a[1][2]*b[1][1] + a[2][2]*b[1][2];
-        _v[2][2] = a[0][0]*b[2][0] + a[1][0]*b[2][1] + a[2][0]*b[2][2];
-        _v[2][1] = a[0][1]*b[2][0] + a[1][1]*b[2][1] + a[2][1]*b[2][2];
-        _v[2][2] = a[0][2]*b[2][0] + a[1][2]*b[2][1] + a[2][2]*b[2][2];
+        (*this)(0,0) = a(0,0)*b(0,0) + a(0,1)*b(1,0) + a(0,2)*b(2,0);
+        (*this)(0,1) = a(0,0)*b(0,1) + a(0,1)*b(1,1) + a(0,2)*b(2,1);
+        (*this)(0,2) = a(0,0)*b(0,2) + a(0,1)*b(1,2) + a(0,2)*b(2,2);
+        (*this)(1,0) = a(1,0)*b(0,0) + a(1,1)*b(1,0) + a(1,2)*b(2,0);
+        (*this)(1,1) = a(1,0)*b(0,1) + a(1,1)*b(1,1) + a(1,2)*b(2,1);
+        (*this)(1,2) = a(1,0)*b(0,2) + a(1,1)*b(1,2) + a(1,2)*b(2,2);
+        (*this)(2,0) = a(2,0)*b(0,0) + a(2,1)*b(1,0) + a(2,2)*b(2,0);
+        (*this)(2,1) = a(2,0)*b(0,1) + a(2,1)*b(1,1) + a(2,2)*b(2,1);
+        (*this)(2,2) = a(2,0)*b(0,2) + a(2,1)*b(1,2) + a(2,2)*b(2,2);
         return *this;
     }
 
 public:     // Access operators.
+
+    //! Return element at row 'i' and column 'j'. No bounds checking!
+    S&
+    operator()(const int64 i, const int64 j)
+    { return _v[i + 3*j]; }
+
+    //! Return element at row 'i' and column 'j'. No bounds checking!
+    S
+    operator()(const int64 i, const int64 j) const
+    { return _v[i + 3*j]; }
 
     //! Return i'th column. No bounds checking!
     S*	
@@ -500,7 +417,7 @@ public:     // Access operators.
 
 private:		// Member variables.
 
-    S _v[3][3];
+    S _v[9];
 };
 
 // Static constants.
@@ -527,91 +444,43 @@ public:
     explicit
     mat(const S v = 1)
     {
-        _v[0][0] = v;
-        _v[0][1] = 0;
-        _v[0][2] = 0;
-        _v[0][3] = 0;
-        _v[1][0] = 0;
-        _v[1][1] = v;
-        _v[1][2] = 0;
-        _v[1][3] = 0;
-        _v[2][0] = 0;
-        _v[2][1] = 0;
-        _v[2][2] = v;
-        _v[2][3] = 0;
-        _v[3][0] = 0;
-        _v[3][1] = 0;
-        _v[3][2] = 0;
-        _v[3][3] = v;
+        _v[0] = v; _v[4] = 0; _v[8]  = 0; _v[12] = 0;
+        _v[1] = 0; _v[5] = v; _v[9]  = 0; _v[13] = 0;
+        _v[2] = 0; _v[6] = 0; _v[10] = v; _v[14] = 0;
+        _v[3] = 0; _v[7] = 0; _v[11] = 0; _v[15] = v;
     }
 
     //! Copy CTOR.
     //explicit
     mat(const mat<4,S> &rhs)
     {
-        _v[0][0] = rhs[0][0];
-        _v[0][1] = rhs[0][1];
-        _v[0][2] = rhs[0][2];
-        _v[0][3] = rhs[0][3];
-        _v[1][0] = rhs[1][0];
-        _v[1][1] = rhs[1][1];
-        _v[1][2] = rhs[1][2];
-        _v[1][3] = rhs[1][3];
-        _v[2][0] = rhs[2][0];
-        _v[2][1] = rhs[2][1];
-        _v[2][2] = rhs[2][2];
-        _v[2][3] = rhs[2][3];
-        _v[3][0] = rhs[3][0];
-        _v[3][1] = rhs[3][1];
-        _v[3][2] = rhs[3][2];
-        _v[3][3] = rhs[3][3];
+        _v[0] = rhs[0]; _v[4] = rhs[4]; _v[8]  = rhs[8];  _v[12] = rhs[12];
+        _v[1] = rhs[1]; _v[5] = rhs[5]; _v[9]  = rhs[9];  _v[13] = rhs[13];
+        _v[2] = rhs[2]; _v[6] = rhs[6]; _v[10] = rhs[10]; _v[14] = rhs[14];
+        _v[3] = rhs[3]; _v[7] = rhs[7]; _v[11] = rhs[11]; _v[15] = rhs[15];
     }
 
     //! Array CTOR - column major.
     explicit
-    mat(const S a[16])
+    mat(const S v[16])
     {	
-        _v[0][0] = a[0];
-        _v[0][1] = a[1];
-        _v[0][2] = a[2];
-        _v[0][3] = a[3];
-        _v[1][0] = a[4];
-        _v[1][1] = a[5];
-        _v[1][2] = a[6];
-        _v[1][3] = a[7];
-        _v[2][0] = a[8];
-        _v[2][1] = a[9];
-        _v[2][2] = a[10];
-        _v[2][3] = a[11];
-        _v[3][0] = a[12];
-        _v[3][1] = a[13];
-        _v[3][2] = a[14];
-        _v[3][3] = a[15];
+        _v[0] = v[0]; _v[4] = v[4]; _v[8]  = v[8];  _v[12] = v[12];
+        _v[1] = v[1]; _v[5] = v[5]; _v[9]  = v[9];  _v[13] = v[13];
+        _v[2] = v[2]; _v[6] = v[6]; _v[10] = v[10]; _v[14] = v[14];
+        _v[3] = v[3]; _v[7] = v[7]; _v[11] = v[11]; _v[15] = v[15];
     }
 
     //! Value CTOR - column major.
     explicit
-    mat(const S a0, const S a4, const S a8,  const S a12,
-        const S a1, const S a5, const S a9,  const S a13,
-        const S a2, const S a6, const S a10, const S a14,
-        const S a3, const S a7, const S a11, const S a15)
+    mat(const S v0, const S v4, const S v8,  const S v12,
+        const S v1, const S v5, const S v9,  const S v13,
+        const S v2, const S v6, const S v10, const S v14,
+        const S v3, const S v7, const S v11, const S v15)
     {	
-        _v[0][0] = a0;
-        _v[0][1] = a1;
-        _v[0][2] = a2;
-        _v[0][3] = a3;
-        _v[1][0] = a4;
-        _v[1][1] = a5;
-        _v[1][2] = a6;
-        _v[1][3] = a7;
-        _v[2][0] = a8;
-        _v[2][1] = a9;
-        _v[2][2] = a10;
-        _v[2][3] = a11;
-        _v[3][0] = a12;
-        _v[3][1] = a13;
-        _v[3][2] = a14;
-        _v[3][3] = a15;
+        _v[0] = v0; _v[4] = v4; _v[8]  = v8;  _v[12] = v12;
+        _v[1] = v1; _v[5] = v5; _v[9]  = v9;  _v[13] = v13;
+        _v[2] = v2; _v[6] = v6; _v[10] = v10; _v[14] = v14;
+        _v[3] = v3; _v[7] = v7; _v[11] = v11; _v[15] = v15;
     }
 
 public:		// Operators.
@@ -620,88 +489,40 @@ public:		// Operators.
     mat<4,S>& 
     operator=(const mat<4,S> &rhs)
     {
-        _v[0][0] = rhs[0][0];
-        _v[0][1] = rhs[0][1];
-        _v[0][2] = rhs[0][2];
-        _v[0][3] = rhs[0][3];
-        _v[1][0] = rhs[1][0];
-        _v[1][1] = rhs[1][1];
-        _v[1][2] = rhs[1][2];
-        _v[1][3] = rhs[1][3];
-        _v[2][0] = rhs[2][0];
-        _v[2][1] = rhs[2][1];
-        _v[2][2] = rhs[2][2];
-        _v[2][3] = rhs[2][3];
-        _v[3][0] = rhs[3][0];
-        _v[3][1] = rhs[3][1];
-        _v[3][2] = rhs[3][2];
-        _v[3][3] = rhs[3][3];
+        _v[0] = rhs[0]; _v[4] = rhs[4]; _v[8]  = rhs[8];  _v[12] = rhs[12];
+        _v[1] = rhs[1]; _v[5] = rhs[5]; _v[9]  = rhs[9];  _v[13] = rhs[13];
+        _v[2] = rhs[2]; _v[6] = rhs[6]; _v[10] = rhs[10]; _v[14] = rhs[14];
+        _v[3] = rhs[3]; _v[7] = rhs[7]; _v[11] = rhs[11]; _v[15] = rhs[15];
         return *this;
     }
 
     mat<4,S>& 
     operator+=(const mat<4,S> &b)
     {
-        _v[0][0] += b[0][0];
-        _v[0][1] += b[0][1];
-        _v[0][2] += b[0][2];
-        _v[0][3] += b[0][3];
-        _v[1][0] += b[1][0];
-        _v[1][1] += b[1][1];
-        _v[1][2] += b[1][2];
-        _v[1][3] += b[1][3];
-        _v[2][0] += b[2][0];
-        _v[2][1] += b[2][1];
-        _v[2][2] += b[2][2];
-        _v[2][3] += b[2][3];
-        _v[3][0] += b[3][0];
-        _v[3][1] += b[3][1];
-        _v[3][2] += b[3][2];
-        _v[3][3] += b[3][3];
+        _v[0] += rhs[0]; _v[4] += rhs[4]; _v[8]  += rhs[8];  _v[12] += rhs[12];
+        _v[1] += rhs[1]; _v[5] += rhs[5]; _v[9]  += rhs[9];  _v[13] += rhs[13];
+        _v[2] += rhs[2]; _v[6] += rhs[6]; _v[10] += rhs[10]; _v[14] += rhs[14];
+        _v[3] += rhs[3]; _v[7] += rhs[7]; _v[11] += rhs[11]; _v[15] += rhs[15];
         return *this;
     }
 
     mat<4,S>& 
     operator-=(const mat<4,S> &b)
     {
-        _v[0][0] -= b[0][0];
-        _v[0][1] -= b[0][1];
-        _v[0][2] -= b[0][2];
-        _v[0][3] -= b[0][3];
-        _v[1][0] -= b[1][0];
-        _v[1][1] -= b[1][1];
-        _v[1][2] -= b[1][2];
-        _v[1][3] -= b[1][3];
-        _v[2][0] -= b[2][0];
-        _v[2][1] -= b[2][1];
-        _v[2][2] -= b[2][2];
-        _v[2][3] -= b[2][3];
-        _v[3][0] -= b[3][0];
-        _v[3][1] -= b[3][1];
-        _v[3][2] -= b[3][2];
-        _v[3][3] -= b[3][3];
+        _v[0] -= rhs[0]; _v[4] -= rhs[4]; _v[8]  -= rhs[8];  _v[12] -= rhs[12];
+        _v[1] -= rhs[1]; _v[5] -= rhs[5]; _v[9]  -= rhs[9];  _v[13] -= rhs[13];
+        _v[2] -= rhs[2]; _v[6] -= rhs[6]; _v[10] -= rhs[10]; _v[14] -= rhs[14];
+        _v[3] -= rhs[3]; _v[7] -= rhs[7]; _v[11] -= rhs[11]; _v[15] -= rhs[15];
         return *this;
     }
 
     mat<4,S>& 
     operator*=(const S s)
     {
-        _v[0][0] *= s;
-        _v[0][1] *= s;
-        _v[0][2] *= s;
-        _v[0][3] *= s;
-        _v[1][0] *= s;
-        _v[1][1] *= s;
-        _v[1][2] *= s;
-        _v[1][3] *= s;
-        _v[2][0] *= s;
-        _v[2][1] *= s;
-        _v[2][2] *= s;
-        _v[2][3] *= s;
-        _v[3][0] *= s;
-        _v[3][1] *= s;
-        _v[3][2] *= s;
-        _v[3][3] *= s;
+        _v[0] *= s; _v[4] *= s; _v[8]  *= s; _v[12] *= s;
+        _v[1] *= s; _v[5] *= s; _v[9]  *= s; _v[13] *= s;
+        _v[2] *= s; _v[6] *= s; _v[10] *= s; _v[14] *= s;
+        _v[3] *= s; _v[7] *= s; _v[11] *= s; _v[15] *= s;
         return *this;
     }
 
@@ -709,27 +530,38 @@ public:		// Operators.
     mat<4,S>&
     operator*=(const mat<4,S> &b)
     {	
-        const mat<4,4,S,T> a(*this);
-        _v[0][0]=a[0][0]*b[0][0]+a[1][0]*b[0][1]+a[2][0]*b[0][2]+a[3][0]*b[0][3];
-        _v[0][1]=a[0][1]*b[0][0]+a[1][1]*b[0][1]+a[2][1]*b[0][2]+a[3][1]*b[0][3];
-        _v[0][2]=a[0][2]*b[0][0]+a[1][2]*b[0][1]+a[2][2]*b[0][2]+a[3][2]*b[0][3];
-        _v[0][3]=a[0][3]*b[0][0]+a[1][3]*b[0][1]+a[2][3]*b[0][2]+a[3][3]*b[0][3];
-        _v[1][0]=a[0][0]*b[1][0]+a[1][0]*b[1][1]+a[2][0]*b[1][2]+a[3][0]*b[1][3];
-        _v[1][1]=a[0][1]*b[1][0]+a[1][1]*b[1][1]+a[2][1]*b[1][2]+a[3][1]*b[1][3];
-        _v[1][2]=a[0][2]*b[1][0]+a[1][2]*b[1][1]+a[2][2]*b[1][2]+a[3][2]*b[1][3];
-        _v[1][3]=a[0][3]*b[1][0]+a[1][3]*b[1][1]+a[2][3]*b[1][2]+a[3][3]*b[1][3];
-        _v[2][0]=a[0][0]*b[2][0]+a[1][0]*b[2][1]+a[2][0]*b[2][2]+a[3][0]*b[2][3];
-        _v[2][1]=a[0][1]*b[2][0]+a[1][1]*b[2][1]+a[2][1]*b[2][2]+a[3][1]*b[2][3];
-        _v[2][2]=a[0][2]*b[2][0]+a[1][2]*b[2][1]+a[2][2]*b[2][2]+a[3][2]*b[2][3];
-        _v[2][3]=a[0][3]*b[2][0]+a[1][3]*b[2][1]+a[2][3]*b[2][2]+a[3][3]*b[2][3];
-        _v[3][0]=a[0][0]*b[3][0]+a[1][0]*b[3][1]+a[2][0]*b[3][2]+a[3][0]*b[3][3];
-        _v[3][1]=a[0][1]*b[3][0]+a[1][1]*b[3][1]+a[2][1]*b[3][2]+a[3][1]*b[3][3];
-        _v[3][2]=a[0][2]*b[3][0]+a[1][2]*b[3][1]+a[2][2]*b[3][2]+a[3][2]*b[3][3];
-        _v[3][3]=a[0][3]*b[3][0]+a[1][3]*b[3][1]+a[2][3]*b[3][2]+a[3][3]*b[3][3];
+        
+        const mat<4,S> a(*this);    // Copy.
+        (*this)(0,0) = a(0,0)*b(0,0)+a(0,1)*b(1,0)+a(0,2)*b(2,0)+a(0,3)*b(3,0);
+        (*this)(0,1) = a(0,0)*b(0,1)+a(0,1)*b(1,1)+a(0,2)*b(2,1)+a(0,3)*b(3,1);
+        (*this)(0,2) = a(0,0)*b(0,2)+a(0,1)*b(1,2)+a(0,2)*b(2,2)+a(0,3)*b(3,2);
+        (*this)(0,3) = a(0,0)*b(0,3)+a(0,1)*b(1,3)+a(0,2)*b(2,3)+a(0,3)*b(3,3);
+        (*this)(1,0) = a(1,0)*b(0,0)+a(1,1)*b(1,0)+a(1,2)*b(2,0)+a(1,3)*b(3,0);
+        (*this)(1,1) = a(1,0)*b(0,1)+a(1,1)*b(1,1)+a(1,2)*b(2,1)+a(1,3)*b(3,1);
+        (*this)(1,2) = a(1,0)*b(0,2)+a(1,1)*b(1,2)+a(1,2)*b(2,2)+a(1,3)*b(3,2);
+        (*this)(1,3) = a(1,0)*b(0,3)+a(1,1)*b(1,3)+a(1,2)*b(2,3)+a(1,3)*b(3,3);
+        (*this)(2,0) = a(2,0)*b(0,0)+a(2,1)*b(1,0)+a(2,2)*b(2,0)+a(2,3)*b(3,0);
+        (*this)(2,1) = a(2,0)*b(0,1)+a(2,1)*b(1,1)+a(2,2)*b(2,1)+a(2,3)*b(3,1);
+        (*this)(2,2) = a(2,0)*b(0,2)+a(2,1)*b(1,2)+a(2,2)*b(2,2)+a(2,3)*b(3,2);
+        (*this)(2,3) = a(2,0)*b(0,3)+a(2,1)*b(1,3)+a(2,2)*b(2,3)+a(2,3)*b(3,3);
+        (*this)(3,0) = a(3,0)*b(0,0)+a(3,1)*b(1,0)+a(3,2)*b(2,0)+a(3,3)*b(3,0);
+        (*this)(3,1) = a(3,0)*b(0,1)+a(3,1)*b(1,1)+a(3,2)*b(2,1)+a(3,3)*b(3,1);
+        (*this)(3,2) = a(3,0)*b(0,2)+a(3,1)*b(1,2)+a(3,2)*b(2,2)+a(3,3)*b(3,2);
+        (*this)(3,3) = a(3,0)*b(0,3)+a(3,1)*b(1,3)+a(3,2)*b(2,3)+a(3,3)*b(3,3);
         return *this;
     }
 
 public:     // Access operators.
+
+    //! Return element at row 'i' and column 'j'. No bounds checking!
+    S&
+    operator()(const int64 i, const int64 j)
+    { return _v[i + 4*j]; }
+
+    //! Return element at row 'i' and column 'j'. No bounds checking!
+    S
+    operator()(const int64 i, const int64 j) const
+    { return _v[i + 4*j]; }
 
     //! Return i'th column. No bounds checking!
     S*	
@@ -743,7 +575,7 @@ public:     // Access operators.
 
 private:		// Member variables.
 
-    S _v[4][4];
+    S _v[16];
 };
 
 // Static constants.
