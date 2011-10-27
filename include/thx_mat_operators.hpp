@@ -9,6 +9,7 @@
 #define THX_MAT_OPERATORS_HPP_INCLUDED
 
 #include "thx_mat.hpp"
+#include "thx_vec.hpp"
 
 //------------------------------------------------------------------------------
 

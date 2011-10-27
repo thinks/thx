@@ -46,6 +46,8 @@ namespace thx
 //------------------------------------------------------------------------------
 
 // mat<N,S>
+// --------
+//! DOCS
 
 template<int64 N, typename S>
 class mat
@@ -55,6 +57,7 @@ public:
     typedef S value_type;
     static const int64 dim = N;
     static const int64 size = N*N;
+    static const mat<N,S> identity;
 
 public:
 
@@ -70,16 +73,15 @@ public:
     }
 
     //! Copy CTOR.
-    //explicit
     mat(const mat<N,S> &rhs)
-    { std::copy(rhs._v, rhs._v + size, _v); }
+    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
 
 public:		// Operators.
 
     mat<N,S>& 
     operator=(const mat<N,S> &rhs)
     {
-        std::copy(rhs._v, rhs._v + size, _v);
+        std::memcpy(_v, rhs._v, size*sizeof(S));
         return *this;
     }
 
@@ -87,7 +89,7 @@ public:		// Operators.
     operator+=(const mat<N,S> &b)
     {
         for (int64 i(0); i < size; ++i) {
-            _v[i] += rhs[i];
+            _v[i] += rhs._v[i];
         }
         return *this;
     }
@@ -117,10 +119,8 @@ public:		// Operators.
         const mat<N,S> a(*this);  // Deep copy.
         for (int64 i(0); i < N; ++i) {
             for (int64 j(0); j < N; ++j) {
-                //at(i,j) = 0;
                 _v[i + N*j] = 0;
                 for (int64 k(0); k < N; ++k) {
-                    //at(i,j) = at(i,j) + a(i,k)*b(k,j);
                     _v[i + N*j] += a[i + N*k]*b[k + N*j];
                 }
             }
@@ -136,7 +136,7 @@ public:     // Access operators.
     { return _v[i + N*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S
+    const S&
     operator()(const int64 i, const int64 j) const
     { return _v[i + N*j]; }
 
@@ -146,19 +146,25 @@ public:     // Access operators.
     { return _v[i]; }
 
     //! Return i'th element. No bounds checking!
-    S
+    const S&
     operator[](const int64 i) const
     { return _v[i]; }
 
 private:		// Member variables
 
     S _v[N*N];
-    //S _v[N][N]; //! {col_0:{row_0,row_1,...} col_1:{row_0,row_1} ...}
 };
+
+// Static constants.
+
+template<int64 N, typename S>
+const mat<N,S> mat<N,S>::identity(1);
 
 //------------------------------------------------------------------------------
 
 // mat<2,S>
+// --------
+//! DOCS
 
 template<typename S>
 class mat<2,S>
@@ -181,20 +187,13 @@ public:
     }
 
     //! Copy CTOR.
-    //explicit
     mat(const mat<2,S> &rhs)
-    {
-        _v[0] = rhs[0]; _v[2] = rhs[2];
-        _v[1] = rhs[1]; _v[3] = rhs[3];
-    }
+    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
 
     //! Array CTOR - column-major.
     explicit
     mat(const S v[4])
-    {	
-        _v[0] = v[0]; _v[2] = v[2];
-        _v[1] = v[1]; _v[3] = v[3];
-    }
+    { std::memcpy(_v, v, size*sizeof(S)); }
 
     //! Value CTOR - column-major.
     explicit
@@ -211,24 +210,23 @@ public:		// Operators.
     mat<2,S>& 
     operator=(const mat<2,S> &rhs)
     {
-        _v[0] = rhs[0]; _v[2] = rhs[2];
-        _v[1] = rhs[1]; _v[3] = rhs[3];
+        std::memcpy(_v, rhs._v, size*sizeof(S));
         return *this;
     }
 
     mat<2,S>& 
     operator+=(const mat<2,S> &b)
     {
-        _v[0] += b[0]; _v[2] += b[2];
-        _v[1] += b[1]; _v[3] += b[3];
+        _v[0] += b._v[0]; _v[2] += b._v[2];
+        _v[1] += b._v[1]; _v[3] += b._v[3];
         return *this;
     }
 
     mat<2,S>& 
     operator-=(const mat<2,S> &b)
     {
-        _v[0] -= b[0]; _v[2] -= b[2];
-        _v[1] -= b[1]; _v[3] -= b[3];
+        _v[0] -= b._v[0]; _v[2] -= b._v[2];
+        _v[1] -= b._v[1]; _v[3] -= b._v[3];
         return *this;
     }
 
@@ -260,7 +258,7 @@ public:     // Access operators.
     { return _v[i + 2*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S
+    const S&
     operator()(const int64 i, const int64 j) const
     { return _v[i + 2*j]; }
 
@@ -270,13 +268,13 @@ public:     // Access operators.
     { return _v[i]; }
 
     //! Return i'th element. No bounds checking!
-    S
+    const S&
     operator[](const int64 i) const
     { return _v[i]; }
 
 private:		// Member variables
 
-    S _v[4];
+    S _v[4];    //!< Data.
 };
 
 // Static constants.
@@ -287,6 +285,8 @@ const mat<2,S> mat<2,S>::identity(1);
 //------------------------------------------------------------------------------
 
 // mat<3,S>
+// --------
+//! DOCS
 
 template<typename S>
 class mat<3,S>
@@ -295,6 +295,7 @@ public:
 
     typedef S value_type;
     static const int64 dim = 3;
+    static const int64 size = 9;
     static const mat<3,S> identity;
 
 public:
@@ -309,13 +310,8 @@ public:
     }
 
     //! Copy CTOR.
-    //explicit
     mat(const mat<3,S> &rhs)
-    {
-        _v[0] = rhs[0]; _v[3] = rhs[3]; _v[6] = rhs[6];
-        _v[1] = rhs[1]; _v[4] = rhs[4]; _v[7] = rhs[7];
-        _v[2] = rhs[2]; _v[5] = rhs[5]; _v[8] = rhs[8];
-    }
+    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
 
     //! Array CTOR - column-major.
     explicit
@@ -343,27 +339,25 @@ public:		// Operators.
     mat<3,S>& 
     operator=(const mat<3,S> &rhs)
     {
-        _v[0] = rhs[0]; _v[3] = rhs[3]; _v[6] = rhs[6];
-        _v[1] = rhs[1]; _v[4] = rhs[4]; _v[7] = rhs[7];
-        _v[2] = rhs[2]; _v[5] = rhs[5]; _v[8] = rhs[8];
+        std::memcpy(_v, rhs._v, size*sizeof(S));
         return *this;
     }
 
     mat<3,S>& 
     operator+=(const mat<3,S> &b)
     {
-        _v[0] += b[0]; _v[3] += b[3]; _v[6] += b[6];
-        _v[1] += b[1]; _v[4] += b[4]; _v[7] += b[7];
-        _v[2] += b[2]; _v[5] += b[5]; _v[8] += b[8];
+        _v[0] += b._v[0]; _v[3] += b._v[3]; _v[6] += b._v[6];
+        _v[1] += b._v[1]; _v[4] += b._v[4]; _v[7] += b._v[7];
+        _v[2] += b._v[2]; _v[5] += b._v[5]; _v[8] += b._v[8];
         return *this;
     }
 
     mat<3,S>& 
     operator-=(const mat<3,S> &b)
     {
-        _v[0] -= b[0]; _v[3] -= b[3]; _v[6] -= b[6];
-        _v[1] -= b[1]; _v[4] -= b[4]; _v[7] -= b[7];
-        _v[2] -= b[2]; _v[5] -= b[5]; _v[8] -= b[8];
+        _v[0] -= b._v[0]; _v[3] -= b._v[3]; _v[6] -= b._v[6];
+        _v[1] -= b._v[1]; _v[4] -= b._v[4]; _v[7] -= b._v[7];
+        _v[2] -= b._v[2]; _v[5] -= b._v[5]; _v[8] -= b._v[8];
         return *this;
     }
 
@@ -401,23 +395,23 @@ public:     // Access operators.
     { return _v[i + 3*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S
+    const S&
     operator()(const int64 i, const int64 j) const
     { return _v[i + 3*j]; }
 
-    //! Return i'th column. No bounds checking!
-    S*	
+    //! Return i'th element. No bounds checking!
+    S&	
     operator[](const int64 i)
     { return _v[i]; }
 
     //! Return i'th column. No bounds checking!
-    const S*
+    const S&
     operator[](const int64 i) const
     { return _v[i]; }
 
 private:		// Member variables.
 
-    S _v[9];
+    S _v[9];    //!< Data.
 };
 
 // Static constants.
@@ -436,6 +430,7 @@ public:
 
     typedef S value_type;
     static const int64 dim = 4;
+    static const int64 size = 16;
     static const mat<4,S> identity;
 
 public:
@@ -451,14 +446,8 @@ public:
     }
 
     //! Copy CTOR.
-    //explicit
     mat(const mat<4,S> &rhs)
-    {
-        _v[0] = rhs[0]; _v[4] = rhs[4]; _v[8]  = rhs[8];  _v[12] = rhs[12];
-        _v[1] = rhs[1]; _v[5] = rhs[5]; _v[9]  = rhs[9];  _v[13] = rhs[13];
-        _v[2] = rhs[2]; _v[6] = rhs[6]; _v[10] = rhs[10]; _v[14] = rhs[14];
-        _v[3] = rhs[3]; _v[7] = rhs[7]; _v[11] = rhs[11]; _v[15] = rhs[15];
-    }
+    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
 
     //! Array CTOR - column major.
     explicit
@@ -489,30 +478,27 @@ public:		// Operators.
     mat<4,S>& 
     operator=(const mat<4,S> &rhs)
     {
-        _v[0] = rhs[0]; _v[4] = rhs[4]; _v[8]  = rhs[8];  _v[12] = rhs[12];
-        _v[1] = rhs[1]; _v[5] = rhs[5]; _v[9]  = rhs[9];  _v[13] = rhs[13];
-        _v[2] = rhs[2]; _v[6] = rhs[6]; _v[10] = rhs[10]; _v[14] = rhs[14];
-        _v[3] = rhs[3]; _v[7] = rhs[7]; _v[11] = rhs[11]; _v[15] = rhs[15];
+        std::memcpy(_v, rhs._v, size*sizeof(S));
         return *this;
     }
 
     mat<4,S>& 
     operator+=(const mat<4,S> &b)
     {
-        _v[0] += rhs[0]; _v[4] += rhs[4]; _v[8]  += rhs[8];  _v[12] += rhs[12];
-        _v[1] += rhs[1]; _v[5] += rhs[5]; _v[9]  += rhs[9];  _v[13] += rhs[13];
-        _v[2] += rhs[2]; _v[6] += rhs[6]; _v[10] += rhs[10]; _v[14] += rhs[14];
-        _v[3] += rhs[3]; _v[7] += rhs[7]; _v[11] += rhs[11]; _v[15] += rhs[15];
+        _v[0]+=rhs._v[0];_v[4]+=rhs._v[4];_v[8] +=rhs._v[8]; _v[12]+=rhs._v[12];
+        _v[1]+=rhs._v[1];_v[5]+=rhs._v[5];_v[9] +=rhs._v[9]; _v[13]+=rhs._v[13];
+        _v[2]+=rhs._v[2];_v[6]+=rhs._v[6];_v[10]+=rhs._v[10];_v[14]+=rhs._v[14];
+        _v[3]+=rhs._v[3];_v[7]+=rhs._v[7];_v[11]+=rhs._v[11];_v[15]+=rhs._v[15];
         return *this;
     }
 
     mat<4,S>& 
     operator-=(const mat<4,S> &b)
     {
-        _v[0] -= rhs[0]; _v[4] -= rhs[4]; _v[8]  -= rhs[8];  _v[12] -= rhs[12];
-        _v[1] -= rhs[1]; _v[5] -= rhs[5]; _v[9]  -= rhs[9];  _v[13] -= rhs[13];
-        _v[2] -= rhs[2]; _v[6] -= rhs[6]; _v[10] -= rhs[10]; _v[14] -= rhs[14];
-        _v[3] -= rhs[3]; _v[7] -= rhs[7]; _v[11] -= rhs[11]; _v[15] -= rhs[15];
+        _v[0]-=rhs._v[0];_v[4]-=rhs._v[4];_v[8] -=rhs._v[8]; _v[12]-=rhs._v[12];
+        _v[1]-=rhs._v[1];_v[5]-=rhs._v[5];_v[9] -=rhs._v[9]; _v[13]-=rhs._v[13];
+        _v[2]-=rhs._v[2];_v[6]-=rhs._v[6];_v[10]-=rhs._v[10];_v[14]-=rhs._v[14];
+        _v[3]-=rhs._v[3];_v[7]-=rhs._v[7];_v[11]-=rhs._v[11];_v[15]-=rhs._v[15];
         return *this;
     }
 
@@ -530,7 +516,6 @@ public:		// Operators.
     mat<4,S>&
     operator*=(const mat<4,S> &b)
     {	
-        
         const mat<4,S> a(*this);    // Copy.
         (*this)(0,0) = a(0,0)*b(0,0)+a(0,1)*b(1,0)+a(0,2)*b(2,0)+a(0,3)*b(3,0);
         (*this)(0,1) = a(0,0)*b(0,1)+a(0,1)*b(1,1)+a(0,2)*b(2,1)+a(0,3)*b(3,1);
@@ -559,7 +544,7 @@ public:     // Access operators.
     { return _v[i + 4*j]; }
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S
+    const S&
     operator()(const int64 i, const int64 j) const
     { return _v[i + 4*j]; }
 
@@ -575,7 +560,7 @@ public:     // Access operators.
 
 private:		// Member variables.
 
-    S _v[16];
+    S _v[16];   //!< Data.
 };
 
 // Static constants.

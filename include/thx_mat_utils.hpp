@@ -129,7 +129,6 @@ template<int64 N, typename S>
 void
 gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 {
-    /*
     THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
    
     int64 icol(0);
@@ -203,7 +202,6 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
             }
         }
     }
-    */
 }
 
 //------------------------------------------------------------------------------
@@ -322,8 +320,8 @@ inverted(const mat<4,S> &a)
     row[1] = a(1,1) - d*Q[0][1];
     row[2] = a(1,2) - d*Q[0][2]; 
     row[3] = a(1,3) - d*Q[0][3];
-    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
 
+    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
     if (m > tol) {
         // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
 
@@ -433,6 +431,8 @@ inverted(const mat<4,S> &a)
 
     return b;
 }
+
+//------------------------------------------------------------------------------
 
 }	// Namespace: thx.
 

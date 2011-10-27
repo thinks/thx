@@ -10,6 +10,7 @@
 
 #include "thx_types.hpp"
 #include "thx_vec.hpp"
+#include "thx_mat.hpp"
 #include "thx_traits.hpp"
 #include "thx_static_assert.hpp"
 #include <cassert>
@@ -130,6 +131,43 @@ template<typename S>
 vec<2,S> 
 perp(const vec<2,S> &v) 
 { return vec<2,S>(-v[1], v[0]); }
+
+//------------------------------------------------------------------------------
+
+//! Outer product. TODO
+template<int64 N, typename S>
+mat<N,S> 
+outer_product(const vec<N,S> &u, const vec<N,S> &v);
+
+template<typename S> 
+mat<2,S> 
+outer_product(const vec<2,S> &u, const vec<2,S> &v)
+{
+    return mat<2,S>(
+        u[0]*v[0], u[0]*v[1],
+        u[1]*v[0], u[1]*v[1]);
+}
+
+template<typename S> 
+mat<3,S>
+outer_product(const vec<3,S> &u, const vec<3,S> &v)
+{
+    return mat<3,S>(
+        u[0]*v[0], u[0]*v[1], u[0]*v[2],
+        u[1]*v[0], u[1]*v[1], u[1]*v[2],
+        u[2]*v[0], u[2]*v[1], u[2]*v[2]);
+}
+
+template<typename S>
+mat<4,S>
+outer_product(const vec<4,S> &u, const vec<4,S> &v)
+{
+    return mat<3,S>(
+        u[0]*v[0], u[0]*v[1], u[0]*v[2], u[0]*v[3],
+        u[1]*v[0], u[1]*v[1], u[1]*v[2], u[1]*v[3],
+        u[2]*v[0], u[2]*v[1], u[2]*v[2], u[2]*v[3],
+        u[3]*v[0], u[3]*v[1], u[3]*v[2], u[3]*v[3]);
+}
 
 //------------------------------------------------------------------------------
 

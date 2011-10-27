@@ -124,11 +124,19 @@ main(int argc, char* argv[])
         }
     }
 
+    const mat3f32 cm3(1.f, 0.f, 6.f,
+                      0.f, 2.f, 7.f,
+                      0.f, 0.f, 3.5f);
+
+
     cerr
         << "\n"
         << "sizeof(thx::mat2f32): " << sizeof(mat2f32) << " [bytes]\n"
         << "sizeof(thx::mat3f32): " << sizeof(mat3f32) << " [bytes]\n"
         << "sizeof(thx::mat4f32): " << sizeof(mat4f32) << " [bytes]\n"
+        << "\n"
+        << "mutable: &m3 | &m3[0]" << &m3 << " | " << &m3[0]
+        << "const: &m3 | &m3[0]" << &cm3 << " | " << &cm3[0]
         << "\n"
         << "mat<2>:\n"
         << m2 << "\n"

@@ -20,7 +20,7 @@ namespace thx
 // define value_type
 // define dimension
 // 
-// Empty CTOR (set all zeros by default)
+// Default CTOR (set all zeros by default)
 // Copy CTOR
 // Array CTOR
 // Value CTOR (specializations only)
@@ -37,6 +37,8 @@ namespace thx
 //------------------------------------------------------------------------------
 
 // vec<N,S>
+// --------
+//! DOCS
 
 template<int64 N, typename S>
 class vec
@@ -46,9 +48,9 @@ public:
     typedef S value_type;
     static const int64 dim = N;
 
-public:		// CTOR/DTOR.
+public:		// CTOR's.
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit 
     vec(const S s = 0)
     { 
@@ -58,32 +60,21 @@ public:		// CTOR/DTOR.
     }
 
     //! Copy CTOR.
-    //explicit
     vec(const vec<N,S> &rhs)
-    {
-        for (int64 i(0); i < N; ++i) { 
-            _v[i] = rhs[i]; 
-        }
-    }
+    { std::memcpy(_v, rhs._v, N*sizeof(S)); }
     
     //! Array CTOR.
     explicit 
     vec(const S *v)
-    { 
-        for (int64 i(0); i < N; ++i) { 
-            _v[i] = v[i]; 
-        }
-    }
+    { std::memcpy(_v, rhs._v, N*sizeof(S)); }
 
 public:		// Operators.
 
     //! Assignment.
     vec<N,S>& 
-    operator=(const vec<N,S> &u)
+    operator=(const vec<N,S> &rhs)
     {
-        for (int64 i(0); i < N; ++i) { 
-            _v[i] = u[i]; 
-        }
+        std::memcpy(_v, rhs._v, N*sizeof(S));
         return *this;
     }
 
@@ -91,7 +82,7 @@ public:		// Operators.
     operator+=(const vec<N,S> &u)
     {
         for (int64 i(0); i < N; ++i) { 
-            _v[i] += u[i]; 
+            _v[i] += u._v[i]; 
         }
         return *this;
     }
@@ -100,7 +91,7 @@ public:		// Operators.
     operator-=(const vec<N,S> &u)
     {
         for (int64 i(0); i < N; ++i) { 
-            _v[i] -= u[i]; 
+            _v[i] -= u._v[i]; 
         }
         return *this;
     }
@@ -118,23 +109,25 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return i'th component. No bounds checking!
-    S 
-    operator[](const int64 i) const
-    { return _v[i];	}
-
-    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-private:	// Member variables.
+    //! Return i'th component. No bounds checking!
+    const S& 
+    operator[](const int64 i) const
+    { return _v[i];	}
 
-    S _v[N];
+private:	    // Member variables.
+
+    S _v[N];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
 
 // vec2<S>
+// -------
+//! DOCS
 
 template<typename S>
 class vec<2,S>
@@ -146,7 +139,7 @@ public:
 
 public:		// CTOR/DTOR.
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
     vec(const S s = 0) 
     {
@@ -155,20 +148,13 @@ public:		// CTOR/DTOR.
     }	
 
     //! Copy CTOR.
-    //explicit
     vec(const vec<2,S> &rhs)
-    {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-    }
+    { std::memcpy(_v, rhs._v, 2*sizeof(S)); }
     
     //! Array CTOR.
     explicit 
     vec(const S v[2])
-    { 
-        _v[0] = v[0];
-        _v[1] = v[1];
-    }
+    { std::memcpy(_v, v, 2*sizeof(S)); }
 
     //! Value CTOR.
     explicit 
@@ -184,24 +170,23 @@ public:		// Operators.
     vec<2,S>& 
     operator=(const vec<2,S> &rhs)
     {
-        _v[0] = u[0];
-        _v[1] = u[1];
+        std::memcpy(_v, rhs._v, 2*sizeof(S));
         return *this;
     }
 
     vec<2,S>& 
     operator+=(const vec<2,S> &u)
     {
-        _v[0] += u[0];
-        _v[1] += u[1];
+        _v[0] += u._v[0];
+        _v[1] += u._v[1];
         return *this;
     }
 
     vec<2,S>& 
     operator-=(const vec<2,S> &u)
     {
-        _v[0] -= u[0];
-        _v[1] -= u[1];
+        _v[0] -= u._v[0];
+        _v[1] -= u._v[1];
         return *this;
     }
 
@@ -214,26 +199,28 @@ public:		// Operators.
         return *this;
     }
 
-public:     // Access operators.
+public:         // Access operators.
 
-    //! Return i'th component.
-    S 
-    operator[](const int64 i) const
-    { return _v[i];	}
-
-    //! Return i'th component.
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-private:	// Member variables.
+    //! Return i'th component. No bounds checking!
+    const S& 
+    operator[](const int64 i) const
+    { return _v[i];	}
 
-    S _v[2];
+private:	    // Member variables.
+
+    S _v[2];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
 
 // vec3<S>
+// -------
+//! DOCS
 
 template<typename S>
 class vec<3,S>
@@ -243,9 +230,9 @@ public:
     typedef S value_type;
     static const int64 dim = 3;
 
-public:		// CTOR/DTOR.
+public:		// CTOR's.
 
-    //! Empty CTOR. NB: Uninitialized!
+    //! Default CTOR.
     explicit
     vec(const S s = 0) 
     {
@@ -255,22 +242,13 @@ public:		// CTOR/DTOR.
     }	
 
     //! Copy CTOR.
-    //explicit
     vec(const vec<3,S> &rhs)
-    {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-    }
+    { std::memcpy(_v, rhs._v, 3*sizeof(S)); }
     
     //! Array CTOR.
     explicit 
     vec(const S v[3])
-    { 
-        _v[0] = v[0];
-        _v[1] = v[1];
-        _v[2] = v[2];
-    }
+    { std::memcpy(_v, v, 3*sizeof(S)); }
 
     //! Value CTOR.
     explicit 
@@ -287,27 +265,25 @@ public:		// Operators.
     vec<3,S>& 
     operator=(const vec<3,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
+        std::memcpy(_v, rhs._v, 3*sizeof(S));
         return *this;
     }
 
     vec<3,S>& 
     operator+=(const vec<3,S> &u)
     {
-        _v[0] += u[0];
-        _v[1] += u[1];
-        _v[2] += u[2];
+        _v[0] += u._v[0];
+        _v[1] += u._v[1];
+        _v[2] += u._v[2];
         return *this;
     }
 
     vec<3,S>& 
     operator-=(const vec<3,S> &u)
     {
-        _v[0] -= u[0];
-        _v[1] -= u[1];
-        _v[2] -= u[2];
+        _v[0] -= u._v[0];
+        _v[1] -= u._v[1];
+        _v[2] -= u._v[2];
         return *this;
     }
 
@@ -323,24 +299,26 @@ public:		// Operators.
 
 public:     // Access operators.
 
-    //! Return i'th component.
-    S 
-    operator[](const int64 i) const
-    { return _v[i];	}
-
-    //! Return i'th component.
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-private:	// Member variables.
+    //! Return i'th component. No bounds checking!
+    const S& 
+    operator[](const int64 i) const
+    { return _v[i];	}
 
-    S _v[3];
+private:	    // Member variables.
+
+    S _v[3];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
 
 // vec4<S>
+// -------
+//! DOCS
 
 template<typename S>
 class vec<4,S>
@@ -350,9 +328,9 @@ public:
     typedef S value_type;
     static const int64 dim = 4;
 
-public:		// CTOR/DTOR.
+public:		// CTOR's.
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
     vec(const S s = 0) 
     {
@@ -363,24 +341,13 @@ public:		// CTOR/DTOR.
     }	
 
     //! Copy CTOR.
-    //explicit
     vec(const vec<4,S> &rhs)
-    {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
-    }
+    { std::memcpy(_v, rhs._v, 4*sizeof(S)); }
     
     //! Array CTOR.
     explicit 
     vec(const S v[4])
-    { 
-        _v[0] = v[0];
-        _v[1] = v[1];
-        _v[2] = v[2];
-        _v[3] = v[3];
-    }
+    { std::memcpy(_v, v, 4*sizeof(S)); }
 
     //! Value CTOR.
     explicit 
@@ -398,30 +365,27 @@ public:		// Operators.
     vec<4,S>& 
     operator=(const vec<4,S> &rhs)
     {
-        _v[0] = rhs[0];
-        _v[1] = rhs[1];
-        _v[2] = rhs[2];
-        _v[3] = rhs[3];
+        std::memcpy(_v, rhs._v, 4*sizeof(S));
         return *this;
     }
 
     vec<4,S>& 
     operator+=(const vec<4,S> &u)
     {
-        _v[0] += u[0];
-        _v[1] += u[1];
-        _v[2] += u[2];
-        _v[3] += u[3];
+        _v[0] += u._v[0];
+        _v[1] += u._v[1];
+        _v[2] += u._v[2];
+        _v[3] += u._v[3];
         return *this;
     }
 
     vec<4,S>& 
     operator-=(const vec<4,S> &u)
     {
-        _v[0] -= u[0];
-        _v[1] -= u[1];
-        _v[2] -= u[2];
-        _v[3] -= u[3];
+        _v[0] -= u._v[0];
+        _v[1] -= u._v[1];
+        _v[2] -= u._v[2];
+        _v[3] -= u._v[3];
         return *this;
     }
 
@@ -438,19 +402,19 @@ public:		// Operators.
 
 public:     // Access operators.
 
-    //! Return i'th component.
-    S 
-    operator[](const int64 i) const
-    { return _v[i];	}
-
-    //! Return i'th component.
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-private:	// Member variables.
+    //! Return i'th component. No bounds checking!
+    const S& 
+    operator[](const int64 i) const
+    { return _v[i];	}
 
-    S _v[4];
+private:	    // Member variables.
+
+    S _v[4];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
