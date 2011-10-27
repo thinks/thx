@@ -226,7 +226,8 @@ invert(mat<3,S> &a)
 
 template<typename S>
 void 
-invert(mat<4,S> &a);	
+invert(mat<4,S> &a)
+{ a = inverted(a); }
 
 //------------------------------------------------------------------------------
 
@@ -276,7 +277,162 @@ inverted(const mat<3,S> &a)
 
 template<typename S> 
 mat<4,S> 
-inverted(const mat<4,S> &a);
+inverted(const mat<4,S> &a)
+{
+    // Not yet optimized!
+
+    // Use the norm of A to establish a sensible tolerance for singularity.
+
+    const S tol = 64*std::numeric_limits<S>::epsilon()*(
+                     traits<S>::abs(a(0,0)) + traits<S>::abs(a(0,1)) +
+                     traits<S>::abs(a(0,1)) + traits<S>::abs(a(0,2)) +
+                     traits<S>::abs(a(1,0)) + traits<S>::abs(a(1,1)) +
+                     traits<S>::abs(a(1,1)) + traits<S>::abs(a(1,2)) +
+                     traits<S>::abs(a(2,0)) + traits<S>::abs(a(2,1)) +
+                     traits<S>::abs(a(2,1)) + traits<S>::abs(a(2,2)) +
+                     traits<S>::abs(a(3,0)) + traits<S>::abs(a(3,1)) +
+                     traits<S>::abs(a(3,1)) + traits<S>::abs(a(3,2)));
+
+    // Orthonormalize the rows of A using Modified Gram-Schmidt, saving the
+    // coefficients in L.
+
+    S Q[4][4] = {{0}};
+    S L[4][4] = {{0}};
+    
+    // Row 0.
+
+    S m = traits<S>::sqrt(sqr(a(0,0)) + sqr(a(0,1)) + sqr(a(0,2)) + sqr(a(0,3)));
+    if (m > tol) {
+        // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
+
+        const S r(1/m);
+        L[0][0] = r;
+        Q[0][0] = r*a(0,0); 
+        Q[0][1] = r*a(0,1);
+        Q[0][2] = r*a(0,2); 
+        Q[0][3] = r*a(0,3);
+    }
+
+    // Row 1.
+
+    S d = Q[0][0]*a(1,0) + Q[0][1]*a(1,1) + Q[0][2]*a(1,2) + Q[0][3]*a(1,3);
+    L[1][0] = d;
+    S row[4];
+    row[0] = a(1,0) - d*Q[0][0]; 
+    row[1] = a(1,1) - d*Q[0][1];
+    row[2] = a(1,2) - d*Q[0][2]; 
+    row[3] = a(1,3) - d*Q[0][3];
+    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+
+    if (m > tol) {
+        // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
+
+        const S r(1/m);
+        L[1][1] = r;
+        Q[1][0] = r*row[0]; 
+        Q[1][1] = r*row[1]; 
+        Q[1][2] = r*row[2]; 
+        Q[1][3] = r*row[3];
+    }
+
+    // Row 2.
+
+    d = Q[0][0]*a(2,0) + Q[0][1]*a(2,1) + Q[0][2]*a(2,2) + Q[0][3]*a(2,3);
+    L[2][0] = d;
+    row[0] = a(2,0) - d*Q[0][0]; 
+    row[1] = a(2,1) - d*Q[0][1];
+    row[2] = a(2,2) - d*Q[0][2]; 
+    row[3] = a(2,3) - d*Q[0][3];
+
+    d = Q[1][0]*row[0] + Q[1][1]*row[1] + Q[1][2]*row[2] + Q[1][3]*row[3];
+    L[2][1] = d;
+    row[0] -= d*Q[1][0]; 
+    row[1] -= d*Q[1][1]; 
+    row[2] -= d*Q[1][2]; 
+    row[3] -= d*Q[1][3];
+    
+    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+    if (m > tol) {
+        // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
+
+        const S r(1/m);
+        L[2][2] = r;
+        Q[2][0] = r*row[0]; 
+        Q[2][1] = r*row[1]; 
+        Q[2][2] = r*row[2]; 
+        Q[2][3] = r*row[3];
+    }
+
+    // Row 3.
+
+    d = Q[0][0]*a(3,0) + Q[0][1]*a(3,1) + Q[0][2]*a(3,2) + Q[0][3]*a(3,3);
+    L[3][0] = d;
+    row[0] = a(3,0) - d*Q[0][0]; 
+    row[1] = a(3,1) - d*Q[0][1];
+    row[2] = a(3,2) - d*Q[0][2]; 
+    row[3] = a(3,3) - d*Q[0][3];
+
+    d = Q[1][0]*row[0] + Q[1][1]*row[1] + Q[1][2]*row[2] + Q[1][3]*row[3];
+    L[3][1] = d;
+    row[0] -= d*Q[1][0]; 
+    row[1] -= d*Q[1][1]; 
+    row[2] -= d*Q[1][2]; 
+    row[3] -= d*Q[1][3];
+
+    d = Q[2][0]*row[0] + Q[2][1]*row[1] + Q[2][2]*row[2] + Q[2][3]*row[3];
+    L[3][2] = d;
+    row[0] -= d*Q[2][0]; 
+    row[1] -= d*Q[2][1]; 
+    row[2] -= d*Q[2][2]; 
+    row[3] -= d*Q[2][3];
+
+    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+    if (m > tol) {
+        // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
+
+        const S r(1/m);
+        L[3][3] = r;
+        Q[3][0] = r*row[0]; 
+        Q[3][1] = r*row[1]; 
+        Q[3][2] = r*row[2]; 
+        Q[3][3] = r*row[3];
+    }
+
+    // Invert L in place (the diagonal is already correct)
+
+    L[1][0] = -L[1][0]*L[0][0]*L[1][1];
+    L[3][2] = -L[3][2]*L[2][2]*L[3][3];
+    const S w(L[2][0]*L[0][0] + L[2][1]*L[1][0]);
+    const S x(L[2][1]*L[1][1]);
+    const S y(L[3][0]*L[0][0] + L[3][1]*L[1][0]);
+    const S z(L[3][1]*L[1][1]);
+    L[2][0] = -L[2][2]*w;
+    L[2][1] = -L[2][2]*x;
+    L[3][0] = -L[3][2]*w - L[3][3]*y;
+    L[3][1] = -L[3][2]*x - L[3][3]*z;
+
+    // Multiply B = Q^T*inv(L).
+    mat<4,S> b;
+
+    b(0,0) = Q[0][0]*L[0][0]+Q[1][0]*L[1][0]+Q[2][0]*L[2][0]+Q[3][0]*L[3][0];
+    b(0,1) = Q[0][0]*L[0][1]+Q[1][0]*L[1][1]+Q[2][0]*L[2][1]+Q[3][0]*L[3][1];
+    b(0,2) = Q[0][0]*L[0][2]+Q[1][0]*L[1][2]+Q[2][0]*L[2][2]+Q[3][0]*L[3][2];
+    b(0,3) = Q[0][0]*L[0][3]+Q[1][0]*L[1][3]+Q[2][0]*L[2][3]+Q[3][0]*L[3][3];
+    b(1,0) = Q[0][1]*L[0][0]+Q[1][1]*L[1][0]+Q[2][1]*L[2][0]+Q[3][1]*L[3][0];
+    b(1,1) = Q[0][1]*L[0][1]+Q[1][1]*L[1][1]+Q[2][1]*L[2][1]+Q[3][1]*L[3][1];
+    b(1,2) = Q[0][1]*L[0][2]+Q[1][1]*L[1][2]+Q[2][1]*L[2][2]+Q[3][1]*L[3][2];
+    b(1,3) = Q[0][1]*L[0][3]+Q[1][1]*L[1][3]+Q[2][1]*L[2][3]+Q[3][1]*L[3][3];
+    b(2,0) = Q[0][2]*L[0][0]+Q[1][2]*L[1][0]+Q[2][2]*L[2][0]+Q[3][2]*L[3][0];
+    b(2,1) = Q[0][2]*L[0][1]+Q[1][2]*L[1][1]+Q[2][2]*L[2][1]+Q[3][2]*L[3][1];
+    b(2,2) = Q[0][2]*L[0][2]+Q[1][2]*L[1][2]+Q[2][2]*L[2][2]+Q[3][2]*L[3][2];
+    b(2,3) = Q[0][2]*L[0][3]+Q[1][2]*L[1][3]+Q[2][2]*L[2][3]+Q[3][2]*L[3][3];
+    b(3,0) = Q[0][3]*L[0][0]+Q[1][3]*L[1][0]+Q[2][3]*L[2][0]+Q[3][3]*L[3][0];
+    b(3,1) = Q[0][3]*L[0][1]+Q[1][3]*L[1][1]+Q[2][3]*L[2][1]+Q[3][3]*L[3][1];
+    b(3,2) = Q[0][3]*L[0][2]+Q[1][3]*L[1][2]+Q[2][3]*L[2][2]+Q[3][3]*L[3][2];
+    b(3,3) = Q[0][3]*L[0][3]+Q[1][3]*L[1][3]+Q[2][3]*L[2][3]+Q[3][3]*L[3][3];
+
+    return b;
+}
 
 }	// Namespace: thx.
 

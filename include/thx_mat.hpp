@@ -563,13 +563,13 @@ public:     // Access operators.
     operator()(const int64 i, const int64 j) const
     { return _v[i + 4*j]; }
 
-    //! Return i'th column. No bounds checking!
-    S*	
+    //! Return i'th element. No bounds checking!
+    S&	
     operator[](const int64 i)
     { return _v[i]; }
 
-    //! Return i'th column. No bounds checking!
-    const S*
+    //! Return i'th element. No bounds checking!
+    const S&
     operator[](const int64 i) const
     { return _v[i]; }
 
