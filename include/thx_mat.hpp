@@ -61,13 +61,13 @@ public:
 
 public:
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
-    mat(const S s = 1)
+    mat(const S x = 1)
     {
         for (int64 i(0); i < N; ++i) {
             for (int64 j(0); j < N; ++j) {
-                _v[i + N*j] = ((i == j) ? s : 0); // Set diagonal to value.
+                _v[i + N*j] = ((i == j) ? x : 0); // Set diagonal to value.
             }
         }
     }
@@ -78,6 +78,7 @@ public:
 
 public:		// Operators.
 
+    //! Assign.
     mat<N,S>& 
     operator=(const mat<N,S> &rhs)
     {
@@ -89,7 +90,7 @@ public:		// Operators.
     operator+=(const mat<N,S> &b)
     {
         for (int64 i(0); i < size; ++i) {
-            _v[i] += rhs._v[i];
+            _v[i] += b._v[i];
         }
         return *this;
     }
@@ -98,7 +99,7 @@ public:		// Operators.
     operator-=(const mat<N,S> &b)
     {
         for (int64 i(0); i < size; ++i) {
-            _v[i] = rhs[i];
+            _v[i] -= b._v[i];
         }
         return *this;
     }
@@ -116,7 +117,7 @@ public:		// Operators.
     mat<N,S>& 
     operator*=(const mat<N,S> &b)
     {	
-        const mat<N,S> a(*this);  // Deep copy.
+        const mat<N,S> a(*this);  // Copy.
         for (int64 i(0); i < N; ++i) {
             for (int64 j(0); j < N; ++j) {
                 _v[i + N*j] = 0;
@@ -152,7 +153,7 @@ public:     // Access operators.
 
 private:		// Member variables
 
-    S _v[N*N];
+    S _v[N*N];  //!< Data.
 };
 
 // Static constants.
@@ -178,7 +179,7 @@ public:
 
 public:
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
     mat(const S v = 1)
     {
@@ -188,12 +189,12 @@ public:
 
     //! Copy CTOR.
     mat(const mat<2,S> &rhs)
-    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
+    { std::memcpy(_v, rhs._v, 4*sizeof(S)); }
 
     //! Array CTOR - column-major.
     explicit
     mat(const S v[4])
-    { std::memcpy(_v, v, size*sizeof(S)); }
+    { std::memcpy(_v, v, 4*sizeof(S)); }
 
     //! Value CTOR - column-major.
     explicit
@@ -210,7 +211,7 @@ public:		// Operators.
     mat<2,S>& 
     operator=(const mat<2,S> &rhs)
     {
-        std::memcpy(_v, rhs._v, size*sizeof(S));
+        std::memcpy(_v, rhs._v, 4*sizeof(S));
         return *this;
     }
 
@@ -300,7 +301,7 @@ public:
 
 public:
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
     mat(const S v = 1)
     {
@@ -311,16 +312,12 @@ public:
 
     //! Copy CTOR.
     mat(const mat<3,S> &rhs)
-    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
+    { std::memcpy(_v, rhs._v, 9*sizeof(S)); }
 
     //! Array CTOR - column-major.
     explicit
     mat(const S v[9])
-    {	
-        _v[0] = v[0]; _v[3] = v[3]; _v[6] = v[6];
-        _v[1] = v[1]; _v[4] = v[4]; _v[7] = v[7];
-        _v[2] = v[2]; _v[5] = v[5]; _v[8] = v[8];
-    }
+    { std::memcpy(_v, v, 9*sizeof(S));	}
 
     //! Value CTOR - column-major.
     explicit
@@ -335,7 +332,7 @@ public:
 
 public:		// Operators.
 
-    //! Assignment.
+    //! Assign.
     mat<3,S>& 
     operator=(const mat<3,S> &rhs)
     {
@@ -404,7 +401,7 @@ public:     // Access operators.
     operator[](const int64 i)
     { return _v[i]; }
 
-    //! Return i'th column. No bounds checking!
+    //! Return i'th element. No bounds checking!
     const S&
     operator[](const int64 i) const
     { return _v[i]; }
@@ -435,7 +432,7 @@ public:
 
 public:
 
-    //! Empty CTOR.
+    //! Default CTOR.
     explicit
     mat(const S v = 1)
     {
@@ -447,17 +444,12 @@ public:
 
     //! Copy CTOR.
     mat(const mat<4,S> &rhs)
-    { std::memcpy(_v, rhs._v, size*sizeof(S)); }
+    { std::memcpy(_v, rhs._v, 16*sizeof(S)); }
 
     //! Array CTOR - column major.
     explicit
     mat(const S v[16])
-    {	
-        _v[0] = v[0]; _v[4] = v[4]; _v[8]  = v[8];  _v[12] = v[12];
-        _v[1] = v[1]; _v[5] = v[5]; _v[9]  = v[9];  _v[13] = v[13];
-        _v[2] = v[2]; _v[6] = v[6]; _v[10] = v[10]; _v[14] = v[14];
-        _v[3] = v[3]; _v[7] = v[7]; _v[11] = v[11]; _v[15] = v[15];
-    }
+    { std::memcpy(_v, rhs._v, 16*sizeof(S)); }
 
     //! Value CTOR - column major.
     explicit
@@ -474,7 +466,7 @@ public:
 
 public:		// Operators.
 
-    //! Assignment.
+    //! Assign.
     mat<4,S>& 
     operator=(const mat<4,S> &rhs)
     {
@@ -485,20 +477,20 @@ public:		// Operators.
     mat<4,S>& 
     operator+=(const mat<4,S> &b)
     {
-        _v[0]+=rhs._v[0];_v[4]+=rhs._v[4];_v[8] +=rhs._v[8]; _v[12]+=rhs._v[12];
-        _v[1]+=rhs._v[1];_v[5]+=rhs._v[5];_v[9] +=rhs._v[9]; _v[13]+=rhs._v[13];
-        _v[2]+=rhs._v[2];_v[6]+=rhs._v[6];_v[10]+=rhs._v[10];_v[14]+=rhs._v[14];
-        _v[3]+=rhs._v[3];_v[7]+=rhs._v[7];_v[11]+=rhs._v[11];_v[15]+=rhs._v[15];
+        _v[0]+=b._v[0]; _v[4]+=b._v[4]; _v[8] +=b._v[8];  _v[12]+=b._v[12];
+        _v[1]+=b._v[1]; _v[5]+=b._v[5]; _v[9] +=b._v[9];  _v[13]+=b._v[13];
+        _v[2]+=b._v[2]; _v[6]+=b._v[6]; _v[10]+=b._v[10]; _v[14]+=b._v[14];
+        _v[3]+=b._v[3]; _v[7]+=b._v[7]; _v[11]+=b._v[11]; _v[15]+=b._v[15];
         return *this;
     }
 
     mat<4,S>& 
     operator-=(const mat<4,S> &b)
     {
-        _v[0]-=rhs._v[0];_v[4]-=rhs._v[4];_v[8] -=rhs._v[8]; _v[12]-=rhs._v[12];
-        _v[1]-=rhs._v[1];_v[5]-=rhs._v[5];_v[9] -=rhs._v[9]; _v[13]-=rhs._v[13];
-        _v[2]-=rhs._v[2];_v[6]-=rhs._v[6];_v[10]-=rhs._v[10];_v[14]-=rhs._v[14];
-        _v[3]-=rhs._v[3];_v[7]-=rhs._v[7];_v[11]-=rhs._v[11];_v[15]-=rhs._v[15];
+        _v[0]-=b._v[0]; _v[4]-=b._v[4]; _v[8] -=b._v[8];  _v[12]-=b._v[12];
+        _v[1]-=b._v[1]; _v[5]-=b._v[5]; _v[9] -=b._v[9];  _v[13]-=b._v[13];
+        _v[2]-=b._v[2]; _v[6]-=b._v[6]; _v[10]-=b._v[10]; _v[14]-=b._v[14];
+        _v[3]-=b._v[3]; _v[7]-=b._v[7]; _v[11]-=b._v[11]; _v[15]-=b._v[15];
         return *this;
     }
 

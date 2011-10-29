@@ -146,8 +146,8 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
         for (int64 j(0); j < N; ++j) {
             if (1 != ipiv[j]) {
                 for (int64 k(0); k < N; ++k) {
-                    if (0 == ipiv[k] && traits<S>::abs(a[j][k]) >= big) {
-                        big = traits<S>::abs(a[j][k]);
+                    if (0 == ipiv[k] && traits<S>::abs(a(j,k)) >= big) {
+                        big = traits<S>::abs(a(j,k));
                         irow = j;
                         icol = k;
                     }
@@ -158,36 +158,36 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
         ++ipiv[icol];
         if (irow != icol) {
             for (int64 r(0); r < N; ++r) {	
-                S tmp(a[irow][r]);      // Swap a.
-                a[irow][r] = a[icol][r];
-                a[icol][r] = tmp;
+                S tmp(a(irow,r));      // Swap a.
+                a(irow,r) = a(icol,r);
+                a(icol,r) = tmp;
 
-                tmp = b[irow][r];       // Swap b.
-                b[irow][r] = b[icol][r];
-                b[icol][r] = tmp;
+                tmp = b(irow,r);       // Swap b.
+                b(irow,r) = b(icol,r);
+                b(icol,r) = tmp;
             }
         }
 
         idxr[i] = irow;
         idxc[i] = icol;
 
-        assert(!is_zero(traits<S>::abs(a[icol][icol])));
-        const S pivinv(1/a[icol][icol]);
-        a[icol][icol] = 1;
+        assert(!is_zero(traits<S>::abs(a(icol,icol))));
+        const S pivinv(1/a(icol,icol));
+        a(icol,icol) = 1;
 
         for (int64 r(0); r < N; ++r) {
-            a[icol][r] *= pivinv;
-            b[icol][r] *= pivinv;
+            a(icol,r) *= pivinv;
+            b(icol,r) *= pivinv;
         }
 
         for (int64 c(0); c < N; ++c) {
             if (c != icol) {
-                const S tmp(a[c][icol]);
-                a[c][icol] = 0;
+                const S tmp(a(c,icol));
+                a(c,icol) = 0;
 
                 for (int64 r(0); r < N; ++r) {
-                    a[c][r] -= a[icol][r]*tmp;
-                    b[c][r] -= b[icol][r]*tmp;
+                    a(c,r) -= a(icol,r)*tmp;
+                    b(c,r) -= b(icol,r)*tmp;
                 }
             }
         }
@@ -196,9 +196,9 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
     for (int64 i(N - 1); i >= 0; --i) {
         if (idxr[i] != idxc[i]) {
             for (int64 c(0); c < N; ++c) {
-                const S tmp(a[c][idxr[i]]);
-                a[c][idxr[i]] = a[c][idxc[i]];
-                a[c][idxc[i]] = tmp;
+                const S tmp(a(c,idxr[i]));
+                a(c,idxr[i]) = a(c,idxc[i]);
+                a(c,idxc[i]) = tmp;
             }
         }
     }

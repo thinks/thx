@@ -13,8 +13,9 @@
 
 //------------------------------------------------------------------------------
 
-namespace thx 
-{
+namespace thx {
+
+//------------------------------------------------------------------------------
 
 //! Binary operator: mat == mat
 template<int64 N, typename S>
@@ -352,7 +353,7 @@ operator*(const mat<4,S> &a, const vec<4,S> &v)
 
 //------------------------------------------------------------------------------
 
-// Binary operator: vec * mat
+//! Binary operator: vec * mat
 template<int64 N, typename S>
 vec<N,S>
 operator*(const vec<N,S> &v, const mat<N,S> &a)
@@ -396,6 +397,8 @@ operator*(const vec<4,S> &v, const mat<4,S> &a)
         v[0]*a(0,2) + v[1]*a(1,2) + v[2]*a(2,2) + v[3]*a(3,2),
         v[0]*a(0,3) + v[1]*a(1,3) + v[2]*a(2,3) + v[3]*a(3,3));
 }
+
+//------------------------------------------------------------------------------
 
 }	// Namespace: thx.
 
