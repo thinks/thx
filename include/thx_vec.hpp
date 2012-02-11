@@ -54,19 +54,27 @@ public:		// CTOR's.
     explicit 
     vec(const S x = 0)
     { 
-        for (int64 i(0); i < N; ++i) { 
+        for (int64 i = 0; i < N; ++i) { 
             _v[i] = x; 
         }
     }
 
     //! Copy CTOR.
     vec(const vec<N,S> &rhs)
-    { std::memcpy(_v, rhs._v, N*sizeof(S)); }
+    { 
+        for (int64 i = 0; i < N; ++i) { 
+            _v[i] = rhs._v[i]; 
+        }
+    }
     
     //! Array CTOR.
     explicit 
     vec(const S *v)
-    { std::memcpy(_v, rhs._v, N*sizeof(S)); }
+    { 
+        for (int64 i = 0; i < N; ++i) { 
+            _v[i] = v[i]; 
+        }        
+    }
 
 public:		// Operators.
 
@@ -74,14 +82,16 @@ public:		// Operators.
     vec<N,S>& 
     operator=(const vec<N,S> &rhs)
     {
-        std::memcpy(_v, rhs._v, N*sizeof(S));
+        for (int64 i = 0; i < N; ++i) { 
+            _v[i] = rhs._v[i]; 
+        }        
         return *this;
     }
 
     vec<N,S>& 
     operator+=(const vec<N,S> &u)
     {
-        for (int64 i(0); i < N; ++i) { 
+        for (int64 i = 0; i < N; ++i) { 
             _v[i] += u._v[i]; 
         }
         return *this;
@@ -90,7 +100,7 @@ public:		// Operators.
     vec<N,S>& 
     operator-=(const vec<N,S> &u)
     {
-        for (int64 i(0); i < N; ++i) { 
+        for (int64 i = 0; i < N; ++i) { 
             _v[i] -= u._v[i]; 
         }
         return *this;
@@ -100,7 +110,7 @@ public:		// Operators.
     vec<N,S>& 
     operator*=(const S s)
     {
-        for (int64 i(0); i < N; ++i) { 
+        for (int64 i = 0; i < N; ++i) { 
             _v[i] *= s; 
         }
         return *this;
@@ -146,12 +156,12 @@ public:		// CTOR/DTOR.
 
     //! Copy CTOR.
     vec(const vec<2,S> &rhs)
-    { std::memcpy(_v, rhs._v, 2*sizeof(S)); }
+    { _v[0] = rhs._v[0]; _v[1] = rhs._v[1]; }
     
     //! Array CTOR.
     explicit 
     vec(const S v[2])
-    { std::memcpy(_v, v, 2*sizeof(S)); }
+    { _v[0] = v[0]; _v[1] = v[1]; }
 
     //! Value CTOR.
     explicit 
@@ -164,7 +174,7 @@ public:		// Operators.
     vec<2,S>& 
     operator=(const vec<2,S> &rhs)
     {
-        std::memcpy(_v, rhs._v, 2*sizeof(S));
+        _v[0] = rhs._v[0]; _v[1] = rhs._v[1];
         return *this;
     }
 
@@ -230,12 +240,12 @@ public:		// CTOR's.
 
     //! Copy CTOR.
     vec(const vec<3,S> &rhs)
-    { std::memcpy(_v, rhs._v, 3*sizeof(S)); }
+    { _v[0] = rhs._v[0]; _v[1] = rhs._v[1]; _v[2] = rhs._v[2]; }
     
     //! Array CTOR.
     explicit 
     vec(const S v[3])
-    { std::memcpy(_v, v, 3*sizeof(S)); }
+    { _v[0] = v[0]; _v[1] = v[1]; _v[2] = v[2]; }
 
     //! Value CTOR.
     explicit 
@@ -248,7 +258,7 @@ public:		// Operators.
     vec<3,S>& 
     operator=(const vec<3,S> &rhs)
     {
-        std::memcpy(_v, rhs._v, 3*sizeof(S));
+        _v[0] = rhs._v[0]; _v[1] = rhs._v[1]; _v[2] = rhs._v[2];
         return *this;
     }
 
@@ -314,12 +324,12 @@ public:		// CTOR's.
 
     //! Copy CTOR.
     vec(const vec<4,S> &rhs)
-    { std::memcpy(_v, rhs._v, 4*sizeof(S)); }
+    { _v[0] = rhs._v[0]; _v[1] = rhs._v[1]; _v[2] = rhs._v[2]; _v[3] = rhs._v[3]; }
     
     //! Array CTOR.
     explicit 
     vec(const S v[4])
-    { std::memcpy(_v, v, 4*sizeof(S)); }
+    { _v[0] = v[0]; _v[1] = v[1]; _v[2] = v[2]; _v[3] = v[3]; }
 
     //! Value CTOR.
     explicit 
@@ -332,7 +342,7 @@ public:		// Operators.
     vec<4,S>& 
     operator=(const vec<4,S> &rhs)
     {
-        std::memcpy(_v, rhs._v, 4*sizeof(S));
+        _v[0] = rhs._v[0]; _v[1] = rhs._v[1]; _v[2] = rhs._v[2]; _v[3] = rhs._v[3];
         return *this;
     }
 
