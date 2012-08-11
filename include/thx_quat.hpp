@@ -5,10 +5,12 @@
 //
 //------------------------------------------------------------------------------
 
-#ifndef THX_QUATERNION_HPP_INCLUDED
-#define THX_QUATERNION_HPP_INCLUDED
+#ifndef THX_QUAT_HPP_INCLUDED
+#define THX_QUAT_HPP_INCLUDED
 
 #include "thx_vec.hpp"
+#include "thx_types.hpp"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -122,8 +124,26 @@ private:	// Member variables.
 typedef quat<float32>	quatf32;
 typedef quat<float64>	quatf64;
 
-//------------------------------------------------------------------------------
-
 }  // Namespace: thx.
 
-#endif  // THX_QUATERNION_HPP_INCLUDED
+//------------------------------------------------------------------------------
+
+namespace std
+{
+
+//! Binary operator: std::ostream << quat<S>
+template<typename S>
+ostream&
+operator<<(ostream& os, const thx::quat<S>& rhs)
+{
+
+    os	<< "[" << rhs[0] << ", " << 
+        << "(" << rhs[1] << ", " << rhs[2] << ", " << rhs[3] << ")]";
+    return os;
+}
+
+}  // Namespace: std.
+
+//------------------------------------------------------------------------------
+
+#endif  // THX_QUAT_HPP_INCLUDED

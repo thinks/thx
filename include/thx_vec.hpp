@@ -9,6 +9,7 @@
 #define THX_VEC_HPP_INCLUDED
 
 #include "thx_types.hpp"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -413,5 +414,27 @@ typedef vec<4,uint32>	vec4ui32;
 typedef vec<4,uint64>	vec4ui64;
 
 }	// Namespace: thx.
+
+//------------------------------------------------------------------------------
+
+namespace std 
+{
+
+//! Binary operator: std::ostream << vec<N,S>
+template<thx::int64 N, typename S>
+ostream&
+operator<<(ostream &os, const thx::vec<N,S> &rhs)
+{
+    os	<< "[";
+    for (thx::int64 i = 0; i < N; ++i) {
+        os << rhs[i] << (i != (N - 1) ? ", " : "");
+    }
+    os << "]";
+    return os;
+}
+
+}	// Namespace: std.
+
+//------------------------------------------------------------------------------
 
 #endif	// THX_VEC_HPP_INCLUDED
