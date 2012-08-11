@@ -15,23 +15,21 @@
 
 //------------------------------------------------------------------------------
 
-namespace thx
-{
+namespace thx {
 
-// set_axis_angle
-// --------------
+//------------------------------------------------------------------------------
+
 //! NB: Axis should be normalized, i.e. have unit length.
-
 template<typename S> 
 void
 set_axis_angle(quat<S> &q, const vec<3,S> &axis, const S theta_rad)
 {
     THX_STATIC_ASSERT(traits<S>::is_floating);
     
-    const S st(traits<S>::sin(static_cast<S>(0.5)*theta_rad));
-    const S ct(traits<S>::cos(static_cast<S>(0.5)*theta_rad));
+    const S st(traits<S>::sin(0.5*theta_rad));
+    const S ct(traits<S>::cos(0.5*theta_rad));
 
-	q[0] = ct;
+    q[0] = ct;
     q[1] = st*axis[0];
     q[2] = st*axis[1];
     q[3] = st*axis[2];                

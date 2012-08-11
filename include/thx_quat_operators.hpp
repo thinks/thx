@@ -12,11 +12,11 @@
 
 //------------------------------------------------------------------------------
 
-namespace thx
-{
+namespace thx {
+
+//------------------------------------------------------------------------------
 
 // Binary operator: quat == quat
-
 template<typename S>
 bool
 operator==(const quat<S>& q, const quat<S>& r)
@@ -25,7 +25,6 @@ operator==(const quat<S>& q, const quat<S>& r)
 //------------------------------------------------------------------------------
 
 // Binary operator: quat != quat
-
 template<typename S> 
 bool
 operator!=(const quat<S> &q, const quat<S> &r)
@@ -34,7 +33,6 @@ operator!=(const quat<S> &q, const quat<S> &r)
 //------------------------------------------------------------------------------
 
 // Binary operator: quat + quat
-
 template<typename S> 
 quat<S>
 operator+(const quat<S> &q, const quat<S> &r)
@@ -43,7 +41,6 @@ operator+(const quat<S> &q, const quat<S> &r)
 //------------------------------------------------------------------------------
 
 // Binary operator: quat - quat
-
 template<typename S> 
 quat<S>
 operator-(const quat<S> &q, const quat<S> &r)
@@ -52,7 +49,6 @@ operator-(const quat<S> &q, const quat<S> &r)
 //------------------------------------------------------------------------------
 
 // Binary operator: scalar * quat
-
 template<typename S> 
 quat<S>
 operator*(const S s, const quat<S> &q)
@@ -61,7 +57,6 @@ operator*(const S s, const quat<S> &q)
 //------------------------------------------------------------------------------
 
 // Binary operator: quat * scalar
-
 template<typename S> 
 quat<S>
 operator*(const quat<S>& q, const S s)
@@ -70,17 +65,18 @@ operator*(const quat<S>& q, const S s)
 //------------------------------------------------------------------------------
 
 // Binary operator: quat * quat
-
 template<typename S> 
 quat<S>
 operator*(const quat<S> &q, const quat<S> &r)
 {
     return quat<S>(
-		q[0]*r[0] - q[1]*r[1] - q[2]*r[2] - q[3]*r[3],
+        q[0]*r[0] - q[1]*r[1] - q[2]*r[2] - q[3]*r[3],
         q[0]*r[1] + q[1]*r[0] + q[2]*r[3] - q[3]*r[2],
         q[0]*r[2] + q[2]*r[0] + q[3]*r[1] - q[1]*r[3],
         q[0]*r[3] + q[3]*r[0] + q[1]*r[2] - q[2]*r[1]);
 }
+
+//------------------------------------------------------------------------------
 
 }   // Namespace: thx.
 

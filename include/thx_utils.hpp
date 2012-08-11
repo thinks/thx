@@ -268,29 +268,29 @@ rad2deg(const S rad)
 
 //------------------------------------------------------------------------------
 
-// round_int32
-// -----------
-//! Round x to nearest integer.
-
-template<typename S>
-int32
-round_int32(S x) 
-{
-    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
-
-    const S round_to_nearest(static_cast<S>(0.5));
-    int32 i;
-    __asm
-    {
-        fld x
-        fadd st, st (0)
-        fadd round_to_nearest
-        fistp i
-        sar i, 1
-    }
-    return (i);
-}
+//// round_int32
+//// -----------
+////! Round x to nearest integer.
+//
+//template<typename S>
+//int32
+//round_int32(S x) 
+//{
+//    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+//    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+//
+//    const S round_to_nearest(static_cast<S>(0.5));
+//    int32 i;
+//    __asm
+//    {
+//        fld x
+//        fadd st, st (0)
+//        fadd round_to_nearest
+//        fistp i
+//        sar i, 1
+//    }
+//    return (i);
+//}
 
 //template<typename S>
 //int64
@@ -312,26 +312,26 @@ round_int32(S x)
 // ceil_int64(43.5f) = 44
 // ceil_int64(-43.5f) = -43
 
-template<typename S>
-int32
-ceil_int32(S x)
-{
-    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
-
-    const S round_to_pos_inf(static_cast<S>(-0.5));
-    int32 i;
-    __asm
-    {
-        fld x
-        fadd st, st (0)
-        fsubr round_to_pos_inf
-        fistp i
-        sar i, 1
-    }
-
-    return (-i);
-}
+//template<typename S>
+//int32
+//ceil_int32(S x)
+//{
+//    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+//    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+//
+//    const S round_to_pos_inf(static_cast<S>(-0.5));
+//    int32 i;
+//    __asm
+//    {
+//        fld x
+//        fadd st, st (0)
+//        fsubr round_to_pos_inf
+//        fistp i
+//        sar i, 1
+//    }
+//
+//    return (-i);
+//}
 
 //template<typename S>
 //int64
@@ -353,25 +353,25 @@ ceil_int32(S x)
 //! floor_int64(43.5f) = 43
 //! floor_int64(-43.5f) = -44
 
-template<typename S>
-int32
-floor_int32(S x)
-{
-    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
-
-    const S round_to_neg_inf(static_cast<S>(-0.5));
-    int32 i;
-    __asm
-    {
-        fld x
-        fadd st, st (0)
-        fadd round_to_neg_inf
-        fistp i
-        sar i, 1
-    }
-    return (i);
-}
+//template<typename S>
+//int32
+//floor_int32(S x)
+//{
+//    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+//    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+//
+//    const S round_to_neg_inf(static_cast<S>(-0.5));
+//    int32 i;
+//    __asm
+//    {
+//        fld x
+//        fadd st, st (0)
+//        fadd round_to_neg_inf
+//        fistp i
+//        sar i, 1
+//    }
+//    return (i);
+//}
 
 //template<typename S>
 //int64
@@ -392,31 +392,31 @@ floor_int32(S x)
 //! Acts as floor for positive values, ceil for negative values,
 //! i.e. rounds to integer closest to zero.
 
-template<typename S>
-int32
-trunc_int32(S x)
-{
-    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
-    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
-
-    const S round_towards_neg_inf(static_cast<S>(-0.5));
-    int32 i;
-    __asm
-    {
-        fld x
-        fadd st, st (0)
-        fabs
-        fadd round_towards_neg_inf
-        fistp i
-        sar i, 1
-    }
-
-    if( x < 0 ) { 
-        i = -i; 
-    }
-
-    return (i);
-}
+//template<typename S>
+//int32
+//trunc_int32(S x)
+//{
+//    assert(x > (std::numeric_limits<int32>::min)()/2 - traits<S>::one());
+//    assert(x < (std::numeric_limits<int32>::max)()/2 + traits<S>::one());
+//
+//    const S round_towards_neg_inf(static_cast<S>(-0.5));
+//    int32 i;
+//    __asm
+//    {
+//        fld x
+//        fadd st, st (0)
+//        fabs
+//        fadd round_towards_neg_inf
+//        fistp i
+//        sar i, 1
+//    }
+//
+//    if( x < 0 ) { 
+//        i = -i; 
+//    }
+//
+//    return (i);
+//}
 
 //template<typename S>
 //int64
