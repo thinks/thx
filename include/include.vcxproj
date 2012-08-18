@@ -16,7 +16,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -60,6 +60,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="thx.hpp" />
+    <ClInclude Include="thx_mat.hpp" />
+    <ClInclude Include="thx_mat_operators.hpp" />
+    <ClInclude Include="thx_mat_utils.hpp" />
+    <ClInclude Include="thx_quat.hpp" />
+    <ClInclude Include="thx_quat_operators.hpp" />
+    <ClInclude Include="thx_quat_utils.hpp" />
+    <ClInclude Include="thx_traits.hpp" />
+    <ClInclude Include="thx_types.hpp" />
+    <ClInclude Include="thx_utils.hpp" />
+    <ClInclude Include="thx_vec.hpp" />
+    <ClInclude Include="thx_vec_operators.hpp" />
+    <ClInclude Include="thx_vec_utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

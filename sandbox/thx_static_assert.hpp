@@ -40,7 +40,7 @@ class compile_time_check<false>
 //#ifndef NDEBUG
 #define THX_STATIC_ASSERT(test, errormsg)                   \
 do {                                                        \
-	struct ERROR_##errormsg {};                             \
+    struct ERROR_##errormsg {};                             \
     typedef thx::compile_time_check<(test) != 0> tmpl_impl; \
     tmpl_impl aTemp = tmpl_impl(ERROR_##errormsg());        \
     sizeof(aTemp);                                          \

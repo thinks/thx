@@ -55,7 +55,7 @@ public:		// CTOR's.
     explicit 
     vec(const S x = 0)
     { 
-        for (int64 i(0); i < N; ++i) { 
+        for (int64 i = 0; i < N; ++i) { 
             _v[i] = x; 
         }
     }
@@ -67,7 +67,7 @@ public:		// CTOR's.
     //! Array CTOR.
     explicit 
     vec(const S *v)
-    { std::memcpy(_v, rhs._v, N*sizeof(S)); }
+    { std::memcpy(_v, v, N*sizeof(S)); }
 
 public:		// Operators.
 
