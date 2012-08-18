@@ -11,20 +11,19 @@
 #include "thx_mat.hpp"
 #include "thx_vec.hpp"
 #include "thx_utils.hpp"
-#include "thx_static_assert.hpp"
 #include <cassert>
 
 //------------------------------------------------------------------------------
 
 namespace thx {
 
-//------------------------------------------------------------------------------
-
-//! Determinant. TODO
+//! TODO: NxN determinant.
 template<int64 N, typename S>
 S
 determinant(const mat<N,S> &a);
 
+
+//! 2x2 determinant.
 template<typename S>	
 S 
 determinant(const mat<2,S> &a) 
@@ -32,6 +31,8 @@ determinant(const mat<2,S> &a)
     return (a(0,0)*a(1,1) - a(1,0)*a(0,1));
 }
 
+
+//! 3x3 determinant.
 template<typename S>	
 S 
 determinant(const mat<3,S> &a) 
@@ -41,6 +42,8 @@ determinant(const mat<3,S> &a)
             a(0,2)*(a(1,0)*a(2,1) - a(1,1)*a(2,0)));
 }
 
+
+//! 4-by-4 determinant.
 template<typename S>	
 S 
 determinant(const mat<4,S> &a) 
@@ -57,22 +60,28 @@ determinant(const mat<4,S> &a)
 
 //------------------------------------------------------------------------------
 
-//! Transpose.
+//! Transpose provided NxN matrix.
 template<int64 N, typename S>
 void
 transpose(mat<N,S> &a)
 { a = transposed(a); }
 
+
+//! Transpose provided 2x2 matrix.
 template<typename S>	
 void 
 transpose(mat<2,S> &a) 
 { a = transposed(a); }
 
+
+//! Transpose provided 3x3 matrix.
 template<typename S>	
 void 
 transpose(mat<3,S> &a) 
 { a = transposed(a); }
 
+
+//! Transpose provided 4x4 matrix.
 template<typename S>	
 void 
 transpose(mat<4,S> &a) 
@@ -80,15 +89,16 @@ transpose(mat<4,S> &a)
 
 //------------------------------------------------------------------------------
 
-//! Transposed.
+//! Return NxN transpose.
 template<int64 N, typename S>
 mat<N,S> 
 transposed(const mat<N,S> &a)
 {
     mat<N,S> b(a);  // Copy.
-    for (int64 i(0); i < N; ++i) {
-        for (int64 j(0); j < N; ++j) {
-            const S tmp(b(i,j));   // Swap.
+    S tmp;
+    for (int64 i = 0; i < N; ++i) {
+        for (int64 j = 0; j < N; ++j) {
+            tmp = b(i,j);   // Swap.
             b(i,j) = b(j,i);
             b(j,i) = tmp;
         }
@@ -96,6 +106,8 @@ transposed(const mat<N,S> &a)
     return b;
 }
 
+
+//! Return 2x2 transpose.
 template<typename S> 
 mat<2,S> 
 transposed(const mat<2,S> &a)
@@ -104,6 +116,8 @@ transposed(const mat<2,S> &a)
                     a(0,1), a(1,1));
 }
 
+
+//! Return 3x3 transpose.
 template<typename S> 
 mat<3,S> 
 transposed(const mat<3,S> &a)
@@ -113,6 +127,8 @@ transposed(const mat<3,S> &a)
                     a(0,2), a(1,2), a(2,2));
 }
 
+
+//! Return 4x4 transpose.
 template<typename S>
 mat<4,S> 
 transposed(const mat<4,S> &a)
@@ -206,22 +222,28 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 
 //------------------------------------------------------------------------------
 
-//! Invert.
+//! Invert provided NxN matrix.
 template<int64 N, typename S>
 void 
 invert(mat<N,S> &a)
 { a = inverted(a); }
 
+
+//! Invert provided 2x2 matrix.
 template<typename S> 
 void 
 invert(mat<2,S> &a)
 { a = inverted(a); }
 
+
+//! Invert provided 3x3 matrix.
 template<typename S> 
 void
 invert(mat<3,S> &a)
 { a = inverted(a); }
 
+
+//! Invert provided 4x4 matrix.
 template<typename S>
 void 
 invert(mat<4,S> &a)
@@ -431,8 +453,6 @@ inverted(const mat<4,S> &a)
 
     return b;
 }
-
-//------------------------------------------------------------------------------
 
 }	// Namespace: thx.
 
