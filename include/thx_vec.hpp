@@ -22,12 +22,12 @@ namespace thx
 // define dimension
 // 
 // Default CTOR (set all zeros by default)
-// Copy CTOR
 // Array CTOR
 // Value CTOR (specializations only)
-// (All vec's have default DTOR)
+// (All vec's have compiler-generated DTOR)
+// (All vec's have compiler-generated copy CTOR)
+// (All vec's have compiler-generated operator=)
 //
-// operator=
 // operator+=
 // operator-=
 // operator*=(scalar)
@@ -59,18 +59,10 @@ public:		// CTOR's.
             _v[i] = x; 
         }
     }
-
-    //! Copy CTOR.
-    vec(const vec<N,S> &rhs)
-    {
-        for (int64 i = 0; i < N; ++i) { 
-            _v[i] = rhs._v[i]; 
-        }
-    }
     
     //! Array CTOR.
     explicit 
-    vec(const S *v)
+    vec(const S v[N])
     { 
         for (int64 i = 0; i < N; ++i) { 
             _v[i] = v[i]; 
@@ -79,16 +71,7 @@ public:		// CTOR's.
 
 public:		// Operators.
 
-    //! Assignment.
-    vec<N,S>& 
-    operator=(const vec<N,S> &rhs)
-    {
-        for (int64 i = 0; i < N; ++i) { 
-            _v[i] = rhs._v[i]; 
-        }
-        return *this;
-    }
-
+	//! DOCS
     vec<N,S>& 
     operator+=(const vec<N,S> &u)
     {
@@ -98,6 +81,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     vec<N,S>& 
     operator-=(const vec<N,S> &u)
     {
@@ -157,13 +141,6 @@ public:		// CTOR/DTOR.
         _v[0] = x; 
         _v[1] = x; 
     }	
-
-    //! Copy CTOR.
-    vec(const vec<2,S> &rhs)
-    {
-        _v[0] = rhs._v[0];
-        _v[1] = rhs._v[1];
-    }
     
     //! Array CTOR.
     explicit 
@@ -183,15 +160,7 @@ public:		// CTOR/DTOR.
 
 public:		// Operators.
 
-    //! Assignment.
-    vec<2,S>& 
-    operator=(const vec<2,S> &rhs)
-    {
-        _v[0] = rhs._v[0];
-        _v[1] = rhs._v[1];
-        return *this;
-    }
-
+	//! DOCS
     vec<2,S>& 
     operator+=(const vec<2,S> &u)
     {
@@ -200,6 +169,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     vec<2,S>& 
     operator-=(const vec<2,S> &u)
     {
@@ -258,14 +228,6 @@ public:		// CTOR's.
         _v[1] = x; 
         _v[2] = x; 
     }	
-
-    //! Copy CTOR.
-    vec(const vec<3,S> &rhs)
-    { 
-        _v[0] = rhs._v[0]; 
-        _v[1] = rhs._v[1]; 
-        _v[2] = rhs._v[2]; 
-    }
     
     //! Array CTOR.
     explicit 
@@ -286,16 +248,6 @@ public:		// CTOR's.
     }
 
 public:		// Operators.
-
-    //! Assignment.
-    vec<3,S>& 
-    operator=(const vec<3,S> &rhs)
-    {
-        _v[0] = rhs._v[0]; 
-        _v[1] = rhs._v[1]; 
-        _v[2] = rhs._v[2]; 
-        return *this;
-    }
 
     //! DOCS
     vec<3,S>& 
@@ -369,15 +321,6 @@ public:		// CTOR's.
         _v[2] = x; 
         _v[3] = x; 
     }	
-
-    //! Copy CTOR.
-    vec(const vec<4,S> &rhs)
-    { 
-        _v[0] = rhs._v[0]; 
-        _v[1] = rhs._v[1]; 
-        _v[2] = rhs._v[2]; 
-        _v[3] = rhs._v[3];
-	}
     
     //! Array CTOR.
     explicit 
@@ -400,17 +343,6 @@ public:		// CTOR's.
 	}
 
 public:		// Operators.
-
-    //! Assignment.
-    vec<4,S>& 
-    operator=(const vec<4,S> &rhs)
-    {
-        _v[0] = rhs._v[0]; 
-        _v[1] = rhs._v[1]; 
-        _v[2] = rhs._v[2]; 
-        _v[3] = rhs._v[3];
-        return *this;
-    }
 
     //! DOCS
     vec<4,S>& 
