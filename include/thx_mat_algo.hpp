@@ -5,8 +5,8 @@
 //
 //------------------------------------------------------------------------------
 
-#ifndef THX_MAT_UTILS_HPP_INCLUDED
-#define THX_MAT_UTILS_HPP_INCLUDED
+#ifndef THX_MAT_ALGO_HPP_INCLUDED
+#define THX_MAT_ALGO_HPP_INCLUDED
 
 #include "thx_mat.hpp"
 #include "thx_vec.hpp"
@@ -456,4 +456,4 @@ inverted(const mat<4,S> &a)
 
 }	// Namespace: thx.
 
-#endif	// THX_MAT_UTILS_HPP_INCLUDED
+#endif	// THX_MAT_ALGO_HPP_INCLUDED

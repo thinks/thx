@@ -5,14 +5,14 @@
 //
 //------------------------------------------------------------------------------
 
-#ifndef THX_VEC_UTILS_HPP_INCLUDED
-#define THX_VEC_UTILS_HPP_INCLUDED
+#ifndef THX_VEC_ALGO_HPP_INCLUDED
+#define THX_VEC_ALGO_HPP_INCLUDED
 
 #include "thx_types.hpp"
 #include "thx_vec.hpp"
 #include "thx_mat.hpp"
 #include "thx_traits.hpp"
-#include "thx_static_assert.hpp"
+#include <type_traits>
 #include <cassert>
 
 //------------------------------------------------------------------------------
@@ -21,28 +21,33 @@ namespace thx {
 
 //------------------------------------------------------------------------------
 
-//! Inner product.
+//! Compute vec<N,S> inner product. Assumes N >= 1.
 template<int64 N, typename S>
 S
 inner_product(const vec<N,S> &u, const vec<N,S> &v)
 {
-    S d(u[0]*v[0]);
-    for (int64 i(1); i < N; ++i) { 
+    S d = u[0]*v[0];
+    for (int64 i = 1; i < N; ++i) { 
         d += u[i]*v[i]; 
     }
     return d;
 }
 
+//! Compute vec<2,S> inner product.
 template<typename S>
 S
 inner_product(const vec<2,S> &u, const vec<2,S> &v)
 { return (u[0]*v[0] + u[1]*v[1]); }
 
+
+//! Compute vec<3,S> inner product.
 template<typename S>
 S
 inner_product(const vec<3,S> &u, const vec<3,S> &v)
 { return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2]); }
 
+
+//! Compute vec<4,S> inner product.
 template<typename S>
 S
 inner_product(const vec<4,S> &u, const vec<4,S> &v)
@@ -50,20 +55,22 @@ inner_product(const vec<4,S> &u, const vec<4,S> &v)
 
 //------------------------------------------------------------------------------
 
-//! Outer product. TODO: Verify!
+//! Compute NxN outer product. TODO: Verify!
 template<int64 N, typename S>
 mat<N,S> 
 outer_product(const vec<N,S> &u, const vec<N,S> &v)
 {
     mat<N,S> r;
-    for (int64 i(0); i < N; ++i) {
-        for (int64 j(0); j < N; ++j) {
+    for (int64 i = 0; i < N; ++i) {
+        for (int64 j = 0; j < N; ++j) {
             r(i,j) = u[i]*v[j];
         }
     }
     return r;
 }
 
+
+//! Compute 2x2 outer product.
 template<typename S> 
 mat<2,S> 
 outer_product(const vec<2,S> &u, const vec<2,S> &v)
@@ -73,6 +80,8 @@ outer_product(const vec<2,S> &u, const vec<2,S> &v)
         u[1]*v[0], u[1]*v[1]);
 }
 
+
+//! Compute 3x3 outer product.
 template<typename S> 
 mat<3,S>
 outer_product(const vec<3,S> &u, const vec<3,S> &v)
@@ -83,11 +92,13 @@ outer_product(const vec<3,S> &u, const vec<3,S> &v)
         u[2]*v[0], u[2]*v[1], u[2]*v[2]);
 }
 
+
+//! Compute 4x4 outer product.
 template<typename S>
 mat<4,S>
 outer_product(const vec<4,S> &u, const vec<4,S> &v)
 {
-    return mat<3,S>(
+    return mat<4,S>(
         u[0]*v[0], u[0]*v[1], u[0]*v[2], u[0]*v[3],
         u[1]*v[0], u[1]*v[1], u[1]*v[2], u[1]*v[3],
         u[2]*v[0], u[2]*v[1], u[2]*v[2], u[2]*v[3],
@@ -96,25 +107,10 @@ outer_product(const vec<4,S> &u, const vec<4,S> &v)
 
 //------------------------------------------------------------------------------
 
-//! Dot product.
+//! Dot product, convenience.
 template<int64 N, typename S>
 S
 dot(const vec<N,S> &u, const vec<N,S> &v)
-{ return inner_product(u, v); }
-
-template<typename S>
-S
-dot(const vec<2,S> &u, const vec<2,S> &v)
-{ return inner_product(u, v); }
-
-template<typename S>
-S
-dot(const vec<3,S> &u, const vec<3,S> &v)
-{ return inner_product(u, v); }
-
-template<typename S>
-S
-dot(const vec<4,S> &u, const vec<4,S> &v)
 { return inner_product(u, v); }
 
 //------------------------------------------------------------------------------
@@ -143,6 +139,7 @@ dist2(const vec<N,S> &u, const vec<N,S> &v)
 
 //------------------------------------------------------------------------------
 
+//! Euclidean distance.
 template<int64 N, typename S>	
 S 
 dist(const vec<N,S> &u, const vec<N,S> &v) 
@@ -155,7 +152,11 @@ template<int64 N, typename S>
 void 
 normalize(vec<N,S> &v) 
 { 
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
+	static_assert(std::is_floating_point<S>::value, 
+				 "Scalar type must be floating point" );
+
+	
+	THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
    
     const S inv_mag(1/mag(v));
     v *= inv_mag;
@@ -168,10 +169,9 @@ template<int64 N, typename S>
 vec<N,S> 
 normalized(const vec<N,S> &v) 
 { 
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-
-    const S inv_mag(1/mag(v));
-    return inv_mag*v;
+	static_assert(std::is_floating_point<S>::value, 
+				 "Scalar type must be floating point" );
+    return (1/mag(v))*v;
 }
 
 //------------------------------------------------------------------------------
@@ -181,6 +181,7 @@ template<typename S>
 S
 cross(const vec<2,S> &u, const vec<2,S> &v)
 { return (u[0]*v[1] - u[1]*v[0]); }
+
 
 //! 3D cross product.
 template<typename S> 
@@ -198,10 +199,12 @@ cross(const vec<3,S> &u, const vec<3,S> &v)
 template<typename S> 
 vec<2,S> 
 perp(const vec<2,S> &v) 
-{ return vec<2,S>(-v[1], v[0]); }
+{ 
+    return vec<2,S>(-v[1], v[0]); 
+}
 
 //------------------------------------------------------------------------------
 
 }	// Namespace: thx.
 
-#endif	// THX_VEC_UTILS_HPP_INCLUDED
+#endif	// THX_VEC_ALGO_HPP_INCLUDED

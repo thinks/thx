@@ -21,12 +21,6 @@
     <ClInclude Include="thx_mat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thx_mat_operators.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="thx_mat_utils.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="thx_quat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,10 +42,13 @@
     <ClInclude Include="thx_vec.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thx_vec_operators.hpp">
+    <ClInclude Include="thx_vec_algo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thx_vec_utils.hpp">
+    <ClInclude Include="thx_operators.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thx_mat_algo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,7 +28,7 @@ class traits;
 //------------------------------------------------------------------------------
 
 // traits<float32>
-//----------------
+// ---------------
 //! Traits for float32 scalar type.
 
 template <>
@@ -36,36 +36,15 @@ class traits<float32>
 {
 public:
 
-	enum { is_floating = 1 };
-	enum { is_integer  = 0 };
-	enum { is_signed   = 1 };
-
-	static float32 
-	zero()		
-	{ return  0.f; }
-
-	static float32 
-	one()		
-	{ return  1.f; }
-
-	static float32 
-	m_one()	
-	{ return -one(); }
-
-	static float32 
+	constexpr float32 
 	pi()		
-	{ return  3.1415926535897f; }
+	{ return 3.1415926535897f; }
 
 	static float32
 	big_value()	
 	{ 
 		return (traits<float32>::sqrt((std::numeric_limits<float32>::max)())/8);
 	}
-
-	static float32 
-	epsilon() 
-	{ return 0.000001f; }
-
 
 	static float32 
 	abs(const float32 x)  
@@ -110,12 +89,12 @@ public:
 	static float32 
 	sqrt(const float32 x) 
 	{
-		assert(traits<float32>::zero() < x);
 		return ::sqrtf(x); 
 	}
 
 	static float32 
-	flip(const float32 x) { return -x; }
+	flip(const float32 x) 
+	{ return -x; }
 
 	//static
 	//int
@@ -125,13 +104,6 @@ public:
 	//	assert(traits<float32>::zero < x);
 	//	return ((*(reinterpret_cast<int*>(&x))) >> 23) - 127;
 	//}
-
-public:
-
-	template<typename S>
-	static float32
-	scalar_cast(const S x)
-	{ return static_cast<float32>(x); }
 
 private:	// Non-constructible.
 
@@ -144,7 +116,7 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<float64>
-//----------------
+// ---------------
 //! Traits for float64 scalar type.
 
 template <>
@@ -152,35 +124,15 @@ class traits<float64>
 {
 public:
 
-	enum { is_floating = 1 };
-	enum { is_integer  = 0 };
-	enum { is_signed   = 1 };
-
-	static float64 
-	zero()		
-	{ return  0.0; }
-
-	static float64 
-	one()		
-	{ return  1.0; }
-
-	static float64 
-	m_one()	
-	{ return -one(); }
-
-	static float64 
+	constexpr float64 
 	pi()		
-	{ return  3.1415926535897; }
+	{ return 3.1415926535897; }
 
 	static float64 
 	big_value()	
 	{ 
 		return (traits<float64>::sqrt((std::numeric_limits<float64>::max)())/8);
 	}
-
-	static float64 
-	epsilon() 
-	{ return 0.000001; }
 
 	static float64 
 	abs(const float64 x)  
@@ -224,21 +176,11 @@ public:
 
 	static float64 
 	sqrt(const float64 x) 
-	{ 
-		assert(traits<float64>::zero() < x);
-		return ::sqrt(x); 
-	}
+	{ return ::sqrt(x); }
 
 	static float64 
 	flip(const float64 x) 
 	{ return -x; }
-
-public:
-
-	template<typename S>
-	static float64
-	scalar_cast(const S x)
-	{ return static_cast<float64>(x); }
 
 private:	// Non-constructible.
 
@@ -251,7 +193,7 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<int8>
-//-------------
+// ------------
 //! Traits for int8 scalar type.
 
 template <>
@@ -259,38 +201,13 @@ class traits<int8>
 {
 public:
 
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 1 };
-
-	static int8 
-	zero()  
-	{ return  0; }
-
-	static int8 
-	one()   
-	{ return  1; }
-
-	static int8 
-	m_one() 
-	{ return -one(); }
-
-	static int8 
-	epsilon() { return 0; }
-
 	static int8 
 	abs(const int8 x)	
 	{ return static_cast<int8>(::abs(x)); }
 
 	static int8 
-	flip(const int8 x)	{ return -x; }
-
-public:
-
-	template<typename S>
-	static int8
-	scalar_cast(const S x)
-	{ return static_cast<int8>(x); }
+	flip(const int8 x)	
+	{ return -x; }
 
 private:	// Non-constructible.
 
@@ -303,33 +220,13 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<int16>
-//--------------
+// -------------
 //! Traits for int16 scalar type.
 
 template <>
 class traits<int16> 
 {
 public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 1 };
-
-	static int16 
-	zero()  
-	{ return  0; }
-
-	static int16 
-	one()   
-	{ return  1; }
-
-	static int16 
-	m_one() 
-	{ return -one(); }
-
-	static int16 
-	epsilon() 
-	{ return 0; }
 
 	static int16 
 	abs(const int16 x)  
@@ -338,13 +235,6 @@ public:
 	static int16 
 	flip(const int16 x) 
 	{ return -x; }
-
-public:
-
-	template<typename S>
-	static int16
-	scalar_cast(const S x)
-	{ return static_cast<int16>(x); }
 
 private:	// Non-constructible.
 
@@ -357,33 +247,13 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<int32>
-//--------------
+// -------------
 //! Traits for int32 scalar type.
 
 template <>
 class traits<int32> 
 {
 public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 1 };
-
-	static int32 
-	zero()  
-	{ return  0; }
-
-	static int32 
-	one()   
-	{ return  1; }
-
-	static int32 
-	m_one() 
-	{ return flip(one()); }
-
-	static int32 
-	epsilon() 
-	{ return 0; }
 
 	static int32 
 	abs(const int32 x)  
@@ -407,13 +277,6 @@ public:
 	//	return a;
 	//}
 
-public:
-
-	template<typename S>
-	static int32
-	scalar_cast(const S x)
-	{ return static_cast<int32>(x); }
-
 private:	// Non-constructible.
 
 	traits();
@@ -425,33 +288,13 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<int64>
-//--------------
+// -------------
 //! Traits for int64 scalar type.
 
 template <>
 class traits<int64> 
 {
 public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 1 };
-
-	static int64 
-	zero()  
-	{ return  0; }
-
-	static int64 
-	one()   
-	{ return  1; }
-
-	static int64 
-	m_one() 
-	{ return -1; }
-
-	static int64 
-	epsilon() 
-	{ return 0; }
 
 	static int64 
 	abs(const int64 x)  
@@ -460,13 +303,6 @@ public:
 	static int64 
 	flip(const int64 x) 
 	{ return -x; }
-
-public:
-
-	template<typename S>
-	static int64
-	scalar_cast(const S x)
-	{ return static_cast<int64>(x); }
 
 private:	// Non-constructible.
 
@@ -479,38 +315,12 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<uint8>
-//--------------
+// -------------
 //! Traits for uint8 scalar type.
-
 
 template <>
 class traits<uint8> 
 {
-public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 0 };
-
-	static uint8 
-	zero() 
-	{ return 0; }
-
-	static uint8 
-	one()  
-	{ return 1; }
-
-	static uint8 
-	epsilon() 
-	{ return 0; }
-
-public:
-
-	template<typename S>
-	static uint8
-	scalar_cast(const S x)
-	{ return static_cast<uint8>(x); }
-
 private:	// Non-constructible.
 
 	traits();
@@ -522,37 +332,12 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<uint16>
-//---------------
+// --------------
 //! Traits for uint16 scalar type.
 
 template <>
 class traits<uint16> 
 {
-public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 0 };
-
-	static uint16 
-	zero() 
-	{ return 0; }
-
-	static uint16 
-	one()  
-	{ return 1; }
-
-	static uint16 
-	epsilon() 
-	{ return 0; }
-
-public:
-
-	template<typename S>
-	static uint16
-	scalar_cast(const S x)
-	{ return static_cast<uint16>(x); }
-
 private:	// Non-constructible.
 
 	traits();
@@ -564,29 +349,13 @@ private:	// Non-constructible.
 //------------------------------------------------------------------------------
 
 // traits<uint32>
-//---------------
+// --------------
 //! Traits for uint32 scalar type.
 
 template <>
 class traits<uint32> 
 {
 public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 0 };
-
-	static uint32 
-	zero() 
-	{ return 0; }
-
-	static uint32 
-	one()  
-	{ return 1; }
-
-	static uint32 
-	epsilon() 
-	{ return 0; }
 
 	// Round integer up to nearest power of 2.
 	//	
@@ -605,13 +374,6 @@ public:
 	//	return val+1;
 	//}
 
-public:
-
-	template<typename S>
-	static int32
-	scalar_cast(const S x)
-	{ return static_cast<int32>(x); }
-
 private:	// Non-constructible.
 
 	traits();
@@ -620,41 +382,15 @@ private:	// Non-constructible.
 	traits<uint32>& operator=(const traits<uint32>&);
 };
 
-
 //------------------------------------------------------------------------------
 
 // traits<uint64>
-//---------------
+// --------------
 //! Traits for uint64 scalar type.
 
 template <>
 class traits<uint64> 
 {
-public:
-
-	enum { is_floating = 0 };
-	enum { is_integer  = 1 };
-	enum { is_signed   = 0 };
-
-	static uint64 
-	zero() 
-	{ return 0; }
-
-	static uint64 
-	one()  
-	{ return 1; }
-
-	static uint64 
-	epsilon() 
-	{ return 0; }
-
-public:
-
-	template<typename S>
-	static uint64
-	scalar_cast(const S x)
-	{ return static_cast<uint64>(x); }
-
 private:	// Non-constructible.
 
 	traits();

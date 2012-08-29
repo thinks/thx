@@ -5,8 +5,8 @@
 //
 //------------------------------------------------------------------------------
 
-#ifndef THX_QUAT_UTILS_HPP_INCLUDED
-#define THX_QUAT_UTILS_HPP_INCLUDED
+#ifndef THX_QUAT_ALGO_HPP_INCLUDED
+#define THX_QUAT_ALGO_HPP_INCLUDED
 
 #include "thx_quat.hpp"
 #include "thx_vec.hpp"
@@ -25,8 +25,8 @@ set_axis_angle(quat<S> &q, const vec<3,S> &axis, const S theta_rad)
 {
     THX_STATIC_ASSERT(traits<S>::is_floating);
     
-    const S st(traits<S>::sin(0.5*theta_rad));
-    const S ct(traits<S>::cos(0.5*theta_rad));
+    const S st = traits<S>::sin(0.5*theta_rad);
+    const S ct = traits<S>::cos(0.5*theta_rad);
 
     q[0] = ct;
     q[1] = st*axis[0];
@@ -144,4 +144,4 @@ set_axis_angle(quat<S> &q, const vec<3,S> &axis, const S theta_rad)
 
 }   // Namespace: thx.
 
-#endif  // THX_QUAT_UTILS_HPP_INCLUDED
+#endif  // THX_QUAT_ALGO_HPP_INCLUDED

@@ -32,11 +32,6 @@ public:
         : _v(real, 0, 0, 0)
     {}
 
-    //! Copy CTOR.
-    quat(const quat<S> &rhs)
-        : _v(rhs._v)
-    {}
-
     //! Value CTOR.
     explicit
     quat(const S v0, const S v1, const S v2, const S v3)
@@ -63,14 +58,6 @@ public:
 
 public:     // Operators.
 
-    //! Assign.
-    quat<S>&
-    operator=(const quat<S> &rhs)
-    {
-        _v = rhs._v;
-        return *this;
-    }
-
     quat<S>&
     operator+=(const quat<S> &rhs)
     {
@@ -96,7 +83,7 @@ public:     // Operators.
     quat<S>&
     operator*=(const quat<S> &r)
     {	
-        const quat<S> t(*this);     // Copy.
+        const quat<S> t(*this); // Copy.
         _v[0] = t[0]*r[0] - t[1]*r[1] - t[2]*r[2] - t[3]*r[3];
         _v[1] = t[0]*r[1] + t[1]*r[0] + t[2]*r[3] - t[3]*r[2];
         _v[2] = t[0]*r[2] + t[2]*r[0] + t[3]*r[1] - t[1]*r[3];
