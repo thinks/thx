@@ -154,10 +154,6 @@ normalize(vec<N,S> &v)
 { 
 	static_assert(std::is_floating_point<S>::value, 
 				 "Scalar type must be floating point" );
-
-	
-	THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-   
     const S inv_mag(1/mag(v));
     v *= inv_mag;
 }
