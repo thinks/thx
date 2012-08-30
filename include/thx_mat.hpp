@@ -24,7 +24,7 @@ namespace thx
 //
 // constexpr mat<N,S> identity() (specializations only)
 //
-// Default constexpr CTOR (set to identity by default)
+// Default constexpr (specializations only) CTOR (set to identity by default)
 // Array constexpr CTOR (specializations only)
 // Value constexpr CTOR (specializations only)
 // (All mat's have default DTOR)
@@ -60,7 +60,6 @@ public:
     typedef S value_type;
     static const int64 dim = N;
     static const int64 linear_size = dim*dim;
-    static const mat<N,S> identity;
 
 public:
 
@@ -77,6 +76,7 @@ public:
 
 public:		// Operators.
 
+	//! DOCS
     mat<N,S>& 
     operator+=(const mat<N,S> &b)
     {
@@ -86,6 +86,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<N,S>& 
     operator-=(const mat<N,S> &b)
     {
@@ -95,6 +96,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<N,S>& 
     operator*=(const S s)
     {
@@ -123,23 +125,23 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S&
-    operator()(const int64 i, const int64 j)
-    { return _v[i + dim*j]; }
-
-    //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
     { return _v[i + dim*j]; }
 
-    //! Return i'th element. No bounds checking!
+	//! Return element at row 'i' and column 'j'. No bounds checking!
     S&
-    operator[](const int64 i)
-    { return _v[i]; }
+    operator()(const int64 i, const int64 j)
+    { return _v[i + dim*j]; }
 
     //! Return i'th element. No bounds checking!
     S
     operator[](const int64 i) const
+    { return _v[i]; }
+
+	//! Return i'th element. No bounds checking!
+    S&
+    operator[](const int64 i)
     { return _v[i]; }
 
 public:		// Data.
@@ -154,15 +156,10 @@ public:		// Data.
     data()
     { return &_v[0]; }
 
-private:		// Member variables
+private:	// Member variables
 
     S _v[linear_size];  //!< Data.
 };
-
-// Static constants.
-
-template<int64 N, typename S>
-const mat<N,S> mat<N,S>::identity(1);
 
 //------------------------------------------------------------------------------
 
@@ -209,6 +206,7 @@ public:
 
 public:		// Operators.
 
+	//! DOCS
     mat<2,S>& 
     operator+=(const mat<2,S> &b)
     {
@@ -217,6 +215,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<2,S>& 
     operator-=(const mat<2,S> &b)
     {
@@ -225,6 +224,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<2,S>& 
     operator*=(const S s)
     {
@@ -248,23 +248,23 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S&
-    operator()(const int64 i, const int64 j)
-    { return _v[i + dim*j]; }
-
-    //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
     { return _v[i + dim*j]; }
 
-    //! Return i'th element. No bounds checking!
+	//! Return element at row 'i' and column 'j'. No bounds checking!
     S&
-    operator[](const int64 i)
-    { return _v[i]; }
+    operator()(const int64 i, const int64 j)
+    { return _v[i + dim*j]; }
 
     //! Return i'th element. No bounds checking!
     S
     operator[](const int64 i) const
+    { return _v[i]; }
+
+	//! Return i'th element. No bounds checking!
+    S&
+    operator[](const int64 i)
     { return _v[i]; }
 
 public:		// Data.
@@ -333,6 +333,7 @@ public:
 
 public:		// Operators.
 
+	//! DOCS
     mat<3,S>& 
     operator+=(const mat<3,S> &b)
     {
@@ -342,6 +343,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<3,S>& 
     operator-=(const mat<3,S> &b)
     {
@@ -351,6 +353,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<3,S>& 
     operator*=(const S s)
     {
@@ -380,23 +383,23 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S&
-    operator()(const int64 i, const int64 j)
-    { return _v[i + dim*j]; }
-
-    //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
     { return _v[i + dim*j]; }
 
-    //! Return i'th element. No bounds checking!
-    S&	
-    operator[](const int64 i)
-    { return _v[i]; }
+	//! Return element at row 'i' and column 'j'. No bounds checking!
+    S&
+    operator()(const int64 i, const int64 j)
+    { return _v[i + dim*j]; }
 
     //! Return i'th element. No bounds checking!
     S
     operator[](const int64 i) const
+    { return _v[i]; }
+
+	//! Return i'th element. No bounds checking!
+    S&	
+    operator[](const int64 i)
     { return _v[i]; }
 
 public:		// Data.
@@ -419,6 +422,8 @@ private:		// Member variables.
 //------------------------------------------------------------------------------
 
 // mat<4,S>
+// --------
+//! DOCS
 
 template<typename S>
 class mat<4,S>
@@ -467,6 +472,7 @@ public:
 
 public:		// Operators.
 
+	//! DOCS
     mat<4,S>& 
     operator+=(const mat<4,S> &b)
     {
@@ -477,6 +483,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<4,S>& 
     operator-=(const mat<4,S> &b)
     {
@@ -487,6 +494,7 @@ public:		// Operators.
         return *this;
     }
 
+	//! DOCS
     mat<4,S>& 
     operator*=(const S s)
     {
@@ -524,23 +532,23 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return element at row 'i' and column 'j'. No bounds checking!
-    S&
-    operator()(const int64 i, const int64 j)
-    { return _v[i + dim*j]; }
-
-    //! Return element at row 'i' and column 'j'. No bounds checking!
     S
     operator()(const int64 i, const int64 j) const
     { return _v[i + dim*j]; }
 
-    //! Return i'th element. No bounds checking!
-    S&	
-    operator[](const int64 i)
-    { return _v[i]; }
+	//! Return element at row 'i' and column 'j'. No bounds checking!
+    S&
+    operator()(const int64 i, const int64 j)
+    { return _v[i + dim*j]; }
 
     //! Return i'th element. No bounds checking!
     S
     operator[](const int64 i) const
+    { return _v[i]; }
+
+	//! Return i'th element. No bounds checking!
+    S&	
+    operator[](const int64 i)
     { return _v[i]; }
 
 public:		// Data.

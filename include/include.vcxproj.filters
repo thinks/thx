@@ -24,12 +24,6 @@
     <ClInclude Include="thx_quat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thx_quat_operators.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="thx_quat_utils.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="thx_traits.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -49,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="thx_mat_algo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thx_quat_algo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

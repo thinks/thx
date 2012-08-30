@@ -36,6 +36,7 @@ class traits<float32>
 {
 public:
 
+	static
 	constexpr float32 
 	pi()		
 	{ return 3.1415926535897f; }

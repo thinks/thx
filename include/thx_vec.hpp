@@ -21,9 +21,9 @@ namespace thx
 // define value_type
 // define dimension
 // 
-// Default CTOR (set all zeros by default)
-// Array CTOR
-// Value CTOR (specializations only)
+// Default constexpr (specializations only) CTOR (set all zeros by default)
+// Array constexpr CTOR (specializations only)
+// Value constexpr CTOR (specializations only)
 // (All vec's have compiler-generated DTOR)
 // (All vec's have compiler-generated copy CTOR)
 // (All vec's have compiler-generated operator=)
@@ -32,8 +32,11 @@ namespace thx
 // operator-=
 // operator*=(scalar)
 //
-// operator[]
-// operator[] const
+// S  operator[] const
+// S& operator[]
+//
+// const S* const_data() const
+// S* data()
 
 //------------------------------------------------------------------------------
 
@@ -47,7 +50,11 @@ class vec
 public:
 
     typedef S value_type;
-    static const int64 dim = N;
+
+	//! Return number of components.
+	constexpr int64
+	dim()
+	{ return N; }
 
 public:		// CTOR's.
 
@@ -104,14 +111,26 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return i'th component. No bounds checking!
+    S 
+    operator[](const int64 i) const
+    { return _v[i];	}
+
+	//! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-    //! Return i'th component. No bounds checking!
-    const S& 
-    operator[](const int64 i) const
-    { return _v[i];	}
+public:		// Data.
+
+    //! Const data.
+    const S* 
+    const_data() const
+    { return &_v[0]; }
+
+    //! Mutable data.
+    S* 
+    data()
+    { return &_v[0]; }
 
 private:	    // Member variables.
 
@@ -130,33 +149,31 @@ class vec<2,S>
 public:
 
     typedef S value_type;
-    static const int64 dim = 2;
+
+	//! Return number of components.
+	constexpr int64
+	dim()
+	{ return 2; }
 
 public:		// CTOR/DTOR.
 
     //! Default CTOR.
-    explicit
+    constexpr explicit
     vec(const S x = 0) 
-    { 
-        _v[0] = x; 
-        _v[1] = x; 
-    }	
+		: _v{x, x}
+    {}	
     
     //! Array CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v[2])
-    { 
-        _v[0] = v[0]; 
-        _v[1] = v[1]; 
-    }		
+		: _v{v[0], v[1]}
+    {}		
 
     //! Value CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v0, const S v1)
-    { 
-        _v[0] = v0; 
-        _v[1] = v1; 
-    }
+		: _v{v0, v1}
+    {}
 
 public:		// Operators.
 
@@ -190,13 +207,13 @@ public:		// Operators.
 public:         // Access operators.
 
     //! Return i'th component. No bounds checking!
-    S& 
-    operator[](const int64 i)
+    S
+    operator[](const int64 i) const
     { return _v[i];	}
 
-    //! Return i'th component. No bounds checking!
-    const S& 
-    operator[](const int64 i) const
+	//! Return i'th component. No bounds checking!
+    S& 
+    operator[](const int64 i)
     { return _v[i];	}
 
 private:	    // Member variables.
@@ -216,36 +233,31 @@ class vec<3,S>
 public:
 
     typedef S value_type;
-    static const int64 dim = 3;
+
+	//! Return number of components.
+	constexpr int64
+	dim()
+	{ return 3; }
 
 public:		// CTOR's.
 
     //! Default CTOR.
-    explicit
+    constexpr explicit
     vec(const S x = 0) 
-    { 
-        _v[0] = x; 
-        _v[1] = x; 
-        _v[2] = x; 
-    }	
+		: _v{x, x, x}
+    {}	
     
     //! Array CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v[3])
-    { 
-        _v[0] = v[0]; 
-        _v[1] = v[1]; 
-        _v[2] = v[2]; 
-    }
+		: _v{v[0], v[1], v[2]}
+    {}
 
     //! Value CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v0, const S v1, const S v2)
-    { 
-        _v[0] = v0; 
-        _v[1] = v1; 
-        _v[2] = v2; 
-    }
+		: _v{v0, v1, v2}
+    {}
 
 public:		// Operators.
 
@@ -282,14 +294,26 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return i'th component. No bounds checking!
+    S
+    operator[](const int64 i) const
+    { return _v[i];	}
+
+	//! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-    //! Return i'th component. No bounds checking!
-    const S& 
-    operator[](const int64 i) const
-    { return _v[i];	}
+public:		// Data.
+
+    //! Const data.
+    const S* 
+    const_data() const
+    { return &_v[0]; }
+
+    //! Mutable data.
+    S* 
+    data()
+    { return &_v[0]; }
 
 private:	    // Member variables.
 
@@ -308,39 +332,31 @@ class vec<4,S>
 public:
 
     typedef S value_type;
-    static const int64 dim = 4;
+
+	//! Return number of components.
+	constexpr int64
+	dim()
+	{ return 4; }
 
 public:		// CTOR's.
 
     //! Default CTOR.
-    explicit
+    constexpr explicit
     vec(const S x = 0) 
-    { 
-        _v[0] = x; 
-        _v[1] = x; 
-        _v[2] = x; 
-        _v[3] = x; 
-    }	
+			: _v{x, x, x, x}
+    {}	
     
     //! Array CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v[4])
-    { 
-        _v[0] = v[0]; 
-        _v[1] = v[1]; 
-        _v[2] = v[2]; 
-        _v[3] = v[3]; 
-	}		
+		: _v{v[0], v[1], v[2], v[3]}
+    {}		
 
     //! Value CTOR.
-    explicit 
+    constexpr explicit 
     vec(const S v0, const S v1, const S v2, const S v3)
-    { 
-		_v[0] = v0; 
-		_v[1] = v1; 
-		_v[2] = v2; 
-		_v[3] = v3; 
-	}
+		: _v{v0, v1, v2, v3}
+    {}
 
 public:		// Operators.
 
@@ -380,14 +396,26 @@ public:		// Operators.
 public:     // Access operators.
 
     //! Return i'th component. No bounds checking!
+    S
+    operator[](const int64 i) const
+    { return _v[i];	}
+
+	//! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
-    //! Return i'th component. No bounds checking!
-    const S& 
-    operator[](const int64 i) const
-    { return _v[i];	}
+public:		// Data.
+
+    //! Const data.
+    const S* 
+    const_data() const
+    { return &_v[0]; }
+
+    //! Mutable data.
+    S* 
+    data()
+    { return &_v[0]; }
 
 private:	    // Member variables.
 
