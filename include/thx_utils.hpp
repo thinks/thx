@@ -8,6 +8,8 @@
 #ifndef THX_UTILS_HPP_INCLUDED
 #define THX_UTILS_HPP_INCLUDED
 
+#include "thx_namespace.hpp"
+#include "thx_define.hpp"
 #include "thx_traits.hpp"
 #include "thx_types.hpp"
 #include <limits>
@@ -15,12 +17,11 @@
 
 //------------------------------------------------------------------------------
 
-namespace thx
-{
+BEGIN_THX_NAMESPACE
 
 //! Value clamped to range [low..high].
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 clamp(S const& x, S const& low, S const& high)
 {
     assert(high >= low);
@@ -31,7 +32,7 @@ clamp(S const& x, S const& low, S const& high)
 
 //! Linear interpolation. Use floating point types. [(1-t)*x0 + t*x1]
 template<typename S>
-constexpr S
+THX_CONST_EXPR S
 lerp(const S x0, const S x1, const S t)
 {
     static_assert(std::is_floating_point<S>::value, 
@@ -43,7 +44,7 @@ lerp(const S x0, const S x1, const S t)
 
 //! Smooth step function.
 template<typename S> 
-constexpr S
+THX_CONST_EXPR S
 smooth_step(const S t)
 {
     static_assert(std::is_floating_point<S>::value, 
@@ -55,7 +56,7 @@ smooth_step(const S t)
 
 //! DOCS
 template<typename S> 
-constexpr S
+THX_CONST_EXPR S
 smooth_step(const S x0, const S x1, const S t, const S t0, const S t1)
 {
     static_assert(std::is_floating_point<S>::value, 
@@ -67,7 +68,7 @@ smooth_step(const S x0, const S x1, const S t, const S t0, const S t1)
 
 //! DOCS
 template<typename S>
-constexpr S
+THX_CONST_EXPR S
 ramp(const S t)
 {
     static_assert(std::is_floating_point<S>::value, 
@@ -79,7 +80,7 @@ ramp(const S t)
 
 //! DOCS
 template<typename S>
-constexpr S
+THX_CONST_EXPR S
 smooth_heaviside(const S t, const S w)
 { 
     return smooth_step(t, -w, w, 0, 1); 
@@ -89,7 +90,7 @@ smooth_heaviside(const S t, const S w)
 
 //! Return fractional part of x.
 template<typename S>
-constexpr S
+THX_CONST_EXPR S
 frac(const S x)
 {
     return x - traits<S>::floor(x);
@@ -111,7 +112,7 @@ frac(const S x)
 
 //! Return true if x is zero.
 template<typename S>
-constexpr bool 
+THX_CONST_EXPR bool 
 is_zero(const S x, const S tolerance = 0) 
 {
 	return std::is_floating_point<S>::value ? 
@@ -123,7 +124,7 @@ is_zero(const S x, const S tolerance = 0)
 
 //! Return true if x is nan.
 template<typename S> 
-constexpr bool
+THX_CONST_EXPR bool
 is_nan(const S x)
 { 
     return (x != x); 
@@ -133,7 +134,7 @@ is_nan(const S x)
 
 //! True if x is in the range [x0..x1]
 template<typename S> 
-constexpr bool   
+THX_CONST_EXPR bool   
 is_range_incl(const S x, const S low, const S high)
 {
     assert(low <= high);
@@ -144,7 +145,7 @@ is_range_incl(const S x, const S low, const S high)
 
 //! True if x is in the range (x0..x1)
 template<typename S> 
-constexpr bool   
+THX_CONST_EXPR bool   
 is_range_excl(const S x, const S low, const S high)
 {
     assert(low < high);
@@ -155,7 +156,7 @@ is_range_excl(const S x, const S low, const S high)
 
 //! Return true if x0 is equal to x1.
 template<typename S>
-constexpr bool 
+THX_CONST_EXPR bool 
 equal(const S x0, const S x1, const S tolerance = 0) 
 {
 	return std::is_floating_point<S>::value ? 
@@ -167,7 +168,7 @@ equal(const S x0, const S x1, const S tolerance = 0)
 
 //! Return true if x0 is equivalent to x1.
 template<typename S> 
-constexpr bool 
+THX_CONST_EXPR bool 
 equiv(const S x0, const S x1)
 {
     return (!(x0 < x1) && !(x0 > x1));
@@ -177,7 +178,7 @@ equiv(const S x0, const S x1)
 
 //! Sign function.
 template<typename S>
-int64 
+THX_CONST_EXPR int64 
 sgn(const S x, const S tolerance = 0)
 {
     return (is_zero(x, tolerance) ? 0 : (x < 0 ? -1 : 1));
@@ -187,11 +188,11 @@ sgn(const S x, const S tolerance = 0)
 
 //! Convert degrees to radians. 
 template<typename S>
-constexpr S 
+THX_CONST_EXPR S 
 deg_to_rad(const S deg)
 {
     static_assert(std::is_floating_point<S>::value, 
-                 "Scalar type must be floating point" );
+                  "Scalar type must be floating point");
     return (traits<S>::pi()/180)*deg; 
 }
 
@@ -199,7 +200,7 @@ deg_to_rad(const S deg)
 
 //! Convert radians to degrees. 
 template<typename S> 
-constexpr S 
+THX_CONST_EXPR S 
 rad_to_deg(const S rad)
 {
     static_assert(std::is_floating_point<S>::value, 
@@ -211,7 +212,7 @@ rad_to_deg(const S rad)
 
 //! Return x squared.
 template<typename S> 
-constexpr S 
+THX_CONST_EXPR S 
 sqr(const S x) 
 { 
     return x*x; 
@@ -221,7 +222,7 @@ sqr(const S x)
 
 //! Return x cubed.
 template<typename S> 
-constexpr S 
+THX_CONST_EXPR S 
 cube(const S x) 
 { 
     return x*x*x; 
@@ -230,17 +231,28 @@ cube(const S x)
 //------------------------------------------------------------------------------
 
 //! Returns smallest value.
-template<typename S> 
-constexpr S const& 
-min(S const& a, S const& b) 
-{
-	return (a < b) ? a : b;
+template <typename S>
+THX_CONST_EXPR S const&
+min(S const &a, S const &b) 
+{ 
+	return (a < b) ? a : b; 
 }
+
+
+#if 0 // C++11
+//! Returns smallest value using variadic templates.
+template <typename S, typename ...P>
+THX_CONST_EXPR S const&
+min(const S &a, P const &... b) 
+{ 
+	return min(a, min(b...)); 
+}
+#endif
 
 
 //! Returns smallest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 min(S const& x0, S const& x1, S const& x2)
 { 
     return min<S>(x0, min<S>(x1, x2)); 
@@ -249,7 +261,7 @@ min(S const& x0, S const& x1, S const& x2)
 
 //! Returns smallest value.
 template<typename S>
-constexpr S
+THX_CONST_EXPR S
 min(S const& x0, S const& x1, S const& x2, S const& x3)
 { 
     return min<S>(min<S>(x0, x1), min<S>(x2, x3)); 
@@ -258,7 +270,7 @@ min(S const& x0, S const& x1, S const& x2, S const& x3)
 
 //! Returns smallest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 min(S const& x0, S const& x1, S const& x2, S const& x3, S const& x4)
 { 
     return min<S>(min<S>(x0, x1), min<S>(x2, x3), x4); 
@@ -267,7 +279,7 @@ min(S const& x0, S const& x1, S const& x2, S const& x3, S const& x4)
 
 //! Returns smallest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 min(S const& x0, 
 	S const& x1, 
 	S const& x2, 
@@ -282,16 +294,27 @@ min(S const& x0,
 
 //! Returns largest value.
 template<typename S> 
-constexpr S const& 
+THX_CONST_EXPR S const& 
 max(S const& a, S const& b) 
 {
 	return (a > b) ? a : b;
 }
 
 
+#if 0 // C++11
+//! Returns largest value using variadic templates.
+template <typename S, typename ...P>
+THX_CONST_EXPR S const&
+max(const S &a, P const &... b) 
+{ 
+	return max(a, max(b...)); 
+}
+#endif
+
+
 //! Returns largest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 max(S const& x0, S const& x1, S const& x2)
 { 
     return max<S>(x0, max<S>(x1, x2)); 
@@ -300,7 +323,7 @@ max(S const& x0, S const& x1, S const& x2)
 
 //! Returns largest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 max(S const& x0, S const& x1, S const& x2, S const& x3)
 { 
     return max<S>(max<S>(x0, x1), max<S>(x2, x3)); 
@@ -309,7 +332,7 @@ max(S const& x0, S const& x1, S const& x2, S const& x3)
 
 //! Returns largest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 max(S const& x0, S const& x1, S const& x2, S const& x3, S const& x4)
 { 
     return max(max<S>(x0, x1), max<S>(x2, x3), x4); 
@@ -318,7 +341,7 @@ max(S const& x0, S const& x1, S const& x2, S const& x3, S const& x4)
 
 //! Returns largest value.
 template<typename S>
-constexpr S const&
+THX_CONST_EXPR S const&
 max(S const& x0, 
 	S const& x1, 
 	S const& x2, 
@@ -468,6 +491,6 @@ compact_gaussian(const S x, const S sigma)
 //    return true;	// Real roots.
 //}
 
-}	// Namespace: thx.
+END_THX_NAMESPACE
 
 #endif	// THX_UTILS_HPP_INCLUDED

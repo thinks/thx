@@ -61,8 +61,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="thx.hpp" />
+    <ClInclude Include="thx_define.hpp" />
     <ClInclude Include="thx_mat.hpp" />
     <ClInclude Include="thx_mat_algo.hpp" />
+    <ClInclude Include="thx_namespace.hpp" />
     <ClInclude Include="thx_operators.hpp" />
     <ClInclude Include="thx_quat.hpp" />
     <ClInclude Include="thx_quat_algo.hpp" />

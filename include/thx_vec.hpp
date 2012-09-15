@@ -8,13 +8,14 @@
 #ifndef THX_VEC_HPP_INCLUDED
 #define THX_VEC_HPP_INCLUDED
 
+#include "thx_namespace.hpp"
+#include "thx_define.hpp"
 #include "thx_types.hpp"
 #include <iostream>
 
 //------------------------------------------------------------------------------
 
-namespace thx
-{
+BEGIN_THX_NAMESPACE
 
 // vec<N,S> anatomy:
 //
@@ -47,14 +48,26 @@ namespace thx
 template<int64 N, typename S>
 class vec
 {
+private:
+
+    static_assert(N > 4, 
+				  "Vector dimension must be > 4");
+    static_assert(std::is_arithmetic<S>::value, 
+				  "Scalar type must be arithmetic");
+
 public:
 
     typedef S value_type;
 
-	//! Return number of components.
-	constexpr int64
-	dim()
-	{ return N; }
+    static const int64 dim = N;
+    static const int64 linear_size = dim;
+
+#if 0 // C++11
+    //! Return number of components.
+    static constexpr int64
+    dim()
+    { return N; }
+#endif
 
 public:		// CTOR's.
 
@@ -62,7 +75,7 @@ public:		// CTOR's.
     explicit 
     vec(const S x = 0)
     { 
-        for (int64 i = 0; i < N; ++i) { 
+        for (auto i = 0; i < N; ++i) { 
             _v[i] = x; 
         }
     }
@@ -71,28 +84,28 @@ public:		// CTOR's.
     explicit 
     vec(const S v[N])
     { 
-        for (int64 i = 0; i < N; ++i) { 
+        for (auto i = 0; i < N; ++i) { 
             _v[i] = v[i]; 
         }
     }		
 
 public:		// Operators.
 
-	//! DOCS
+    //! DOCS
     vec<N,S>& 
     operator+=(const vec<N,S> &u)
     {
-        for (int64 i = 0; i < N; ++i) { 
+        for (auto i = 0; i < N; ++i) { 
             _v[i] += u[i]; 
         }
         return *this;
     }
 
-	//! DOCS
+    //! DOCS
     vec<N,S>& 
     operator-=(const vec<N,S> &u)
     {
-        for (int64 i = 0; i < N; ++i) { 
+        for (auto i = 0; i < N; ++i) { 
             _v[i] -= u[i]; 
         }
         return *this;
@@ -102,7 +115,7 @@ public:		// Operators.
     vec<N,S>& 
     operator*=(const S x)
     {
-        for (int64 i = 0; i < N; ++i) { 
+        for (auto i = 0; i < N; ++i) { 
             _v[i] *= x; 
         }
         return *this;
@@ -115,7 +128,7 @@ public:     // Access operators.
     operator[](const int64 i) const
     { return _v[i];	}
 
-	//! Return i'th component. No bounds checking!
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
@@ -134,7 +147,7 @@ public:		// Data.
 
 private:	    // Member variables.
 
-    S _v[N];    //!< Data.
+    S _v[linear_size];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
@@ -146,38 +159,63 @@ private:	    // Member variables.
 template<typename S>
 class vec<2,S>
 {
+private:
+
+    static_assert(std::is_arithmetic<S>::value, 
+				  "Scalar type must be arithmetic");
+
 public:
 
     typedef S value_type;
 
-	//! Return number of components.
-	constexpr int64
-	dim()
-	{ return 2; }
+    static const int64 dim = 2;
+    static const int64 linear_size = dim;
+
+#if 0 // C++11
+    //! Return number of components.
+    static constexpr int64
+    dim()
+    { return 2; }
+#endif
 
 public:		// CTOR/DTOR.
 
     //! Default CTOR.
-    constexpr explicit
+    explicit THX_CONST_EXPR 
     vec(const S x = 0) 
-		: _v{x, x}
-    {}	
+#if 0 // C++11
+        : _v{x, x}
+#endif
+    {
+        _v[0] = x; 
+        _v[1] = x;
+    }	
     
     //! Array CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR 
     vec(const S v[2])
-		: _v{v[0], v[1]}
-    {}		
+#if 0 // C++11
+        : _v{v[0], v[1]}
+#endif
+    {
+        _v[0] = v[0];
+        _v[1] = v[1];
+    }		
 
     //! Value CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR
     vec(const S v0, const S v1)
-		: _v{v0, v1}
-    {}
+#if 0 // C++11
+        : _v{v0, v1}
+#endif
+    {
+        _v[0] = v0;
+        _v[1] = v1;
+    }
 
 public:		// Operators.
 
-	//! DOCS
+    //! DOCS
     vec<2,S>& 
     operator+=(const vec<2,S> &u)
     {
@@ -186,7 +224,7 @@ public:		// Operators.
         return *this;
     }
 
-	//! DOCS
+    //! DOCS
     vec<2,S>& 
     operator-=(const vec<2,S> &u)
     {
@@ -211,14 +249,26 @@ public:         // Access operators.
     operator[](const int64 i) const
     { return _v[i];	}
 
-	//! Return i'th component. No bounds checking!
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
 
+public:		// Data.
+
+    //! Const data.
+    const S* 
+    const_data() const
+    { return &_v[0]; }
+
+    //! Mutable data.
+    S* 
+    data()
+    { return &_v[0]; }
+
 private:	    // Member variables.
 
-    S _v[2];    //!< Data.
+    S _v[linear_size];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
@@ -230,34 +280,62 @@ private:	    // Member variables.
 template<typename S>
 class vec<3,S>
 {
+private:
+
+    static_assert(std::is_arithmetic<S>::value, 
+				  "Scalar type must be arithmetic");
+
 public:
 
     typedef S value_type;
 
-	//! Return number of components.
-	constexpr int64
-	dim()
-	{ return 3; }
+    static const int64 dim = 3;
+    static const int64 linear_size = dim;
+
+#if 0 // C++11
+    //! Return number of components.
+    static constexpr int64
+    dim()
+    { return 3; }
+#endif
 
 public:		// CTOR's.
 
     //! Default CTOR.
-    constexpr explicit
+    explicit THX_CONST_EXPR
     vec(const S x = 0) 
-		: _v{x, x, x}
-    {}	
+#if 0 // C++11
+        : _v{x, x, x}
+#endif
+    {
+        _v[0] = x;
+        _v[1] = x;
+        _v[2] = x;
+    }	
     
     //! Array CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR
     vec(const S v[3])
-		: _v{v[0], v[1], v[2]}
-    {}
+#if 0 // C++11
+        : _v{v[0], v[1], v[2]}
+#endif
+    {
+        _v[0] = v[0];
+        _v[1] = v[1];
+        _v[2] = v[2];
+    }
 
     //! Value CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR
     vec(const S v0, const S v1, const S v2)
-		: _v{v0, v1, v2}
-    {}
+#if 0 // C++11
+        : _v{v0, v1, v2}
+#endif
+    {
+        _v[0] = v0;
+        _v[1] = v1;
+        _v[2] = v2;
+    }
 
 public:		// Operators.
 
@@ -298,7 +376,7 @@ public:     // Access operators.
     operator[](const int64 i) const
     { return _v[i];	}
 
-	//! Return i'th component. No bounds checking!
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
@@ -317,7 +395,7 @@ public:		// Data.
 
 private:	    // Member variables.
 
-    S _v[3];    //!< Data.
+    S _v[linear_size];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
@@ -329,34 +407,65 @@ private:	    // Member variables.
 template<typename S>
 class vec<4,S>
 {
+private:
+
+    static_assert(std::is_arithmetic<S>::value, 
+				  "Scalar type must be arithmetic");
+
 public:
 
     typedef S value_type;
 
-	//! Return number of components.
-	constexpr int64
-	dim()
-	{ return 4; }
+    static const int64 dim = 4;
+    static const int64 linear_size = dim;
+
+#if 0 // C++11
+    //! Return number of components.
+    static constexpr int64
+    dim()
+    { return 4; }
+#endif
 
 public:		// CTOR's.
 
     //! Default CTOR.
-    constexpr explicit
-    vec(const S x = 0) 
-			: _v{x, x, x, x}
-    {}	
+    explicit THX_CONST_EXPR
+    vec(const S x = 0)
+#if 0 // C++11
+        : _v{x, x, x, x}
+#endif
+    {
+        _v[0] = x; 
+        _v[1] = x; 
+        _v[2] = x; 
+        _v[3] = x; 
+    }	
     
     //! Array CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR 
     vec(const S v[4])
-		: _v{v[0], v[1], v[2], v[3]}
-    {}		
+#if 0 // C++11
+        : _v{v[0], v[1], v[2], v[3]}
+#endif
+    {
+        _v[0] = v[0]; 
+        _v[1] = v[1]; 
+        _v[2] = v[2]; 
+        _v[3] = v[3]; 
+    }		
 
     //! Value CTOR.
-    constexpr explicit 
+    explicit THX_CONST_EXPR
     vec(const S v0, const S v1, const S v2, const S v3)
-		: _v{v0, v1, v2, v3}
-    {}
+#if 0 // C++11
+        : _v{v0, v1, v2, v3}
+#endif
+    {
+        _v[0] = v0; 
+        _v[1] = v1; 
+        _v[2] = v2; 
+        _v[3] = v3; 
+    }
 
 public:		// Operators.
 
@@ -387,9 +496,9 @@ public:		// Operators.
     operator*=(const S x)
     {
         _v[0] *= x; 
-		_v[1] *= x; 
-		_v[2] *= x; 
-		_v[3] *= x;
+        _v[1] *= x; 
+        _v[2] *= x; 
+        _v[3] *= x;
         return *this;
     }
 
@@ -400,7 +509,7 @@ public:     // Access operators.
     operator[](const int64 i) const
     { return _v[i];	}
 
-	//! Return i'th component. No bounds checking!
+    //! Return i'th component. No bounds checking!
     S& 
     operator[](const int64 i)
     { return _v[i];	}
@@ -419,7 +528,7 @@ public:		// Data.
 
 private:	    // Member variables.
 
-    S _v[4];    //!< Data.
+    S _v[linear_size];    //!< Data.
 };
 
 //------------------------------------------------------------------------------
@@ -459,12 +568,11 @@ typedef vec<4,uint16>	vec4ui16;
 typedef vec<4,uint32>	vec4ui32;
 typedef vec<4,uint64>	vec4ui64;
 
-}	// Namespace: thx.
+END_THX_NAMESPACE
 
 //------------------------------------------------------------------------------
 
-namespace std 
-{
+BEGIN_STD_NAMESPACE
 
 //! Binary operator: std::ostream << vec<N,S>
 template<thx::int64 N, typename S>
@@ -472,15 +580,13 @@ ostream&
 operator<<(ostream &os, const thx::vec<N,S> &rhs)
 {
     os	<< "[";
-    for (thx::int64 i = 0; i < N; ++i) {
+    for (auto i = 0; i < N; ++i) {
         os << rhs[i] << (i != (N - 1) ? ", " : "");
     }
     os << "]";
     return os;
 }
 
-}	// Namespace: std.
-
-//------------------------------------------------------------------------------
+END_STD_NAMESPACE
 
 #endif	// THX_VEC_HPP_INCLUDED

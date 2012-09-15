@@ -48,5 +48,11 @@
     <ClInclude Include="thx_quat_algo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="thx_namespace.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thx_define.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

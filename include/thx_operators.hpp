@@ -8,12 +8,14 @@
 #ifndef THX_OPERATORS_HPP_INCLUDED
 #define THX_OPERATORS_HPP_INCLUDED
 
+#include "thx_namespace.hpp"
 #include "thx_vec.hpp"
 #include "thx_mat.hpp"
+#include "thx_quat.hpp"
 
 //------------------------------------------------------------------------------
 
-namespace thx {
+BEGIN_THX_NAMESPACE
 
 //! Unary operator: -vec<N,S>
 template<int64 N, typename S>
@@ -21,7 +23,7 @@ vec<N,S>
 operator-(const vec<N,S> &v)
 {
     vec<N,S> r;
-    for (int64 i = 0; i < N; ++i) {
+    for (auto i = 0; i < N; ++i) {
         r[i] = -v[i]; 
     }
     return r;
@@ -32,21 +34,27 @@ operator-(const vec<N,S> &v)
 template<typename S>
 vec<2,S>
 operator-(const vec<2,S> &v)
-{ return vec<2,S>(-v[0], -v[1]); }
+{ 
+    return vec<2,S>(-v[0], -v[1]); 
+}
 
 
 //! Unary operator: -vec<3,S>
 template<typename S>
 vec<3,S>
 operator-(const vec<3,S> &v)
-{ return vec<3,S>(-v[0], -v[1], -v[2]); }
+{ 
+    return vec<3,S>(-v[0], -v[1], -v[2]); 
+}
 
 
 //! Unary operator: -vec<4,S>
 template<typename S>
 vec<4,S>
 operator-(const vec<4,S> &v)
-{ return vec<4,S>(-v[0], -v[1], -v[2], -v[3]); }
+{ 
+    return vec<4,S>(-v[0], -v[1], -v[2], -v[3]); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -69,21 +77,27 @@ operator==(const vec<N,S> &u, const vec<N,S> &v)
 template<typename S>
 bool
 operator==(const vec<2,S> &u, const vec<2,S> &v)
-{ return (u[0] == v[0] && u[1] == v[1]); }
+{ 
+    return (u[0] == v[0] && u[1] == v[1]); 
+}
 
 
 //! Binary operator: vec<3,S> == vec<3,S>
 template<typename S>
 bool
 operator==(const vec<3,S> &u, const vec<3,S> &v)
-{ return (u[0] == v[0] && u[1] == v[1] && u[2] == v[2]); }
+{ 
+    return (u[0] == v[0] && (u[1] == v[1] && u[2] == v[2])); 
+}
 
 
 //! Binary operator: vec<4,S> == vec<4,S>
 template<typename S>
 bool
 operator==(const vec<4,S> &u, const vec<4,S> &v)
-{ return (u[0] == v[0] && u[1] == v[1] && u[2] == v[2] && u[3] == v[3]); }
+{ 
+    return (u[0] == v[0] && (u[1] == v[1] && (u[2] == v[2] && u[3] == v[3]))); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -106,21 +120,27 @@ operator!=(const vec<N,S> &u, const vec<N,S> &v)
 template<typename S>
 bool 
 operator!=(const vec<2,S> &u, const vec<2,S> &v) 
-{ return !(u == v); }
+{ 
+    return !(u == v); 
+}
 
 
 //! Binary operator: vec<3,S> != vec<3,S>
 template<typename S>
 bool 
 operator!=(const vec<3,S> &u, const vec<3,S> &v) 
-{ return !(u == v); }
+{ 
+    return !(u == v); 
+}
 
 
 //! Binary operator: vec<4,S> != vec<4,S>
 template<typename S>
 bool 
 operator!=(const vec<4,S> &u, const vec<4,S> &v) 
-{ return !(u == v); }
+{ 
+    return !(u == v); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -128,28 +148,36 @@ operator!=(const vec<4,S> &u, const vec<4,S> &v)
 template<int64 N, typename S>
 vec<N,S>
 operator+(const vec<N,S> &u, const vec<N,S> &v)
-{ return vec<N,S>(u) += v; }
+{ 
+	return vec<N,S>(u) += v; 
+}
 
 
 //! Binary operator: vec<2,S> + vec<2,S>
 template<typename S>
 vec<2,S>
 operator+(const vec<2,S> &u, const vec<2,S> &v)
-{ return vec<2,S>(u[0] + v[0], u[1] + v[1]); }
+{ 
+	return vec<2,S>(u[0] + v[0], u[1] + v[1]); 
+}
 
 
 //! Binary operator: vec<3,S> + vec<3,S>
 template<typename S>
 vec<3,S>
 operator+(const vec<3,S> &u, const vec<3,S> &v)
-{ return vec<3,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2]); }
+{ 
+	return vec<3,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2]); 
+}
 
 
 //! Binary operator: vec<4,S> + vec<4,S>
 template<typename S>
 vec<4,S>
 operator+(const vec<4,S> &u, const vec<4,S> &v)
-{ return vec<4,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2], u[3] + v[3]); }
+{ 
+	return vec<4,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2], u[3] + v[3]); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -157,28 +185,36 @@ operator+(const vec<4,S> &u, const vec<4,S> &v)
 template<int64 N, typename S>
 vec<N,S>
 operator-(const vec<N,S> &u, const vec<N,S> &v)
-{ return vec<N,S>(u) -= v; }
+{ 
+	return vec<N,S>(u) -= v; 
+}
 
 
 //! Binary operator: vec<2,S> - vec<2,S>
 template<typename S>
 vec<2,S>
 operator-(const vec<2,S> &u, const vec<2,S> &v)
-{ return vec<2,S>(u[0] - v[0], u[1] - v[1]); }
+{ 
+	return vec<2,S>(u[0] - v[0], u[1] - v[1]); 
+}
 
 
 //! Binary operator: vec<3,S> - vec<3,S>
 template<typename S>
 vec<3,S>
 operator-(const vec<3,S> &u, const vec<3,S> &v)
-{ return vec<3,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2]); }
+{ 
+	return vec<3,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2]); 
+}
 
 
 //! Binary operator: vec<4,S> - vec<4,S>
 template<typename S>
 vec<4,S>
 operator-(const vec<4,S> &u, const vec<4,S> &v)
-{ return vec<4,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2], u[3] - v[3]); }
+{ 
+	return vec<4,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2], u[3] - v[3]); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -186,28 +222,36 @@ operator-(const vec<4,S> &u, const vec<4,S> &v)
 template<int64 N, typename S>
 vec<N,S>
 operator*(const S s, const vec<N,S> &v)
-{ return vec<N,S>(v) *= s; }
+{ 
+	return vec<N,S>(v) *= s; 
+}
 
 
 //! Binary operator: scalar * vec<2,S>
 template<typename S>
 vec<2,S>
 operator*(const S s, const vec<2,S> &v)
-{ return vec<2,S>(s*v[0], s*v[1]); }
+{ 
+	return vec<2,S>(s*v[0], s*v[1]); 
+}
 
 
 //! Binary operator: scalar * vec<3,S>
 template<typename S>
 vec<3,S>
 operator*(const S s, const vec<3,S> &v)
-{ return vec<3,S>(s*v[0], s*v[1], s*v[2]); }
+{ 
+	return vec<3,S>(s*v[0], s*v[1], s*v[2]); 
+}
 
 
 //! Binary operator: scalar * vec<4,S>
 template<typename S>
 vec<4,S>
 operator*(const S s, const vec<4,S> &v)
-{ return vec<4,S>(s*v[0], s*v[1], s*v[2], s*v[3]); }
+{ 
+	return vec<4,S>(s*v[0], s*v[1], s*v[2], s*v[3]); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -215,27 +259,6 @@ operator*(const S s, const vec<4,S> &v)
 template<int64 N, typename S>
 vec<N,S>
 operator*(const vec<N,S> &v, const S s)
-{ return s*v; }
-
-
-//! Binary operator: vec<2,S> * scalar
-template<typename S>
-vec<2,S>
-operator*(const vec<2,S> &v, const S s)
-{ return s*v; }
-
-
-//! Binary operator: vec<3,S> * scalar
-template<typename S>
-vec<3,S>
-operator*(const vec<3,S> &v, const S s)
-{ return s*v; }
-
-
-//! Binary operator: vec<4,S> * scalar
-template<typename S>
-vec<4,S>
-operator*(const vec<4,S> &v, const S s)
 { return s*v; }
 
 //------------------------------------------------------------------------------
@@ -328,21 +351,27 @@ operator!=(const mat<N,S> &a, const mat<N,S> &b)
 template<typename S>
 bool 
 operator!=(const mat<2,S> &a, const mat<2,S> &b)
-{ return !(a == b); }
+{ 
+	return !(a == b); 
+}
 
 
 //! Binary operator: mat<3,S> != mat<3,S>
 template<typename S>
 bool 
 operator!=(const mat<3,S> &a, const mat<3,S> &b)
-{ return !(a == b); }
+{ 
+	return !(a == b); 
+}
 
 
 //! Binary operator: mat<4,S> != mat<4,S>
 template<typename S>
 bool 
 operator!=(const mat<4,S> &a, const mat<4,S> &b)
-{ return !(a == b); }
+{ 
+	return !(a == b); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -350,7 +379,9 @@ operator!=(const mat<4,S> &a, const mat<4,S> &b)
 template<int64 N, typename S>
 mat<N,S>
 operator+(const mat<N,S> &a, const mat<N,S> &b)
-{ return (mat<N,S>(a) += b); }
+{ 
+	return (mat<N,S>(a) += b); 
+}
 
 
 //! Binary operator: mat<2,S> + mat<2,S>
@@ -394,7 +425,9 @@ operator+(const mat<4,S> &a, const mat<4,S> &b)
 template<int64 N, typename S>
 bool
 operator-(const mat<N,S> &a, const mat<N,S> &b)
-{ return (mat<N,S>(a) -= b); }
+{ 
+	return (mat<N,S>(a) -= b); 
+}
 
 
 //! Binary operator: mat<2,S> - mat<2,S>
@@ -438,8 +471,9 @@ operator-(const mat<4,S> &a, const mat<4,S> &b)
 template<int64 N, typename S>
 mat<N,S>
 operator*(const S s, const mat<N,S> &a)
-{ return (mat<N,S>(a) *= s); }
-
+{ 
+	return (mat<N,S>(a) *= s); 
+}
 
 
 //! Binary operator: scalar * mat<2,S>
@@ -485,34 +519,15 @@ mat<N,S>
 operator*(const mat<N,S> &a, const S b)
 { return b*a; }
 
-
-//! Binary operator: mat<2,S> * scalar
-template<typename S>
-mat<2,S> 
-operator*(const mat<2,S> &a, const S b)
-{ return b*a; }
-
-
-//! Binary operator: mat<3,S> * scalar
-template<typename S>
-mat<3,S> 
-operator*(const mat<3,S> &a, const S b)
-{ return b*a; }
-
-
-//! Binary operator: mat<4,S> * scalar
-template<typename S>
-mat<4,S> 
-operator*(const mat<4,S> &a, const S b)
-{ return b*a; }
-
 //------------------------------------------------------------------------------
 
 //! Binary operator: mat<N,S> * mat<N,S>
 template<int64 N, typename S>
 mat<N,S>
 operator*(const mat<N,S> &a, const mat<N,S> &b)
-{ return mat<N,S>(a) *= b; }
+{ 
+	return mat<N,S>(a) *= b; 
+}
 
 
 //! Binary operator: mat<2,S> * mat<2,S>
@@ -578,8 +593,8 @@ vec<N,S>
 operator*(const mat<N,S> &a, const vec<N,S> &v)
 { 
     vec<N,S> u(0);
-    for (int64 i = 0; i < N; ++i) {
-        for (int64 j = 0; j < N; ++j) {
+    for (auto i = 0; i < N; ++i) {
+        for (auto j = 0; j < N; ++j) {
             u[i] += a(i,j)*v[j];
         }
     }
@@ -630,8 +645,8 @@ vec<N,S>
 operator*(const vec<N,S> &v, const mat<N,S> &a)
 { 
     vec<R,S> u(0);
-    for (int64 j = 0; j < N; ++j) {
-        for (int64 i = 0; i < N; ++i) {
+    for (auto j = 0; j < N; ++j) {
+        for (auto i = 0; i < N; ++i) {
             u[j] += v[i]*a(i,j);
         }
     }
@@ -680,7 +695,9 @@ operator*(const vec<4,S> &v, const mat<4,S> &a)
 template<typename S>
 bool
 operator==(const quat<S>& q, const quat<S>& r)
-{ return (q[0] == r[0] && q[1] == r[1] && q[2] == r[2] && q[3] == r[3]); }
+{ 
+	return (q[0] == r[0] && q[1] == r[1] && q[2] == r[2] && q[3] == r[3]); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -736,6 +753,6 @@ operator*(const quat<S> &q, const quat<S> &r)
         q[0]*r[3] + q[3]*r[0] + q[1]*r[2] - q[2]*r[1]);
 }
 
-}   // Namespace: thx.
+END_THX_NAMESPACE
 
 #endif // THX_OPERATORS_HPP_INCLUDED

@@ -36,8 +36,7 @@ class traits<float32>
 {
 public:
 
-	static
-	constexpr float32 
+	static /*constexpr*/ float32 
 	pi()		
 	{ return 3.1415926535897f; }
 
@@ -125,7 +124,7 @@ class traits<float64>
 {
 public:
 
-	constexpr float64 
+	static /*constexpr*/ float64 
 	pi()		
 	{ return 3.1415926535897; }
 

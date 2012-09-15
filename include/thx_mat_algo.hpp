@@ -145,7 +145,8 @@ template<int64 N, typename S>
 void
 gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 {
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
+    static_assert(std::is_floating_point<S>::value, 
+                 "Scalar type must be floating point");
    
     int64 icol(0);
     int64 irow(0);
@@ -266,10 +267,10 @@ template<typename S>
 mat<2,S> 
 inverted(const mat<2,S> &a)
 {
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-    assert(!is_zero(determinant(a)));
+    static_assert(std::is_floating_point<S>::value, 
+                 "Scalar type must be floating point");
 
-    const S inv_det(1/determinant(a));
+    const S inv_det = 1/determinant(a);
     return mat<2,S>(
          inv_det*a(1,1), -inv_det*a(0,1),
         -inv_det*a(1,0),  inv_det*a(0,0));
@@ -279,10 +280,10 @@ template<typename S>
 mat<3,S> 
 inverted(const mat<3,S> &a)
 {
-    THX_STATIC_ASSERT(traits<S>::is_floating, error__non_floating_point_type);
-    assert(!is_zero(determinant(a)));
+    static_assert(std::is_floating_point<S>::value, 
+                 "Scalar type must be floating point");
 
-    const S inv_det(1/determinant(a));
+    const S inv_det = 1/determinant(a);
     return mat<3,S>(
         inv_det*(a(1,1)*a(2,2) - a(1,2)*a(2,1)), 
         inv_det*(a(0,2)*a(2,1) - a(0,1)*a(2,2)), 

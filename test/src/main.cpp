@@ -19,38 +19,42 @@ main(int argc, char* argv[])
     using namespace thx;
 
 #if 1
+	//vec<2, int*> v; // Should fail, int* is not an arithmetic type!
+#endif
+
+#if 1
     {
     cerr
         << "\n"
         << "thx::types:\n"
-        << "sizeof(thx::float64): " << 8*sizeof(float64) << " [bits] | "
+        << "sizeof(thx::float64) : " << 8*sizeof(float64) << " [bits] | "
         << "min: " << (numeric_limits<float64>::min)() << ", "
         << "max: " << (numeric_limits<float64>::max)() << "\n"
-        << "sizeof(thx::float32): " << 8*sizeof(float32) << " [bits] | "
+        << "sizeof(thx::float32) : " << 8*sizeof(float32) << " [bits] | "
         << "min: " << (numeric_limits<float32>::min)() << ", "
         << "max: " << (numeric_limits<float32>::max)() << "\n"
-        << "sizeof(thx::int8):    " << 8*sizeof(int8) << "  [bits] | "
+        << "sizeof(thx::int8)    : " << 8*sizeof(int8) << "  [bits] | "
         << "min: " << static_cast<int64>((numeric_limits<int8>::min)()) << ", "
         << "max: " << static_cast<int64>((numeric_limits<int8>::max)()) << "\n"
-        << "sizeof(thx::int16):   " << 8*sizeof(int16) << " [bits] | "
+        << "sizeof(thx::int16)   : " << 8*sizeof(int16) << " [bits] | "
         << "min: " << (std::numeric_limits<int16>::min)() << ", "
         << "max: " << (std::numeric_limits<int16>::max)() << "\n"
-        << "sizeof(thx::int32):   " << 8*sizeof(int32) << " [bits] | "
+        << "sizeof(thx::int32)   : " << 8*sizeof(int32) << " [bits] | "
         << "min: " << (std::numeric_limits<int32>::min)() << ", "
         << "max: " << (std::numeric_limits<int32>::max)() << "\n"
-        << "sizeof(thx::int64):   " << 8*sizeof(int64) << " [bits] | "
+        << "sizeof(thx::int64)   : " << 8*sizeof(int64) << " [bits] | "
         << "min: " << (std::numeric_limits<int64>::min)() << ", "
         << "max: " << (std::numeric_limits<int64>::max)() << "\n"
-        << "sizeof(thx::uint8):   " << 8*sizeof(uint8) << "  [bits] | "
+        << "sizeof(thx::uint8)   : " << 8*sizeof(uint8) << "  [bits] | "
         << "min: " << static_cast<int64>((numeric_limits<uint8>::min)()) << ", "
         << "max: " << static_cast<int64>((numeric_limits<uint8>::max)()) << "\n"
-        << "sizeof(thx::uint16):  " << 8*sizeof(thx::uint16) << " [bits] | "
+        << "sizeof(thx::uint16)  : " << 8*sizeof(thx::uint16) << " [bits] | "
         << "min: " << (numeric_limits<thx::uint16>::min)() << ", "
         << "max: " << (numeric_limits<thx::uint16>::max)() << "\n"
-        << "sizeof(thx::uint32):  " << 8*sizeof(uint32) << " [bits] | "
+        << "sizeof(thx::uint32)  : " << 8*sizeof(uint32) << " [bits] | "
         << "min: " << (numeric_limits<uint32>::min)() << ", "
         << "max: " << (numeric_limits<uint32>::max)() << "\n"
-        << "sizeof(thx::uint64):  " << 8*sizeof(uint64) << " [bits] | "
+        << "sizeof(thx::uint64)  : " << 8*sizeof(uint64) << " [bits] | "
         << "min: " << (numeric_limits<uint64>::min)() << ", "
         << "max: " << (numeric_limits<uint64>::max)() << "\n"
         << "\n";
@@ -90,14 +94,14 @@ main(int argc, char* argv[])
     vec3f32 u(1, 1, 1);
     vec3f32 v(2, 2, 2);
     cerr 
-        << "u: " << u << "\n"
-        << "v: " << v << "\n"
-        << "dot(u,v): " << dot(u,v) << "\n"
-        << "mag2(u): " << mag2(u) << "\n"
-        << "mag(u): " << mag(u) << "\n"
-        << "dist2(u,v): " << dist2(u,v) << "\n"
-        << "dist(u,v): " << dist(u,v) << "\n"
-        << "normalized(u): " << normalized(u) << "\n";
+        << "u                 : " << u << "\n"
+        << "v                 : " << v << "\n"
+        << "dot(u,v)          : " << dot(u,v) << "\n"
+        << "mag_squared(u)    : " << mag_squared(u) << "\n"
+        << "mag(u)            : " << mag(u) << "\n"
+        << "dist_squared(u,v) : " << dist_squared(u,v) << "\n"
+        << "dist(u,v)         : " << dist(u,v) << "\n"
+        << "normalized(u)     : " << normalized(u) << "\n";
     }
 
 #endif
@@ -135,9 +139,9 @@ main(int argc, char* argv[])
         << "sizeof(thx::mat3f32): " << sizeof(mat3f32) << " [bytes]\n"
         << "sizeof(thx::mat4f32): " << sizeof(mat4f32) << " [bytes]\n"
         << "\n"
-        << "mutable: &m3 | &m3[0]" << &m3 << " | " << &m3[0]
-        << "const: &m3 | &m3[0]" << &cm3 << " | " << &cm3[0]
-        << "\n"
+        //<< "mutable: &m3 | &m3[0]" << &m3 << " | " << &m3[0]
+        //<< "const: &m3 | &m3[0]" << &cm3 << " | " << &cm3[0]
+        //<< "\n"
         << "mat<2>:\n"
         << m2 << "\n"
         << "Transposed:\n"
