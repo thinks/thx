@@ -8,87 +8,452 @@
 #include <thx.hpp>
 #include <iostream>
 #include <limits>
+#include <string>
+#include <sstream>
+#include <exception>
+#include <functional>
+
+//------------------------------------------------------------------------------
+
+#define TEST_THX_TYPES
+#define TEST_THX_VEC
+
+//------------------------------------------------------------------------------
+
+template<typename T>
+struct BitSize 
+{
+  static const std::size_t value = 8*sizeof(T);
+};
+
+//------------------------------------------------------------------------------
+
+template<typename S>
+struct ScalarTypeName
+{
+  static std::string 
+  value() 
+  {
+    return std::string("S");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::float64>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("float64");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::float32>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("float32");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::int8>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("int8");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::int16>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("int16");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::int32>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("int32");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::int64>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("int64");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::uint8>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("uint8");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::uint16>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("uint16");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::uint32>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("uint32");
+  }
+};
+
+template<>
+struct ScalarTypeName<thx::uint64>
+{ 
+  static std::string 
+  value() 
+  {
+    return std::string("uint64");
+  }
+};
+
+//------------------------------------------------------------------------------
+
+template<class V>
+struct VecTypeName
+{
+  static std::string 
+  value() 
+  {
+    std::stringstream ss;
+    switch (V::dim) {
+    case 2:
+    case 3:
+    case 4:
+      ss << "vec<" << V::dim << "," 
+         << ScalarTypeName<typename V::value_type>::value() 
+         << "> (specialization)";
+      break;
+    default:
+      ss << "vec<N," 
+         << ScalarTypeName<typename V::value_type>::value() << ">";
+      break;
+    }
+
+    return ss.str();
+  }
+};
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecDefaultCtor() 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    cout << "Testing " << VecTypeName<V>::value() << " default CTOR... ";
+    V v;
+    for (auto i = 0; i < typename V::linear_size; ++i) {
+      if (v[i] != 0) {
+        throw logic_error("must initialize elements to zero");
+      }
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecArrayCtor() 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    const typename V::value_type a[] = {42, 13 ,27, 8, 3};
+    cout << "Testing " << VecTypeName<V>::value() << " array CTOR... ";
+    V v(a);
+    for (auto i = 0; i < typename V::linear_size; ++i) {
+      if (v[i] != a[i]) {
+        throw logic_error("copy error");
+      }
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecValueCtor(const V& v, const typename V::value_type a[]) 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    cout << "Testing " << VecTypeName<V>::value() << " value CTOR... ";
+    for (auto i = 0; i < typename V::linear_size; ++i) {
+      if (v[i] != a[i]) {
+        throw logic_error("copy error");
+      }
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecPlusEquals() 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    cout << "Testing " << VecTypeName<V>::value() << " += operator... ";
+    V v1(1);
+    V v2(1);
+    v1 += v2;
+    for (auto i = 0; i < typename V::linear_size; ++i) {
+      if (v1[i] != 2) {
+        throw logic_error("invalid element");
+      }
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecMinusEquals() 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    cout << "Testing " << VecTypeName<V>::value() << " -= operator... ";
+    V v1(1);
+    v1 -= v1; // Subtract vec from itself.
+    if (!(v1 == V(0))) {
+      throw logic_error("invalid element");
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
+template<typename V> 
+void 
+testVecEquality() 
+{
+  using std::cout;
+  using std::logic_error;
+
+  try {
+    cout << "Testing " << VecTypeName<V>::value() << " equality... ";
+    V v;
+    if (!(v == v)) { 
+      throw logic_error("self-equality failed");
+    }
+    cout << "OK!\n";
+  }
+  catch (std::exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
 
 //------------------------------------------------------------------------------
 
 int
 main(int argc, char* argv[])
 {
-    using std::cerr;
-    using std::numeric_limits;
-    using namespace thx;
+  using std::cerr;
+  using std::cout;
+  using std::numeric_limits;
+  using std::logic_error;
+  using namespace thx;
 
-#if 1
-	//vec<2, int*> v; // Should fail, int* is not an arithmetic type!
-#endif
-
-#if 1
+  try {
+#ifdef TEST_THX_TYPES
     {
-    cerr
+      static_assert(BitSize<float64>::value == 64, 
+                    "size of thx::float64 must be 64 bits");
+      static_assert(BitSize<float32>::value == 32, 
+                    "size of thx::float32 must be 32 bits");
+      static_assert(BitSize<int8>::value == 8, 
+                    "size of thx::int8 must be 8 bits");
+      static_assert(BitSize<int16>::value == 16, 
+                    "size of thx::int16 must be 16 bits");
+      static_assert(BitSize<int32>::value == 32, 
+                    "size of thx::int32 must be 32 bits");
+      static_assert(BitSize<int64>::value == 64, 
+                    "size of thx::int64 must be 64 bits");
+      static_assert(BitSize<uint8>::value == 8, 
+                    "size of thx::uint8 must be 8 bits");
+      static_assert(BitSize<uint16>::value == 16, 
+                    "size of thx::uint16 must be 16 bits");
+      static_assert(BitSize<uint32>::value == 32, 
+                    "size of thx::uint32 must be 32 bits");
+      static_assert(BitSize<uint64>::value == 64, 
+                    "size of thx::uint64 must be 64 bits");
+
+      cout
         << "\n"
         << "thx::types:\n"
-        << "sizeof(thx::float64) : " << 8*sizeof(float64) << " [bits] | "
+        << "sizeof(thx::float64) : " << BitSize<float64>::value << " [bits] | "
         << "min: " << (numeric_limits<float64>::min)() << ", "
         << "max: " << (numeric_limits<float64>::max)() << "\n"
-        << "sizeof(thx::float32) : " << 8*sizeof(float32) << " [bits] | "
+        << "sizeof(thx::float32) : " << BitSize<float32>::value << " [bits] | "
         << "min: " << (numeric_limits<float32>::min)() << ", "
         << "max: " << (numeric_limits<float32>::max)() << "\n"
-        << "sizeof(thx::int8)    : " << 8*sizeof(int8) << "  [bits] | "
+        << "sizeof(thx::int8)    : " << BitSize<int8>::value << "  [bits] | "
         << "min: " << static_cast<int64>((numeric_limits<int8>::min)()) << ", "
         << "max: " << static_cast<int64>((numeric_limits<int8>::max)()) << "\n"
-        << "sizeof(thx::int16)   : " << 8*sizeof(int16) << " [bits] | "
-        << "min: " << (std::numeric_limits<int16>::min)() << ", "
-        << "max: " << (std::numeric_limits<int16>::max)() << "\n"
-        << "sizeof(thx::int32)   : " << 8*sizeof(int32) << " [bits] | "
-        << "min: " << (std::numeric_limits<int32>::min)() << ", "
-        << "max: " << (std::numeric_limits<int32>::max)() << "\n"
-        << "sizeof(thx::int64)   : " << 8*sizeof(int64) << " [bits] | "
-        << "min: " << (std::numeric_limits<int64>::min)() << ", "
-        << "max: " << (std::numeric_limits<int64>::max)() << "\n"
-        << "sizeof(thx::uint8)   : " << 8*sizeof(uint8) << "  [bits] | "
+        << "sizeof(thx::int16)   : " << BitSize<int16>::value << " [bits] | "
+        << "min: " << (numeric_limits<int16>::min)() << ", "
+        << "max: " << (numeric_limits<int16>::max)() << "\n"
+        << "sizeof(thx::int32)   : " << BitSize<int32>::value << " [bits] | "
+        << "min: " << (numeric_limits<int32>::min)() << ", "
+        << "max: " << (numeric_limits<int32>::max)() << "\n"
+        << "sizeof(thx::int64)   : " << BitSize<int64>::value << " [bits] | "
+        << "min: " << (numeric_limits<int64>::min)() << ", "
+        << "max: " << (numeric_limits<int64>::max)() << "\n"
+        << "sizeof(thx::uint8)   : " << BitSize<uint8>::value << "  [bits] | "
         << "min: " << static_cast<int64>((numeric_limits<uint8>::min)()) << ", "
         << "max: " << static_cast<int64>((numeric_limits<uint8>::max)()) << "\n"
-        << "sizeof(thx::uint16)  : " << 8*sizeof(thx::uint16) << " [bits] | "
-        << "min: " << (numeric_limits<thx::uint16>::min)() << ", "
-        << "max: " << (numeric_limits<thx::uint16>::max)() << "\n"
-        << "sizeof(thx::uint32)  : " << 8*sizeof(uint32) << " [bits] | "
+        << "sizeof(thx::uint16)  : " << BitSize<uint16>::value << " [bits] | "
+        << "min: " << (numeric_limits<uint16>::min)() << ", "
+        << "max: " << (numeric_limits<uint16>::max)() << "\n"
+        << "sizeof(thx::uint32)  : " << BitSize<uint32>::value << " [bits] | "
         << "min: " << (numeric_limits<uint32>::min)() << ", "
         << "max: " << (numeric_limits<uint32>::max)() << "\n"
-        << "sizeof(thx::uint64)  : " << 8*sizeof(uint64) << " [bits] | "
+        << "sizeof(thx::uint64)  : " << BitSize<uint64>::value << " [bits] | "
         << "min: " << (numeric_limits<uint64>::min)() << ", "
         << "max: " << (numeric_limits<uint64>::max)() << "\n"
         << "\n";
     }
 #endif
 
-#if 1
+#ifdef TEST_THX_VEC
+  {
+#if 0
     {
-    vec2f32 v2;
-    vec3f32 v3;
-    vec4f32 v4;
-    vec<7,float32> v7(7.f);
-    cerr
-        << "\n"
-        << "sizeof(vec2f32): " << sizeof(vec2f32) << " [bytes]\n"
-        << "sizeof(vec3f32): " << sizeof(vec3f32) << " [bytes]\n"
-        << "sizeof(vec4f32): " << sizeof(vec4f32) << " [bytes]\n"
-        << "sizeof(vec<7,float32>): " << sizeof(vec<7,float32>) << " [bytes]\n"
-        << "v2: " << v2 << "\n"
-        << "v3: " << v3 << "\n"
-        << "v4: " << v4 << "\n"
-        << "v7: " << v7 << "\n"
-        << "\n";
+      vec<1,float32> v1; // Should not compile, dimension must be >= 2.
+      vec<2, int*> v; // Should not compile, int* is not an arithmetic type.
+    }
+#endif
+
+    static_assert(BitSize<vec<2,float32>>::value == 2*BitSize<float32>::value, 
+                  "thx::vec<N,S> must be perfectly aligned");
+    static_assert(BitSize<vec<3,float32>>::value == 3*BitSize<float32>::value, 
+                  "thx::vec<N,S> must be perfectly aligned");
+    static_assert(BitSize<vec<4,float32>>::value == 4*BitSize<float32>::value, 
+                  "thx::vec<N,S> must be perfectly aligned");
+    static_assert(BitSize<vec<42,float32>>::value == 42*BitSize<float32>::value, 
+                  "thx::vec<N,S> must be perfectly aligned");
+
+    cout
+      << "\n"
+      << "thx::vec<N, S>:\n";
+
+    { // Test vec default CTOR.
+      testVecDefaultCtor<vec<5,int32>>();
+      testVecDefaultCtor<vec<2,int32>>();
+      testVecDefaultCtor<vec<3,int32>>();
+      testVecDefaultCtor<vec<4,int32>>();
     }
 
-    {
-    vec<7,int32> u(3);
-    vec<7,int32> v(4);
-    cerr 
-        << "u: " << u << "\n"
-        << "v: " << v << "\n"
-        << "u == v: " << ((u == v)  ? "true" : "false") << "\n"
-        << "v != v: " << ((u != v)  ? "true" : "false") << "\n";
+    { // Test vec array CTOR.
+      testVecArrayCtor<vec<5,int32>>();
+      testVecArrayCtor<vec<2,int32>>();
+      testVecArrayCtor<vec<3,int32>>();
+      testVecArrayCtor<vec<4,int32>>();
     }
+
+    { // Test vec value CTOR. (only applicable to specializations)
+      typedef int32 ValueType;
+      const ValueType a[] = {42, 13 ,27, 8};
+      testVecValueCtor(vec<2,ValueType>(a[0], a[1]), a);
+      testVecValueCtor(vec<3,ValueType>(a[0], a[1], a[2]), a);
+      testVecValueCtor(vec<4,ValueType>(a[0], a[1], a[2], a[3]), a);
+    }
+
+    // TODO test copy CTOR?
+    // TODO test assign?
+
+    { // Test operator+= 
+      testVecPlusEquals<vec<5,int32>>();
+      testVecPlusEquals<vec<2,int32>>();
+      testVecPlusEquals<vec<3,int32>>();
+      testVecPlusEquals<vec<4,int32>>();
+    }
+
+    { // Test operator-= 
+      testVecMinusEquals<vec<5,int32>>();
+      testVecMinusEquals<vec<2,int32>>();
+      testVecMinusEquals<vec<3,int32>>();
+      testVecMinusEquals<vec<4,int32>>();
+    }
+
+    { // Test operator*= 
+    }
+
+    { // Test vec equality.
+      testVecEquality<vec<5,int32>>();
+      testVecEquality<vec<2,int32>>();
+      testVecEquality<vec<3,int32>>();
+      testVecEquality<vec<4,int32>>();
+    }
+
+
+  }
+
 
     {
     vec3f32 u(1, 1, 1);
@@ -103,8 +468,19 @@ main(int argc, char* argv[])
         << "dist(u,v)         : " << dist(u,v) << "\n"
         << "normalized(u)     : " << normalized(u) << "\n";
     }
-
 #endif
+
+    cout << "\nTest Passed!\n";
+    return EXIT_SUCCESS;
+  }
+  catch (const std::exception& ex) {
+    cout 
+      << ex.what() << "\n"
+      << "\nTest Failed!\n";
+    return EXIT_FAILURE;
+  }
+
+
 
 #if 1
     {
@@ -333,3 +709,6 @@ main(int argc, char* argv[])
 
     return 0;
 }
+
+#undef TEST_THX_TYPES
+#undef TEST_THX_VEC

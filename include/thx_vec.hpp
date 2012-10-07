@@ -50,10 +50,8 @@ class vec
 {
 private:
 
-    static_assert(N > 4, 
-				  "Vector dimension must be > 4");
-    static_assert(std::is_arithmetic<S>::value, 
-				  "Scalar type must be arithmetic");
+  static_assert(N > 4, "vector dimension must be > 4");
+  static_assert(std::is_arithmetic<S>::value, "scalar type must be arithmetic");
 
 public:
 
