@@ -1,0 +1,39 @@
+{
+  "folders":
+  [
+    {
+      "path": "../test"
+    },
+    {
+      "path": "../include"
+    },
+    {
+      "path": "../sandbox"
+    }
+  ],
+  "build_systems":
+  [
+    {
+      "working_dir": "${project_path:${folder}}",
+      "name": "vc10-release",
+      "cmd": 
+      [
+        "cmake", 
+        "--build", "../build/vc10",
+        "--config", "Release|x64",
+        "--target", "INSTALL"
+      ]
+    },
+    {
+      "working_dir": "${project_path:${folder}}",
+      "name": "vc10-debug",
+      "cmd": 
+      [
+        "cmake", 
+        "--build", "../build/vc10",
+        "--config", "Debug|x64",
+        "--target", "install"
+      ]
+    }
+  ]  
+}

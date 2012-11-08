@@ -5,13 +5,6 @@
 *.DS_Store
 
 #
-# MSVC files
+# Build directory
 #
-*.suo
-*.user
-*.ncb 
-*.opensdf
-*.sdf
-ipch/
-[Dd]ebug*/
-[Rr]elease*/
+build/

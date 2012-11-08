@@ -8,19 +8,260 @@
 #ifndef THX_MAT_ALGO_HPP_INCLUDED
 #define THX_MAT_ALGO_HPP_INCLUDED
 
+#include "thx_namespace.hpp"
 #include "thx_mat.hpp"
 #include "thx_vec.hpp"
-#include "thx_utils.hpp"
+#include "thx_scalar_traits.hpp"
 #include <cassert>
 
 //------------------------------------------------------------------------------
 
-namespace thx {
+BEGIN_THX_NAMESPACE
 
-//! TODO: NxN determinant.
+//------------------------------------------------------------------------------
+
+namespace detail {
+
+bool
+equal_dispatch()
+{
+  return false; // TMP!!
+}
+
+} // Namespace: detail.
+
+//! DOCS
+template<int64 N, typename S>
+bool
+equal(const mat<N,S> &a, const mat<N,S> &b)
+{
+  bool t = (a[0] == b[0]);
+  int64 i = 1;
+  while (i < N && t) {
+    t = (t && (a[i] == b[i])); 
+    ++i;
+  }
+  return t;
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<int64 N, typename S>
+bool
+not_equal(const mat<N,S> &a, const mat<N,S> &b)
+{
+  bool t = (a[0] != b[0]);
+  int64 i = 1;
+  while (i < N && !t) {
+    t = (t && (a[i] != b[i])); 
+    ++i;
+  }
+  return t;
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<int64 N, typename S>
+mat<N,S>
+add(const mat<N,S> &a, const mat<N,S> &b)
+{ 
+  return (mat<N,S>(a) += b); 
+}
+
+//! DOCS
+template<typename S> 
+mat<2,S> 
+add(const mat<2,S> &a, const mat<2,S> &b)
+{
+  return mat<2,S>(
+    a[0] + b[0], a[2] + b[2],
+    a[1] + b[1], a[3] + b[3]);
+}
+
+//! DOCS
+template<typename S>
+mat<3,S> 
+add(const mat<3,S> &a, const mat<3,S> &b)
+{
+  return mat<3,S>(
+    a[0] + b[0], a[3] + b[3], a[6] + b[6], 
+    a[1] + b[1], a[4] + b[4], a[7] + b[7], 
+    a[2] + b[2], a[5] + b[5], a[8] + b[8]);
+}
+
+//! DOCS
+template<typename S>
+mat<4,S> 
+add(const mat<4,S> &a, const mat<4,S> &b)
+{
+  return mat<4,S>(
+    a[0] + b[0], a[4] + b[4], a[8]  + b[8],  a[12] + b[12],
+    a[1] + b[1], a[5] + b[5], a[9]  + b[9],  a[13] + b[13],
+    a[2] + b[2], a[6] + b[6], a[10] + b[10], a[14] + b[14],
+    a[3] + b[3], a[7] + b[7], a[11] + b[11], a[15] + b[15]);
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<int64 N, typename S>
+mat<N,S>
+subtract(const mat<N,S> &a, const mat<N,S> &b)
+{ 
+  return (mat<N,S>(a) -= b); 
+}
+
+//! DOCS
+template<typename S> 
+mat<2,S> 
+subtract(const mat<2,S> &a, const mat<2,S> &b)
+{
+  return mat<2,S>(
+    a[0] - b[0], a[2] - b[2],
+    a[1] - b[1], a[3] - b[3]);
+}
+
+//! DOCS
+template<typename S>
+mat<3,S> 
+subtract(const mat<3,S> &a, const mat<3,S> &b)
+{
+  return mat<3,S>(
+    a[0] - b[0], a[3] - b[3], a[6] - b[6], 
+    a[1] - b[1], a[4] - b[4], a[7] - b[7], 
+    a[2] - b[2], a[5] - b[5], a[8] - b[8]);
+}
+
+//! DOCS
+template<typename S>
+mat<4,S> 
+subtract(const mat<4,S> &a, const mat<4,S> &b)
+{
+  return mat<4,S>(
+    a[0] - b[0], a[4] - b[4], a[8]  - b[8],  a[12] - b[12],
+    a[1] - b[1], a[5] - b[5], a[9]  - b[9],  a[13] - b[13],
+    a[2] - b[2], a[6] - b[6], a[10] - b[10], a[14] - b[14],
+    a[3] - b[3], a[7] - b[7], a[11] - b[11], a[15] - b[15]);
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<int64 N, typename S>
+mat<N,S>
+mult(const S s, const mat<N,S> &a)
+{ 
+  return (mat<N,S>(a) *= s); 
+}
+
+
+//! DOCS
+template<typename S>
+mat<2,S> 
+mult(const S s, const mat<2,S> &a)
+{
+  return mat<2,S>(
+    s*a[0], s*a[2], 
+    s*a[1], s*a[3]);
+}
+
+
+//! DOCS
+template<typename S>
+mat<3,S> 
+elementwiseMult(const S s, const mat<3,S> &a)
+{
+  return mat<3,S>(
+    s*a[0], s*a[3], s*a[6], 
+    s*a[1], s*a[4], s*a[7], 
+    s*a[2], s*a[5], s*a[8]);
+}
+
+
+//! DOCS
+template<typename S>
+mat<4,S> 
+elementwiseMult(const S s, const mat<4,S> &a)
+{
+  return mat<4,4,S>(
+    s*a[0], s*a[4], s*a[8],  s*a[12], 
+    s*a[1], s*a[5], s*a[9],  s*a[13], 
+    s*a[2], s*a[6], s*a[10], s*a[14], 
+    s*a[3], s*a[7], s*a[11], s*a[15]);
+}
+
+//------------------------------------------------------------------------------
+
+//! Matrix multiplication.
+template<int64 N, typename S>
+mat<N,S>
+mult(const mat<N,S> &a, const mat<N,S> &b)
+{ 
+  return mat<N,S>(a) *= b; 
+}
+
+//! Matrix multiplication.
+template<typename S>
+mat<2,S> 
+mult(const mat<2,S> &a, const mat<2,S> &b)
+{ 
+  return mat<2,S>(
+      a(0,0)*b(0,0) + a(0,1)*b(1,0),  // v0
+      a(0,0)*b(0,1) + a(0,1)*b(1,1),  // v2
+      a(1,0)*b(0,0) + a(1,1)*b(1,0),  // v1
+      a(1,0)*b(0,1) + a(1,1)*b(1,1)); // v4
+}
+
+//! Matrix multiplication.
+template<typename S>
+mat<3,S> 
+mult(const mat<3,S> &a, const mat<3,S> &b)
+{ 
+  return mat<3,S>(
+    a(0,0)*b(0,0) + a(0,1)*b(1,0) + a(0,2)*b(2,0),  // v0
+    a(0,0)*b(0,1) + a(0,1)*b(1,1) + a(0,2)*b(2,1),  // v3
+    a(0,0)*b(0,2) + a(0,1)*b(1,2) + a(0,2)*b(2,2),  // v6
+    a(1,0)*b(0,0) + a(1,1)*b(1,0) + a(1,2)*b(2,0),  // v1
+    a(1,0)*b(0,1) + a(1,1)*b(1,1) + a(1,2)*b(2,1),  // v4
+    a(1,0)*b(0,2) + a(1,1)*b(1,2) + a(1,2)*b(2,2),  // v7
+    a(2,0)*b(0,0) + a(2,1)*b(1,0) + a(2,2)*b(2,0),  // v2
+    a(2,0)*b(0,1) + a(2,1)*b(1,1) + a(2,2)*b(2,1),  // v5
+    a(2,0)*b(0,2) + a(2,1)*b(1,2) + a(2,2)*b(2,2)); // v8
+}
+
+//! Matrix multiplication.
+template<typename S>
+mat<4,S> 
+mult(const mat<4,S> &a, const mat<4,S> &b)
+{ 
+  return mat<4,S>(
+    a(0,0)*b(0,0)+a(0,1)*b(1,0)+a(0,2)*b(2,0)+a(0,3)*b(3,0),  // v0
+    a(0,0)*b(0,1)+a(0,1)*b(1,1)+a(0,2)*b(2,1)+a(0,3)*b(3,1),  // v4
+    a(0,0)*b(0,2)+a(0,1)*b(1,2)+a(0,2)*b(2,2)+a(0,3)*b(3,2),  // v8
+    a(0,0)*b(0,3)+a(0,1)*b(1,3)+a(0,2)*b(2,3)+a(0,3)*b(3,3),  // v12
+    a(1,0)*b(0,0)+a(1,1)*b(1,0)+a(1,2)*b(2,0)+a(1,3)*b(3,0),  // v1
+    a(1,0)*b(0,1)+a(1,1)*b(1,1)+a(1,2)*b(2,1)+a(1,3)*b(3,1),  // v5
+    a(1,0)*b(0,2)+a(1,1)*b(1,2)+a(1,2)*b(2,2)+a(1,3)*b(3,2),  // v9
+    a(1,0)*b(0,3)+a(1,1)*b(1,3)+a(1,2)*b(2,3)+a(1,3)*b(3,3),  // v13
+    a(2,0)*b(0,0)+a(2,1)*b(1,0)+a(2,2)*b(2,0)+a(2,3)*b(3,0),  // v2
+    a(2,0)*b(0,1)+a(2,1)*b(1,1)+a(2,2)*b(2,1)+a(2,3)*b(3,1),  // v6
+    a(2,0)*b(0,2)+a(2,1)*b(1,2)+a(2,2)*b(2,2)+a(2,3)*b(3,2),  // v10
+    a(2,0)*b(0,3)+a(2,1)*b(1,3)+a(2,2)*b(2,3)+a(2,3)*b(3,3),  // v14
+    a(3,0)*b(0,0)+a(3,1)*b(1,0)+a(3,2)*b(2,0)+a(3,3)*b(3,0),  // v3
+    a(3,0)*b(0,1)+a(3,1)*b(1,1)+a(3,2)*b(2,1)+a(3,3)*b(3,1),  // v7
+    a(3,0)*b(0,2)+a(3,1)*b(1,2)+a(3,2)*b(2,2)+a(3,3)*b(3,2),  // v11
+    a(3,0)*b(0,3)+a(3,1)*b(1,3)+a(3,2)*b(2,3)+a(3,3)*b(3,3)); // v15
+}
+
+//------------------------------------------------------------------------------
+
+//! NxN determinant.
 template<int64 N, typename S>
 S
 determinant(const mat<N,S> &a);
+// TODO: Implement!
 
 
 //! 2x2 determinant.
@@ -28,7 +269,7 @@ template<typename S>
 S 
 determinant(const mat<2,S> &a) 
 {
-    return (a(0,0)*a(1,1) - a(1,0)*a(0,1));
+  return (a(0,0)*a(1,1) - a(1,0)*a(0,1));
 }
 
 
@@ -37,9 +278,9 @@ template<typename S>
 S 
 determinant(const mat<3,S> &a) 
 {
-    return (a(0,0)*(a(1,1)*a(2,2) - a(1,2)*a(2,1)) - 
-            a(0,1)*(a(1,0)*a(2,2) - a(1,2)*a(2,0)) + 
-            a(0,2)*(a(1,0)*a(2,1) - a(1,1)*a(2,0)));
+  return (a(0,0)*(a(1,1)*a(2,2) - a(1,2)*a(2,1)) - 
+          a(0,1)*(a(1,0)*a(2,2) - a(1,2)*a(2,0)) + 
+          a(0,2)*(a(1,0)*a(2,1) - a(1,1)*a(2,0)));
 }
 
 
@@ -48,14 +289,14 @@ template<typename S>
 S 
 determinant(const mat<4,S> &a) 
 { 
-    return (a(0,0)*a(1,1)*a(2,2)*a(3,3) + 
-            a(0,1)*a(1,2)*a(2,3)*a(3,0) + 
-            a(0,2)*a(1,3)*a(2,0)*a(3,1) + 
-            a(0,3)*a(1,0)*a(2,1)*a(3,2) - 
-            a(0,0)*a(1,3)*a(2,2)*a(3,1) -
-            a(0,1)*a(1,0)*a(2,3)*a(3,2) -
-            a(0,2)*a(1,1)*a(2,0)*a(3,3) -
-            a(0,3)*a(1,2)*a(2,1)*a(3,0));
+  return (a(0,0)*a(1,1)*a(2,2)*a(3,3) + 
+          a(0,1)*a(1,2)*a(2,3)*a(3,0) + 
+          a(0,2)*a(1,3)*a(2,0)*a(3,1) + 
+          a(0,3)*a(1,0)*a(2,1)*a(3,2) - 
+          a(0,0)*a(1,3)*a(2,2)*a(3,1) -
+          a(0,1)*a(1,0)*a(2,3)*a(3,2) -
+          a(0,2)*a(1,1)*a(2,0)*a(3,3) -
+          a(0,3)*a(1,2)*a(2,1)*a(3,0));
 }
 
 //------------------------------------------------------------------------------
@@ -64,28 +305,33 @@ determinant(const mat<4,S> &a)
 template<int64 N, typename S>
 void
 transpose(mat<N,S> &a)
-{ a = transposed(a); }
-
+{ 
+  a = transposed(a); 
+}
 
 //! Transpose provided 2x2 matrix.
 template<typename S>	
 void 
 transpose(mat<2,S> &a) 
-{ a = transposed(a); }
-
+{ 
+  a = transposed(a); 
+}
 
 //! Transpose provided 3x3 matrix.
 template<typename S>	
 void 
 transpose(mat<3,S> &a) 
-{ a = transposed(a); }
-
+{ 
+  a = transposed(a); 
+}
 
 //! Transpose provided 4x4 matrix.
 template<typename S>	
 void 
 transpose(mat<4,S> &a) 
-{ a = transposed(a); }
+{ 
+  a = transposed(a); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -94,57 +340,75 @@ template<int64 N, typename S>
 mat<N,S> 
 transposed(const mat<N,S> &a)
 {
-    mat<N,S> b(a);  // Copy.
-    S tmp;
-    for (int64 i = 0; i < N; ++i) {
-        for (int64 j = 0; j < N; ++j) {
-            tmp = b(i,j);   // Swap.
-            b(i,j) = b(j,i);
-            b(j,i) = tmp;
-        }
+  mat<N,S> b(a);  // Copy.
+  S tmp;
+  for (int64 i = 0; i < N; ++i) {
+    for (int64 j = 0; j < N; ++j) {
+      tmp = b(i,j);   // Swap.
+      b(i,j) = b(j,i);
+      b(j,i) = tmp;
     }
-    return b;
+  }
+  return b;
 }
-
 
 //! Return 2x2 transpose.
 template<typename S> 
 mat<2,S> 
 transposed(const mat<2,S> &a)
 {
-    return mat<2,S>(a(0,0), a(1,0),
-                    a(0,1), a(1,1));
+  return mat<2,S>(a(0,0), a(1,0),
+                  a(0,1), a(1,1));
 }
-
 
 //! Return 3x3 transpose.
 template<typename S> 
 mat<3,S> 
 transposed(const mat<3,S> &a)
 {
-    return mat<3,S>(a(0,0), a(1,0), a(2,0),
-                    a(0,1), a(1,1), a(2,1),
-                    a(0,2), a(1,2), a(2,2));
+  return mat<3,S>(a(0,0), a(1,0), a(2,0),
+                  a(0,1), a(1,1), a(2,1),
+                  a(0,2), a(1,2), a(2,2));
 }
-
 
 //! Return 4x4 transpose.
 template<typename S>
 mat<4,S> 
 transposed(const mat<4,S> &a)
 {
-    return mat<4,S>(a(0,0), a(1,0), a(2,0), a(3,0),
-                    a(0,1), a(1,1), a(2,1), a(3,1),
-                    a(0,2), a(1,2), a(2,2), a(3,2),
-                    a(0,3), a(1,3), a(2,3), a(3,3));
+  return mat<4,S>(a(0,0), a(1,0), a(2,0), a(3,0),
+                  a(0,1), a(1,1), a(2,1), a(3,1),
+                  a(0,2), a(1,2), a(2,2), a(3,2),
+                  a(0,3), a(1,3), a(2,3), a(3,3));
 }
 
 //------------------------------------------------------------------------------
+
+//namespace detail {
+//
+//  struct real_scalar_tag {};
+//  struct integer_scalar_tag {};
+//
+//  template<int64 N, typename S>
+//  gauss_jacobi_dispatch(mat<N,S> &a, mat<N,S> &b, real_scalar_tag)
+//  {
+//
+//  }
+//
+//} // Namespace: detail.
+
 
 template<int64 N, typename S>
 void
 gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 {
+#if 0
+  //detail::gauss_jacobi_dispatch(a, b, scalar_traits<S>::scalar_category());
+
+  //typename iterator_traits<InputIterator>::iterator_category category;
+  //detail::advance_dispatch(i, n, category);  
+
+
     static_assert(std::is_floating_point<S>::value, 
                  "Scalar type must be floating point");
    
@@ -163,8 +427,8 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
         for (int64 j(0); j < N; ++j) {
             if (1 != ipiv[j]) {
                 for (int64 k(0); k < N; ++k) {
-                    if (0 == ipiv[k] && traits<S>::abs(a(j,k)) >= big) {
-                        big = traits<S>::abs(a(j,k));
+                    if (0 == ipiv[k] && scalar_traits<S>::abs(a(j,k)) >= big) {
+                        big = scalar_traits<S>::abs(a(j,k));
                         irow = j;
                         icol = k;
                     }
@@ -188,7 +452,7 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
         idxr[i] = irow;
         idxc[i] = icol;
 
-        assert(!is_zero(traits<S>::abs(a(icol,icol))));
+        assert(!is_zero(scalar_traits<S>::abs(a(icol,icol))));
         const S pivinv(1/a(icol,icol));
         a(icol,icol) = 1;
 
@@ -219,7 +483,9 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
             }
         }
     }
+#endif
 }
+
 
 //------------------------------------------------------------------------------
 
@@ -227,28 +493,9 @@ gauss_jacobi(mat<N,S> &a, mat<N,S> &b)
 template<int64 N, typename S>
 void 
 invert(mat<N,S> &a)
-{ a = inverted(a); }
-
-
-//! Invert provided 2x2 matrix.
-template<typename S> 
-void 
-invert(mat<2,S> &a)
-{ a = inverted(a); }
-
-
-//! Invert provided 3x3 matrix.
-template<typename S> 
-void
-invert(mat<3,S> &a)
-{ a = inverted(a); }
-
-
-//! Invert provided 4x4 matrix.
-template<typename S>
-void 
-invert(mat<4,S> &a)
-{ a = inverted(a); }
+{ 
+  a = inverted(a); 
+}
 
 //------------------------------------------------------------------------------
 
@@ -304,15 +551,17 @@ inverted(const mat<4,S> &a)
 
     // Use the norm of A to establish a sensible tolerance for singularity.
 
+    typedef typename scalar_traits<S> traits;
+
     const S tol = 64*std::numeric_limits<S>::epsilon()*(
-                     traits<S>::abs(a(0,0)) + traits<S>::abs(a(0,1)) +
-                     traits<S>::abs(a(0,1)) + traits<S>::abs(a(0,2)) +
-                     traits<S>::abs(a(1,0)) + traits<S>::abs(a(1,1)) +
-                     traits<S>::abs(a(1,1)) + traits<S>::abs(a(1,2)) +
-                     traits<S>::abs(a(2,0)) + traits<S>::abs(a(2,1)) +
-                     traits<S>::abs(a(2,1)) + traits<S>::abs(a(2,2)) +
-                     traits<S>::abs(a(3,0)) + traits<S>::abs(a(3,1)) +
-                     traits<S>::abs(a(3,1)) + traits<S>::abs(a(3,2)));
+                     traits::abs(a(0,0)) + traits::abs(a(0,1)) +
+                     traits::abs(a(0,1)) + traits::abs(a(0,2)) +
+                     traits::abs(a(1,0)) + traits::abs(a(1,1)) +
+                     traits::abs(a(1,1)) + traits::abs(a(1,2)) +
+                     traits::abs(a(2,0)) + traits::abs(a(2,1)) +
+                     traits::abs(a(2,1)) + traits::abs(a(2,2)) +
+                     traits::abs(a(3,0)) + traits::abs(a(3,1)) +
+                     traits::abs(a(3,1)) + traits::abs(a(3,2)));
 
     // Orthonormalize the rows of A using Modified Gram-Schmidt, saving the
     // coefficients in L.
@@ -322,7 +571,7 @@ inverted(const mat<4,S> &a)
     
     // Row 0.
 
-    S m = traits<S>::sqrt(sqr(a(0,0)) + sqr(a(0,1)) + sqr(a(0,2)) + sqr(a(0,3)));
+    S m = traits::sqrt(sqr(a(0,0)) + sqr(a(0,1)) + sqr(a(0,2)) + sqr(a(0,3)));
     if (m > tol) {
         // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
 
@@ -344,7 +593,7 @@ inverted(const mat<4,S> &a)
     row[2] = a(1,2) - d*Q[0][2]; 
     row[3] = a(1,3) - d*Q[0][3];
 
-    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+    m = traits::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
     if (m > tol) {
         // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
 
@@ -372,7 +621,7 @@ inverted(const mat<4,S> &a)
     row[2] -= d*Q[1][2]; 
     row[3] -= d*Q[1][3];
     
-    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+    m = traits::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
     if (m > tol) {
         // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
 
@@ -407,7 +656,7 @@ inverted(const mat<4,S> &a)
     row[2] -= d*Q[2][2]; 
     row[3] -= d*Q[2][3];
 
-    m = traits<S>::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
+    m = traits::sqrt(sqr(row[0]) + sqr(row[1]) + sqr(row[2]) + sqr(row[3]));
     if (m > tol) {
         // Store normalized row in Q, reciprocal of magnitude in diagonal of L.
 
@@ -455,6 +704,6 @@ inverted(const mat<4,S> &a)
     return b;
 }
 
-}	// Namespace: thx.
+END_THX_NAMESPACE
 
 #endif	// THX_MAT_ALGO_HPP_INCLUDED

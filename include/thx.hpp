@@ -31,8 +31,8 @@
 //#include "thx_quaternion.hpp"
 //#include "thx_sym_eigen2.hpp"
 //#include "thx_sym_eigen3.hpp"
-#include "thx_traits.hpp"
-#include "thx_utils.hpp"
+#include "thx_scalar_traits.hpp"
+#include "thx_scalar_algo.hpp"
 #include "thx_operators.hpp"
 
 #endif // THX_HPP_INCLUDED

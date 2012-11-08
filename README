@@ -1,4 +1,0 @@
-Small header-only library for simple linear algebra operations.
-
-Matrix storage is column-major, i.e. OpenGL compatible.
-

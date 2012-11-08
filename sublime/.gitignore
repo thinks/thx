@@ -1,0 +1,10 @@
+#
+# OS junk
+#
+[Tt]humbs.db
+*.DS_Store
+
+#
+# Don't commit certain Sublime files.
+#
+*.sublime-workspace

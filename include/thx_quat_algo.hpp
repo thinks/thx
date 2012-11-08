@@ -10,7 +10,7 @@
 
 #include "thx_quat.hpp"
 #include "thx_vec.hpp"
-#include "thx_traits.hpp"
+#include "thx_scalar_traits.hpp"
 
 //------------------------------------------------------------------------------
 

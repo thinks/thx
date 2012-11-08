@@ -8,10 +8,13 @@
 #ifndef THX_VEC_ALGO_HPP_INCLUDED
 #define THX_VEC_ALGO_HPP_INCLUDED
 
+#include "thx_namespace.hpp"
 #include "thx_types.hpp"
 #include "thx_vec.hpp"
+#include "thx_vec_traits.hpp"
 #include "thx_mat.hpp"
-#include "thx_traits.hpp"
+#include "thx_scalar_traits.hpp"
+#include "thx_scalar_algo.hpp"
 #include <type_traits>
 #include <cassert>
 
@@ -19,78 +22,375 @@
 
 BEGIN_THX_NAMESPACE
 
-//! Compute vec<N,S> inner product.
+//! vec<N,S> less comparison.
 template<int64 N, typename S>
-S
-inner_product(const vec<N,S> &u, const vec<N,S> &v)
-{
-    static_assert(vec<N,S>::dim >= 2, "Vector dimension must be >= 2");
-
-    S d = u[0]*v[0];
-    for (auto i = 1; i < N; ++i) { 
-        d += u[i]*v[i]; 
+bool
+less(const vec<N,S> &u, const vec<N,S> &v) {
+  for (auto i = vec<N,S>::linear_size; i > 0; --i) {
+    if (u[i - 1] < v[i - 1]) {
+      return true;
+    }    
+    else if (u[i - 1] > v[i - 1]) {
+      return false;
     }
-    return d;
+  }
+  return false;
 }
 
+//! vec<2,S> less comparison.
+template<typename S>
+bool
+less(const vec<2,S> &u, const vec<2,S> &v) {
+
+}
+
+//! vec<3,S> less comparison.
+template<typename S>
+bool
+less(const vec<3,S> &u, const vec<3,S> &v) {
+}
+
+//! vec<4,S> less comparison.
+template<typename S>
+bool
+less(const vec<4,S> &u, const vec<4,S> &v) {
+}
+
+//------------------------------------------------------------------------------
+
+//! vec<N,S> less comparison.
+template<int64 N, typename S>
+bool
+greater(const vec<N,S> &u, const vec<N,S> &v) {
+  for (auto i = vec<N,S>::linear_size; i > 0; --i) {
+    if (u[i - 1] < v[i - 1]) {
+      return true;
+    }    
+    else if (u[i - 1] > v[i - 1]) {
+      return false;
+    }
+  }
+  return false;
+}
+
+//! vec<2,S> less comparison.
+template<typename S>
+bool
+greater(const vec<2,S> &u, const vec<2,S> &v) {
+}
+
+//! vec<3,S> less comparison.
+template<typename S>
+bool
+greater(const vec<3,S> &u, const vec<3,S> &v) {
+}
+
+//! vec<4,S> less comparison.
+template<typename S>
+bool
+greater(const vec<4,S> &u, const vec<4,S> &v) {
+  return false;
+}
+
+//------------------------------------------------------------------------------
+
+//! vec<N,S> equal comparison.
+template<class V>
+bool
+vec_equal(const V &u, const V &v) 
+{
+  typedef vec_traits<V>::size_type size_type;
+
+  bool t = equal(u[0], v[0]);
+  size_type i = 1;
+  while (i < vec_traits<V>::linear_size && t) {
+    t = (t && equal(u[i], v[i])); 
+    ++i;
+  }
+  return t;
+}
+
+//------------------------------------------------------------------------------
+
+//! vec<N,S> not equal comparison.
+template<class V>
+bool
+vec_not_equal(const V &u, const V &v) 
+{
+  typedef vec_traits<V>::size_type size_type;
+
+  bool t = not_equal(u[0], v[0]);
+  size_type i = 1;
+  while (i < vec_traits<V>::linear_size && !t) {
+    t = (t || not_equal(u[i], v[i])); 
+    ++i;
+  }
+  return t;
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<class V>
+V
+negated(const V &v)
+{
+  typedef typename vec_traits<V>::size_type size_type;
+
+  V u;
+  for (size_type i = 0; i < vec_traits<V>::linear_size; ++i) {
+    u[i] = negated(v[i]); 
+  }
+  return r;  
+}
+
+//! DOCS
+template<typename S>
+vec<2,S>
+negated(const vec<2,S> &v)
+{ 
+  return vec<2,S>(negated(v[0]), negated(v[1])); 
+}
+
+//! DOCS
+template<typename S>
+vec<3,S>
+negated(const vec<3,S> &v)
+{ 
+  return vec<3,S>(negated(v[0]), negated(v[1]), negated(v[2])); 
+}
+
+//! DOCS
+template<typename S>
+vec<4,S>
+negated(const vec<4,S> &v)
+{ 
+  return vec<4,S>(negated(v[0]), negated(v[1]), negated(v[2]), negated(v[3])); 
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<class V>
+V
+vec_abs(const V &v)
+{
+  using scalar_traits<vec_traits<V>::value_type>::abs;
+  V u;
+  for (vec_traits<V>::size_type i = 0; i < vec_traits<V>::linear_size; ++i) {
+    u[i] = abs(v[i]); 
+  }
+  return u;  
+}
+
+//! DOCS
+template<typename S>
+vec<2,S>
+vec_abs(const vec<2,S> &v)
+{ 
+  using scalar_traits<vec_traits<vec<2,S>>::value_type>::abs;
+  return vec<2,S>(abs(v[0]), abs(v[1])); 
+}
+
+//! DOCS
+template<typename S>
+vec<3,S>
+vec_abs(const vec<3,S> &v)
+{ 
+  using scalar_traits<vec_traits<vec<3,S>>::value_type>::abs;
+  return vec<3,S>(abs(v[0]), abs(v[1]), abs(v[2])); 
+}
+
+//! DOCS
+template<typename S>
+vec<4,S>
+vec_abs(const vec<4,S> &v)
+{ 
+  using scalar_traits<vec_traits<vec<4,S>>::value_type>::abs;
+  return vec<4,S>(abs(v[0]), abs(v[1]), abs(v[2]), abs(v[3])); 
+}
+
+//------------------------------------------------------------------------------
+
+//! Docs
+template<int64 N, typename S>
+vec<N,S>
+vec_add(const vec<N,S> &u, const vec<N,S> &v)
+{ 
+  return vec<N,S>(u) += v; 
+}
+
+//! Docs
+template<typename S>
+vec<2,S>
+vec_add(const vec<2,S> &u, const vec<2,S> &v)
+{ 
+  return vec<2,S>(u[0] + v[0], u[1] + v[1]); 
+}
+
+//! Docs
+template<typename S>
+vec<3,S>
+vec_add(const vec<3,S> &u, const vec<3,S> &v)
+{ 
+  return vec<3,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2]); 
+}
+
+//! Docs
+template<typename S>
+vec<4,S>
+vec_add(const vec<4,S> &u, const vec<4,S> &v)
+{ 
+  return vec<4,S>(u[0] + v[0], u[1] + v[1], u[2] + v[2], u[3] + v[3]); 
+}
+
+//------------------------------------------------------------------------------
+
+//! Docs
+template<int64 N, typename S>
+vec<N,S>
+subtract(const vec<N,S> &u, const vec<N,S> &v)
+{ 
+  return vec<N,S>(u) -= v; 
+}
+
+//! Docs
+template<typename S>
+vec<2,S>
+subtract(const vec<2,S> &u, const vec<2,S> &v)
+{ 
+  return vec<2,S>(u[0] - v[0], u[1] - v[1]); 
+}
+
+//! Docs
+template<typename S>
+vec<3,S>
+subtract(const vec<3,S> &u, const vec<3,S> &v)
+{ 
+  return vec<3,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2]); 
+}
+
+//! Docs
+template<typename S>
+vec<4,S>
+subtract(const vec<4,S> &u, const vec<4,S> &v)
+{ 
+  return vec<4,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2], u[3] - v[3]); 
+}
+
+//------------------------------------------------------------------------------
+
+//! DOCS
+template<int64 N, typename S>
+vec<N,S>
+mult(const S s, const vec<N,S> &v)
+{ 
+  return vec<N,S>(v) *= s; 
+}
+
+//! DOCS
+template<typename S>
+vec<2,S>
+mult(const S s, const vec<2,S> &v)
+{ 
+  return vec<2,S>(s*v[0], s*v[1]); 
+}
+
+//! DOCS
+template<typename S>
+vec<3,S>
+mult(const S s, const vec<3,S> &v)
+{ 
+  return vec<3,S>(s*v[0], s*v[1], s*v[2]); 
+}
+
+//! DOCS
+template<typename S>
+vec<4,S>
+mult(const S s, const vec<4,S> &v)
+{ 
+  return vec<4,S>(s*v[0], s*v[1], s*v[2], s*v[3]); 
+}
+
+//------------------------------------------------------------------------------
+
+//! Compute vec<N,S> inner product.
+template<class V>
+typename vec_traits<V>::value_type
+inner_product(const V &u, const V &v)
+{
+  static_assert(vec_traits<V>::linear_size >= 2, 
+                "Vector dimension must be >= 2");
+
+  typedef typename vec_traits<V>::value_type value_type;
+  typedef typename vec_traits<V>::size_type size_type;
+
+  value_type d = u[0]*v[0];
+  for (size_type i = 1; i < typename vec_traits<V>::linear_size; ++i) { 
+      d += u[i]*v[i]; 
+  }
+  return d;
+}
 
 //! Compute vec<2,S> inner product.
 template<typename S>
-S
+typename vec_traits<vec<2,S>>::value_type
 inner_product(const vec<2,S> &u, const vec<2,S> &v)
-{ return (u[0]*v[0] + u[1]*v[1]); }
-
+{ 
+  return (u[0]*v[0] + u[1]*v[1]); 
+}
 
 //! Compute vec<3,S> inner product.
 template<typename S>
-S
+typename vec_traits<vec<3,S>>::value_type
 inner_product(const vec<3,S> &u, const vec<3,S> &v)
-{ return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2]); }
-
+{ 
+  return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2]); 
+}
 
 //! Compute vec<4,S> inner product.
 template<typename S>
-S
+typename vec_traits<vec<4,S>>::value_type
 inner_product(const vec<4,S> &u, const vec<4,S> &v)
-{ return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2] + u[3]*v[3]); }
+{ 
+  return (u[0]*v[0] + u[1]*v[1] + u[2]*v[2] + u[3]*v[3]); 
+}
 
 //------------------------------------------------------------------------------
 
 //! Compute vec<N,S> outer product. TODO: Verify!
-template<int64 N, typename S>
-mat<N,S> 
-outer_product(const vec<N,S> &u, const vec<N,S> &v)
+template<class V>
+mat<3, typename vec_traits<V>::value_type> 
+outer_product(const V &u, const V &v)
 {
-    mat<N,S> r;
-    for (auto i = 0; i < N; ++i) {
-        for (auto j = 0; j < N; ++j) {
-            r(i,j) = u[i]*v[j];
-        }
+  mat<typename vec_traits<V>::dim, typename vec_traits<V>::value_type> r;
+  for (auto i = 0; i < typename vec_traits<V>::linear_size; ++i) {
+    for (auto j = 0; j < typename vec_traits<V>::linear_size; ++j) {
+      r(i,j) = u[i]*v[j];
     }
-    return r;
+  }
+  return r;
 }
-
 
 //! Compute vec<2,S> outer product.
 template<typename S> 
 mat<2,S> 
 outer_product(const vec<2,S> &u, const vec<2,S> &v)
 {
-    return mat<2,S>(
-        u[0]*v[0], u[0]*v[1],
-        u[1]*v[0], u[1]*v[1]);
+  return mat<2,S>(
+    u[0]*v[0], u[0]*v[1],
+    u[1]*v[0], u[1]*v[1]);
 }
-
 
 //! Compute vec<3,S> outer product.
 template<typename S> 
 mat<3,S>
 outer_product(const vec<3,S> &u, const vec<3,S> &v)
 {
-    return mat<3,S>(
-        u[0]*v[0], u[0]*v[1], u[0]*v[2],
-        u[1]*v[0], u[1]*v[1], u[1]*v[2],
-        u[2]*v[0], u[2]*v[1], u[2]*v[2]);
+  return mat<3,S>(
+    u[0]*v[0], u[0]*v[1], u[0]*v[2],
+    u[1]*v[0], u[1]*v[1], u[1]*v[2],
+    u[2]*v[0], u[2]*v[1], u[2]*v[2]);
 }
 
 
@@ -99,11 +399,11 @@ template<typename S>
 mat<4,S>
 outer_product(const vec<4,S> &u, const vec<4,S> &v)
 {
-    return mat<4,S>(
-        u[0]*v[0], u[0]*v[1], u[0]*v[2], u[0]*v[3],
-        u[1]*v[0], u[1]*v[1], u[1]*v[2], u[1]*v[3],
-        u[2]*v[0], u[2]*v[1], u[2]*v[2], u[2]*v[3],
-        u[3]*v[0], u[3]*v[1], u[3]*v[2], u[3]*v[3]);
+  return mat<4,S>(
+    u[0]*v[0], u[0]*v[1], u[0]*v[2], u[0]*v[3],
+    u[1]*v[0], u[1]*v[1], u[1]*v[2], u[1]*v[3],
+    u[2]*v[0], u[2]*v[1], u[2]*v[2], u[2]*v[3],
+    u[3]*v[0], u[3]*v[1], u[3]*v[2], u[3]*v[3]);
 }
 
 //------------------------------------------------------------------------------
@@ -133,12 +433,12 @@ template<int64 N, typename S>
 S 
 mag(const vec<N,S> &v) 
 { 
-	return traits<S>::sqrt(mag_squared(v)); 
+	return scalar_traits<S>::sqrt(mag_squared(v)); 
 }
 
 //------------------------------------------------------------------------------
 
-//! Squared distance.
+//! Euclidean distance squared.
 template<int64 N, typename S> 
 S
 dist_squared(const vec<N,S> &u, const vec<N,S> &v)
@@ -164,8 +464,8 @@ void
 normalize(vec<N,S> &v) 
 { 
 	static_assert(std::is_floating_point<S>::value, 
-				 "Scalar type must be floating point");
-    v *= (1/mag(v));
+				        "Scalar type must be floating point");
+  v *= (1/mag(v));
 }
 
 //------------------------------------------------------------------------------
@@ -176,8 +476,8 @@ vec<N,S>
 normalized(const vec<N,S> &v) 
 { 
 	static_assert(std::is_floating_point<S>::value, 
-				 "Scalar type must be floating point");
-    return (1/mag(v))*v;
+				        "Scalar type must be floating point");
+  return (1/mag(v))*v;
 }
 
 //------------------------------------------------------------------------------
@@ -190,15 +490,14 @@ cross(const vec<2,S> &u, const vec<2,S> &v)
 	return (u[0]*v[1] - u[1]*v[0]); 
 }
 
-
 //! 3D cross product.
 template<typename S> 
 vec<3,S>
 cross(const vec<3,S> &u, const vec<3,S> &v)
 { 
-    return vec<3,S>(u[1]*v[2] - u[2]*v[1], 
-                    u[2]*v[0] - u[0]*v[2], 
-                    u[0]*v[1] - u[1]*v[0]);
+  return vec<3,S>(u[1]*v[2] - u[2]*v[1], 
+                  u[2]*v[0] - u[0]*v[2], 
+                  u[0]*v[1] - u[1]*v[0]);
 }
 
 //------------------------------------------------------------------------------
