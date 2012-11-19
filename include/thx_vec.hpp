@@ -52,8 +52,7 @@ BEGIN_THX_NAMESPACE
 
 //! DOCS
 template<std::size_t N, typename S>
-class vec
-{
+class vec {
 private:
 
   // TODO: find replacement!
@@ -77,8 +76,7 @@ public: // CTOR's.
 
   //! Default CTOR.
   explicit 
-  vec(const value_type x = 0)
-  { 
+  vec(const value_type x = 0) { 
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] = x; 
     }
@@ -86,8 +84,7 @@ public: // CTOR's.
 
   //! Array CTOR.
   explicit 
-  vec(const_pointer v)
-  { 
+  vec(const_pointer v) { 
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] = v[i]; 
     }
@@ -97,8 +94,7 @@ public:		// Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size,value_type> &u)
-  {
+  operator+=(const vec<linear_size, value_type> &u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] += u[i]; 
     }
@@ -107,8 +103,7 @@ public:		// Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size,value_type> &u)
-  {
+  operator-=(const vec<linear_size, value_type> &u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] -= u[i]; 
     }
@@ -117,8 +112,7 @@ public:		// Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const value_type x)
-  {
+  operator*=(const value_type x) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] *= x; 
     }
@@ -129,15 +123,13 @@ public:     // Access operators.
 
   //! Return i'th component. No bounds checking!
   const_reference 
-  operator[](const size_type i) const
-  { 
+  operator[](const size_type i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference 
-  operator[](const size_type i)
-  { 
+  operator[](const size_type i) { 
     return _v[i];	
   }
 
@@ -145,15 +137,13 @@ public:		// Data.
 
   //! Const data.
   const_pointer
-  const_data() const
-  { 
+  const_data() const { 
     return &_v[0]; 
   }
 
   //! Mutable data.
   pointer 
-  data()
-  { 
+  data() { 
     return &_v[0]; 
   }
 
@@ -472,8 +462,7 @@ public: // Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size,value_type> &u)
-  {
+  operator+=(const vec<linear_size,value_type> &u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1]; 
     _v[2] += u._v[2]; 
@@ -483,8 +472,7 @@ public: // Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size,value_type> &u)
-  {
+  operator-=(const vec<linear_size,value_type> &u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1]; 
     _v[2] -= u._v[2]; 
@@ -494,8 +482,7 @@ public: // Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const S x)
-  {
+  operator*=(const S x) {
     _v[0] *= x; 
     _v[1] *= x; 
     _v[2] *= x; 
@@ -507,15 +494,13 @@ public: // Access operators.
 
   //! Return i'th component. No bounds checking!
   const_reference
-  operator[](const size_type i) const
-  { 
+  operator[](const size_type i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference 
-  operator[](const size_type i)
-  { 
+  operator[](const size_type i) { 
     return _v[i];	
   }
 
@@ -523,15 +508,13 @@ public: // Data.
 
   //! Const data.
   const_pointer 
-  const_data() const
-  { 
+  const_data() const { 
     return &_v[0]; 
   }
 
   //! Mutable data.
   pointer 
-  data()
-  { 
+  data() { 
     return &_v[0]; 
   }
 

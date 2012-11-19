@@ -18,4 +18,4 @@
 
 //------------------------------------------------------------------------------
 
-#endif  // THX_NAMESPACE_HPP_INCLUDED
+#endif // THX_NAMESPACE_HPP_INCLUDED

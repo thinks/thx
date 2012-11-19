@@ -19,6 +19,7 @@
 
 #define TEST_THX_TYPES
 #define TEST_THX_VEC
+#define TEST_THX_VEC_ALGO
 
 //------------------------------------------------------------------------------
 
@@ -230,6 +231,39 @@ testVecArrayCtor()
 
 //------------------------------------------------------------------------------
 
+template<typename V> 
+void 
+testVecAssign() 
+{
+  using std::cout;
+  using std::logic_error;
+  using std::exception;
+
+  try {
+    typedef typename V::value_type value_type;
+    typedef typename V::size_type size_type;
+    static const size_type size = typename V::linear_size;
+
+    cout << "Testing " << VecTypeName<V>::value() << " assign... ";
+
+    V v = makeRandVec<V>();
+    V u(0); // Assume u != v.
+
+    u = v;
+    if (u == v) {
+      cout << "OK!\n";
+    }
+    else {
+      throw logic_error("assign error");
+    }
+  }
+  catch (exception& ex) {
+    cout << "FAILED: " << ex.what() << "\n";
+  }
+}
+
+//------------------------------------------------------------------------------
+
 template<std::size_t N, typename S>
 struct TestVecValueCtor;
 
@@ -413,6 +447,8 @@ testVecMultEquals()
 
 //------------------------------------------------------------------------------
 
+
+
 template<typename V> 
 void 
 testVecEquality() 
@@ -590,7 +626,13 @@ main(int argc, char* argv[])
       TestVecValueCtor<4,ValueType>();
     }
 
-    // TODO test assign?
+    { // Test operator= 
+      typedef int32 ValueType;
+      testVecAssign<vec<5,ValueType>>();
+      testVecAssign<vec<2,ValueType>>();
+      testVecAssign<vec<3,ValueType>>();
+      testVecAssign<vec<4,ValueType>>();
+    }
 
     { // Test operator+= 
       typedef int32 ValueType;
@@ -615,7 +657,11 @@ main(int argc, char* argv[])
       testVecMultEquals<vec<3,ValueType>>();
       testVecMultEquals<vec<4,ValueType>>();
     }
+  }
+#endif // TEST_THX_VEC
 
+#ifdef TEST_THX_VEC_ALGO
+  {
     { // Test operator!= (equality)
       typedef int32 ValueType;
       testVecEquality<vec<5,ValueType>>();
@@ -632,9 +678,6 @@ main(int argc, char* argv[])
       testVecInequality<vec<4,ValueType>>();
     }
 
-  }
-
-
     {
     vec3f32 u(1, 1, 1);
     vec3f32 v(2, 2, 2);
@@ -648,7 +691,10 @@ main(int argc, char* argv[])
         << "dist(u,v)         : " << dist(u,v) << "\n"
         << "normalized(u)     : " << normalized(u) << "\n";
     }
+  }
 #endif
+
+
 
     cout << "\nTest Passed!\n";
     return EXIT_SUCCESS;
