@@ -37,10 +37,9 @@ negate_dispatch(const S x, signed_integer_scalar_tag) {
 //! Return negated value, if supported for the provided type.
 template<typename S> inline THX_CONST_EXPR
 S
-negate(const S x) 
-{
+negate(const S x) {
   typedef typename scalar_traits<S>::scalar_category category;
-  return detail::scalar_negate_dispatch(x, category());
+  return detail::negate_dispatch(x, category());
 }
 
 //------------------------------------------------------------------------------
@@ -49,8 +48,7 @@ namespace detail {
 
 template<typename S> inline THX_CONST_EXPR
 bool
-equal_dispatch(const S x, const S y)
-{
+equal_dispatch(const S x, const S y) {
   return x == y;
 }
 
@@ -255,7 +253,7 @@ template<typename S> inline THX_CONST_EXPR
 S 
 deg_to_rad_dispatch(const S deg, real_scalar_tag)
 {
-  return (scalar_traits<S>::pi()/180)*deg; 
+  return (scalar_traits<S>::pi()/S(180))*deg; 
 }
 
 //! Convert radians to degrees. 
@@ -263,7 +261,7 @@ template<typename S> inline THX_CONST_EXPR
 S 
 rad_to_deg_dispatch(const S rad, real_scalar_tag)
 {
-  return (180/traits<S>::pi())*rad;
+  return (S(180)/scalar_traits<S>::pi())*rad;
 }
 
 } // Namespace: detail.
@@ -274,7 +272,7 @@ S
 deg_to_rad(const S deg)
 {
   typedef typename scalar_traits<S>::scalar_category category;
-  return detail::deg_to_rad_dispatch(x, category()); 
+  return detail::deg_to_rad_dispatch(deg, category()); 
 }
 
 //! Convert radians to degrees. 
@@ -283,7 +281,7 @@ S
 rad_to_deg(const S rad)
 {
   typedef typename scalar_traits<S>::scalar_category category;
-  return detail::rad_to_deg_dispatch(x, category()); 
+  return detail::rad_to_deg_dispatch(rad, category()); 
 }
 
 //------------------------------------------------------------------------------

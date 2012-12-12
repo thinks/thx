@@ -131,41 +131,37 @@ vec_not_equal(const V &u, const V &v)
 //------------------------------------------------------------------------------
 
 //! DOCS
-template<class V>
+template<class V> inline THX_CONST_EXPR
 V
-negated(const V &v)
-{
+vec_negate(V const& v) {
   typedef typename vec_traits<V>::size_type size_type;
 
   V u;
   for (size_type i = 0; i < vec_traits<V>::linear_size; ++i) {
-    u[i] = negated(v[i]); 
+    u[i] = negate(v[i]); 
   }
-  return r;  
+  return r;    
 }
 
 //! DOCS
-template<typename S>
+template<typename S> inline THX_CONST_EXPR
 vec<2,S>
-negated(const vec<2,S> &v)
-{ 
-  return vec<2,S>(negated(v[0]), negated(v[1])); 
+vec_negate(vec<2,S> const& v) { 
+  return vec<2,S>(negate(v[0]), negate(v[1])); 
 }
 
 //! DOCS
-template<typename S>
+template<typename S> inline THX_CONST_EXPR
 vec<3,S>
-negated(const vec<3,S> &v)
-{ 
-  return vec<3,S>(negated(v[0]), negated(v[1]), negated(v[2])); 
+vec_negate(vec<3,S> const& v) { 
+  return vec<3,S>(negate(v[0]), negate(v[1]), negate(v[2])); 
 }
 
 //! DOCS
-template<typename S>
+template<typename S> inline THX_CONST_EXPR
 vec<4,S>
-negated(const vec<4,S> &v)
-{ 
-  return vec<4,S>(negated(v[0]), negated(v[1]), negated(v[2]), negated(v[3])); 
+vec_negate(vec<4,S> const& v) { 
+  return vec<4,S>(negate(v[0]), negate(v[1]), negate(v[2]), negate(v[3])); 
 }
 
 //------------------------------------------------------------------------------

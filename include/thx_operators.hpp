@@ -24,9 +24,8 @@ BEGIN_THX_NAMESPACE
 //! Unary operator: -vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator-(const vec<N,S> &v)
-{
-  return negate(v);
+operator-(vec<N,S> const& v) {
+  return vec_negate(v);
 }
 
 //------------------------------------------------------------------------------

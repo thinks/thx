@@ -32,14 +32,13 @@ private:
 
 } // Namespace: detail.
 
-// !Generic, not implemented.
-template <typename S>
-class scalar_traits;
-
-
 struct real_scalar_tag {};
 struct signed_integer_scalar_tag {};
 struct unsigned_integer_scalar_tag {};
+
+// !Generic, not implemented.
+template <typename S>
+class scalar_traits;
 
 //------------------------------------------------------------------------------
 

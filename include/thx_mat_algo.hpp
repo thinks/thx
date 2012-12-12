@@ -18,8 +18,6 @@
 
 BEGIN_THX_NAMESPACE
 
-//------------------------------------------------------------------------------
-
 namespace detail {
 
 bool
@@ -42,6 +40,159 @@ equal(const mat<N,S> &a, const mat<N,S> &b)
     ++i;
   }
   return t;
+}
+
+//------------------------------------------------------------------------------
+
+namespace detail {
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_x_dispatch(const S rad, real_scalar_tag) {
+  const S cr = cos(rad);
+  const S sr = sin(rad);
+  return mat<3,S>(
+    1,  0,  0,
+    0,  cr, sr,
+    0, -sr, cr);
+}
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_y_dispatch(const S rad, real_scalar_tag) {
+  const S cr = cos(rad);
+  const S sr = sin(rad);
+  return mat<3,S>(
+    cr, 0, -sr,
+    0,  1,  0,
+    sr, 0,  cr);
+}
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_z_dispatch(const S rad, real_scalar_tag) {
+  const S cr = cos(rad);
+  const S sr = sin(rad);
+  return mat<3,S>(
+    cr,  sr, 0,
+    -sr, cr, 0,
+    0,   0,  1);
+}
+
+} // Namespace: detail.
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_x(const S rad) {
+  typedef typename scalar_traits<S>::scalar_category category;
+  return detail::rotation_x_dispatch(rad, category());
+}
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_y(const S rad) {
+  typedef typename scalar_traits<S>::scalar_category category;
+  return detail::rotation_y_dispatch(rad, category());
+}
+
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+rotation_z(const S rad) {
+  typedef typename scalar_traits<S>::scalar_category category;
+  return detail::rotation_z_dispatch(rad, category());
+}
+
+//------------------------------------------------------------------------------
+
+//! 2D translation matrix.
+template<typename S> inline THX_CONST_EXPR
+mat<3,S>
+translation2(vec<2,S> const& t) {
+  return mat<3,S>(
+    1, 0, t[0],
+    0, 1, t[1],
+    0, 0, 1);
+}
+
+//! 3D translation matrix.
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+translation3(vec<3,S> const& t) {
+  return mat<4,S>(
+    1, 0, 0, t[0],
+    0, 1, 0, t[1],
+    0, 0, 1, t[2],
+    0, 0, 0, 1);
+}
+
+//------------------------------------------------------------------------------
+
+namespace detail {
+
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+ortho_projection_dispatch(const S l, 
+                          const S r, 
+                          const S b, 
+                          const S t, 
+                          const S n, 
+                          const S f,
+                          real_scalar_tag) {
+  const S inv_r_minus_l = S(1)/(r - l);
+  const S inv_t_minus_b = S(1)/(t - b);
+  const S inv_f_minus_n = S(1)/(f - n);
+  return mat<4,S>(
+    2*inv_r_minus_l, 0, 0,  -(r + l)*inv_r_minus_l,
+    0, 2*inv_t_minus_b, 0,  -(t + b)*inv_t_minus_b,
+    0, 0, -2*inv_f_minus_n, -(f + n)*inv_f_minus_n,
+    0, 0, 0,                1);
+}
+
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+persp_projection_dispatch(const S l, 
+                          const S r, 
+                          const S b, 
+                          const S t, 
+                          const S n, 
+                          const S f,
+                          real_scalar_tag) {
+  const S inv_r_minus_l = S(1)/(r - l);
+  const S inv_t_minus_b = S(1)/(t - b);
+  const S inv_f_minus_n = S(1)/(f - n);
+  return mat<4,S>(
+    (2*n)*inv_r_minus_l, 0,  (r + l)*inv_r_minus_l,   0,
+    0, (2*n)*inv_t_minus_b,  (t + b)*inv_t_minus_b,   0,
+    0, 0,                   -(f + n)*inv_f_minus_n, -(2*f*n)*inv_f_minus_n,
+    0, 0,                   -1,                       0);
+}
+
+} // Namespace: detail.
+
+//! Returns orthographic projection matrix.
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+ortho_projection(const S l, 
+                 const S r, 
+                 const S b, 
+                 const S t, 
+                 const S n, 
+                 const S f) {
+  typedef typename scalar_traits<S>::scalar_category category;
+  return detail::ortho_projection_dispatch(l, r, b, t, n, f, category());
+}
+
+//! Returns perspective projection matrix.
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+persp_projection(const S l, 
+                 const S r, 
+                 const S b, 
+                 const S t, 
+                 const S n, 
+                 const S f) {
+  typedef typename scalar_traits<S>::scalar_category category;
+  return detail::persp_projection_dispatch(l, r, b, t, n, f, category());
 }
 
 //------------------------------------------------------------------------------
