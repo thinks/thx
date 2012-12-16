@@ -33,6 +33,7 @@ BEGIN_THX_NAMESPACE
 // Default constexpr (specializations only) CTOR (set all zeros by default)
 // Array constexpr CTOR (specializations only)
 // Value constexpr CTOR (specializations only)
+// Vec<N-1> CTOR (specializations only)
 // (All vec's have compiler-generated DTOR)
 // (All vec's have compiler-generated copy CTOR)
 // (All vec's have compiler-generated operator=)
@@ -49,17 +50,14 @@ BEGIN_THX_NAMESPACE
 
 //------------------------------------------------------------------------------
 
-
 //! DOCS
 template<std::size_t N, typename S>
 class vec {
 private:
-
   // TODO: find replacement!
   static_assert(N > 4, "vector dimension must be > 4"); 
 
 public:
-
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
@@ -71,12 +69,9 @@ public:
   static const size_type dim = N;
 
 public: // CTOR's.
-
-  // Copy CTOR and DTOR implicitly defined.
-
   //! Default CTOR.
   explicit 
-  vec(const value_type x = 0) { 
+  vec(value_type const x = 0) { 
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] = x; 
     }
@@ -91,10 +86,9 @@ public: // CTOR's.
   }		
 
 public:		// Operators.
-
   //! DOCS
   vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size, value_type> &u) {
+  operator+=(vec<linear_size, value_type> const& u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] += u[i]; 
     }
@@ -103,7 +97,7 @@ public:		// Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size, value_type> &u) {
+  operator-=(vec<linear_size, value_type> const& u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] -= u[i]; 
     }
@@ -112,29 +106,27 @@ public:		// Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const value_type x) {
+  operator*=(value_type const x) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] *= x; 
     }
     return *this;
   }
 
-public:     // Access operators.
-
+public: // Access operators.
   //! Return i'th component. No bounds checking!
   const_reference 
-  operator[](const size_type i) const { 
+  operator[](size_type const i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference 
-  operator[](const size_type i) { 
+  operator[](size_type const i) { 
     return _v[i];	
   }
 
-public:		// Data.
-
+public: // Data.
   //! Const data.
   const_pointer
   const_data() const { 
@@ -147,9 +139,8 @@ public:		// Data.
     return &_v[0]; 
   }
 
-private:	    // Member variables.
-
-  value_type _v[linear_size];    //!< Data.
+private:  // Member variables.
+  value_type _v[linear_size]; //!< Data.
 };
 
 //------------------------------------------------------------------------------
@@ -159,7 +150,6 @@ template<typename S>
 class vec<2,S>
 {
 public:
-
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
@@ -171,10 +161,9 @@ public:
   static const size_type dim = 2;
 
 public: // CTOR's.
-
   //! Default CTOR.
   explicit THX_CONST_EXPR 
-  vec(const value_type x = 0) 
+  vec(value_type const x = 0) 
 #if 0 // C++11
     : _v{x, x}
 #endif
@@ -196,7 +185,7 @@ public: // CTOR's.
 
   //! Value CTOR.
   explicit THX_CONST_EXPR
-  vec(const value_type v0, const value_type v1)
+  vec(value_type const v0, value_type const v1)
 #if 0 // C++11
     : _v{v0, v1}
 #endif
@@ -206,11 +195,9 @@ public: // CTOR's.
   }
 
 public: // Operators.
-
   //! DOCS
   vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size,value_type> &u)
-  {
+  operator+=(vec<linear_size,value_type> const& u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1];
     return *this;
@@ -218,8 +205,7 @@ public: // Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size,value_type> &u)
-  {
+  operator-=(vec<linear_size,value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1];
     return *this;
@@ -227,47 +213,39 @@ public: // Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const S x)
-  {
+  operator*=(S const x) {
     _v[0] *= x; 
     _v[1] *= x;
     return *this;
   }
 
 public: // Access operators.
-
   //! Return i'th component. No bounds checking!
   const_reference
-  operator[](const size_type i) const
-  { 
+  operator[](size_type const i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference
-  operator[](const size_type i)
-  { 
+  operator[](size_type const i) { 
     return _v[i];	
   }
 
-public:		// Data.
-
+public: // Data.
   //! Const data.
   const_pointer 
-  const_data() const
-  { 
+  const_data() const { 
     return &_v[0]; 
   }
 
   //! Mutable data.
   pointer
-  data()
-  { 
+  data() { 
     return &_v[0]; 
   }
 
 private:  // Member variables.
-
   value_type _v[linear_size];    //!< Data.
 };
 
@@ -278,7 +256,6 @@ template<typename S>
 class vec<3,S>
 {
 public:
-
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
@@ -290,10 +267,9 @@ public:
   static const size_type dim = 3;
 
 public: // CTOR's.
-
   //! Default CTOR.
   explicit THX_CONST_EXPR
-  vec(const value_type x = 0) 
+  vec(value_type const x = 0) 
 #if 0 // C++11
     : _v{x, x, x}
 #endif
@@ -317,7 +293,7 @@ public: // CTOR's.
 
   //! Value CTOR.
   explicit THX_CONST_EXPR
-  vec(const value_type v0, const value_type v1, const value_type v2)
+  vec(value_type const v0, value_type const v1, value_type const v2)
 #if 0 // C++11
     : _v{v0, v1, v2}
 #endif
@@ -327,12 +303,22 @@ public: // CTOR's.
     _v[2] = v2;
   }
 
-public: // Operators.
+  //! Vec<N-1, S> CTOR.
+  explicit THX_CONST_EXPR
+  vec(vec<2,S> const& v, value_type const v2)
+#if 0 // C++11
+    : _v{v[0], v[1], v2}
+#endif
+  {
+    _v[0] = v[0];
+    _v[1] = v[1];
+    _v[2] = v2;
+  }
 
+public: // Operators.
   //! DOCS
   vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size,value_type> &u)
-  {
+  operator+=(vec<linear_size,value_type> const& u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1]; 
     _v[2] += u._v[2];
@@ -341,8 +327,7 @@ public: // Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size,value_type> &u)
-  {
+  operator-=(vec<linear_size,value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1]; 
     _v[2] -= u._v[2];
@@ -351,8 +336,7 @@ public: // Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const value_type x)
-  {
+  operator*=(value_type const x) {
     _v[0] *= x; 
     _v[1] *= x; 
     _v[2] *= x;
@@ -360,39 +344,32 @@ public: // Operators.
   }
 
 public: // Access operators.
-
   //! Return i'th component. No bounds checking!
   const_reference
-  operator[](const size_type i) const
-  { 
+  operator[](size_type const i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference 
-  operator[](const size_type i)
-  { 
+  operator[](size_type const i) { 
     return _v[i];	
   }
 
 public: // Data.
-
   //! Const data.
   const_pointer 
-  const_data() const
-  { 
+  const_data() const { 
     return &_v[0]; 
   }
 
   //! Mutable data.
   pointer 
-  data()
-  { 
+  data() { 
     return &_v[0]; 
   }
 
 private:  // Member variables.
-
   value_type _v[linear_size];    //!< Data.
 };
 
@@ -403,7 +380,6 @@ template<typename S>
 class vec<4,S>
 {
 public:
-
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
@@ -418,7 +394,7 @@ public: // CTOR's.
 
   //! Default CTOR.
   explicit THX_CONST_EXPR
-  vec(const value_type x = 0)
+  vec(value_type const x = 0)
 #if 0 // C++11
     : _v{x, x, x, x}
 #endif
@@ -444,10 +420,10 @@ public: // CTOR's.
 
   //! Value CTOR.
   explicit THX_CONST_EXPR
-  vec(const value_type v0, 
-      const value_type v1, 
-      const value_type v2, 
-      const value_type v3)
+  vec(value_type const v0, 
+      value_type const v1, 
+      value_type const v2, 
+      value_type const v3)
 #if 0 // C++11
     : _v{v0, v1, v2, v3}
 #endif
@@ -458,11 +434,23 @@ public: // CTOR's.
       _v[3] = v3; 
   }
 
-public: // Operators.
+  //! Vec<N-1,S> CTOR.
+  explicit THX_CONST_EXPR
+  vec(vec<3, S> const& v, S const v3 = S(1))
+#if 0 // C++11
+    : _v{v[0], v[1], v[2], w}
+#endif
+  {
+      _v[0] = v[0]; 
+      _v[1] = v[1]; 
+      _v[2] = v[2]; 
+      _v[3] = v3; 
+  }
 
+public: // Operators.
   //! DOCS
-  vec<linear_size,value_type>& 
-  operator+=(const vec<linear_size,value_type> &u) {
+  vec<linear_size, value_type>& 
+  operator+=(vec<linear_size, value_type> const& u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1]; 
     _v[2] += u._v[2]; 
@@ -472,7 +460,7 @@ public: // Operators.
 
   //! DOCS
   vec<linear_size,value_type>& 
-  operator-=(const vec<linear_size,value_type> &u) {
+  operator-=(vec<linear_size, value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1]; 
     _v[2] -= u._v[2]; 
@@ -482,7 +470,7 @@ public: // Operators.
 
   //! Scalar multiplication.
   vec<linear_size,value_type>& 
-  operator*=(const S x) {
+  operator*=(S const x) {
     _v[0] *= x; 
     _v[1] *= x; 
     _v[2] *= x; 
@@ -491,16 +479,15 @@ public: // Operators.
   }
 
 public: // Access operators.
-
   //! Return i'th component. No bounds checking!
   const_reference
-  operator[](const size_type i) const { 
+  operator[](size_type const i) const { 
     return _v[i];	
   }
 
   //! Return i'th component. No bounds checking!
   reference 
-  operator[](const size_type i) { 
+  operator[](size_type const i) { 
     return _v[i];	
   }
 
@@ -519,7 +506,6 @@ public: // Data.
   }
 
 private:  // Member variables.
-
   value_type _v[linear_size];    //!< Data.
 };
 
