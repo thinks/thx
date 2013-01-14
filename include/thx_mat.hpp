@@ -9,6 +9,7 @@
 #define THX_MAT_HPP_INCLUDED
 
 #include "thx_namespace.hpp"
+#include "thx_arithmetic_type.hpp"
 #include "thx_define.hpp"
 #include "thx_types.hpp"
 #include <iostream>
@@ -50,99 +51,74 @@ BEGIN_THX_NAMESPACE
 
 //------------------------------------------------------------------------------
 
-// mat<N,S>
-// --------
 //! DOCS
-
-template<int64 N, typename S>
-class mat
-{
-private:
-
-    static_assert(N > 4, 
-                  "Matrix dimension must be > 4");
-    static_assert(std::is_arithmetic<S>::value, 
-                  "Scalar type must be arithmetic");
-
+template<std::size_t N, typename S>
+class mat {
 public:
+  typedef typename arithmetic_type<S>::value value_type;
+  typedef std::size_t size_type;
+  typedef value_type& reference;
+  typedef value_type const& const_reference;   
+  typedef value_type* pointer;
+  typedef value_type const* const_pointer;   
 
-    typedef S value_type;
+  static const size_type dim = N;
+  static const size_type linear_size = dim*dim;
 
-    static const int64 dim = N;
-    static const int64 linear_size = dim*dim;
-
-#if 0 // C++11
-    //! Return matrix dimension.
-    static constexpr int64
-    dim()
-    { return N; }
-
-    //! Return matrix dimension.
-    static constexpr int64
-    linear_size()
-    { return dim()*dim(); }
-#endif
-
-public:
-
-    //! Default CTOR.
-    explicit
-    mat(const S v = 1)
-    {
-        for (auto i = 0; i < N; ++i) {
-            for (auto j = 0; j < N; ++j) {
-                _v[i + N*j] = ((i == j) ? v : 0); // Set diagonal to value.
-            }
-        }
+public: // CTOR's
+  //! Default CTOR.
+  explicit
+  mat(const S x = 1) {
+    for (size_type i = 0; i < dim; ++i) {
+      for (size_type j = 0; j < dim; ++j) {
+        _v[i + N*j] = ((i == j) ? x : 0); // Set diagonal to value.
+      }
     }
+  }
 
-public:		// Operators.
-
-    //! DOCS
-    mat<N,S>& 
-    operator+=(const mat<N,S> &b)
-    {
-        for (auto i = 0; i < size; ++i) {
-            _v[i] += b._v[i];
-        }
-        return *this;
+public: // Operators.
+  //! DOCS
+  mat<N,S>& 
+  operator+=(mat<dim, value_type> const& b) {
+    for (size_type i = 0; i < linear_size; ++i) {
+      _v[i] += b[i];
     }
+    return *this;
+  }
 
-    //! DOCS
-    mat<N,S>& 
-    operator-=(const mat<N,S> &b)
-    {
-        for (auto i = 0; i < linear_size; ++i) {
-            _v[i] -= b._v[i];
-        }
-        return *this;
+  //! DOCS
+  mat<N,S>& 
+  operator-=(mat<dim, value_type> const& b) {
+    for (size_type i = 0; i < linear_size; ++i) {
+      _v[i] -= b[i];
     }
+    return *this;
+  }
 
-    //! DOCS
-    mat<N,S>& 
-    operator*=(const S s)
-    {
-        for (auto i = 0; i < linear_size; ++i) {
-            _v[i] *= s;
-        }
-        return *this;
+  //! DOCS
+  mat<N,S>& 
+  operator*=(value_type const x) {
+    for (size_type i = 0; i < linear_size; ++i) {
+      _v[i] *= x;
     }
+    return *this;
+  }
 
-    //! Matrix multiplication.
-    mat<N,S>& 
-    operator*=(const mat<N,S> &b)
-    {	
-        const mat<N,S> a(*this);  // Copy.
-        for (auto i = 0; i < N; ++i) {
-            for (auto j = 0; j < N; ++j) {
-                _v[i + N*j] = 0;
-                for (auto k = 0; k < N; ++k) {
-                    _v[i + N*j] += a._v[i + N*k]*b._v[k + N*j];
-                }
-            }
-        }
-        return *this;
-    }
+  //! Matrix multiplication.
+  mat<N,S>& 
+  operator*=(const mat<N,S> &b)
+  {	
+      const mat<N,S> a(*this);  // Copy.
+      for (auto i = 0; i < N; ++i) {
+          for (auto j = 0; j < N; ++j) {
+              _v[i + N*j] = 0;
+              for (auto k = 0; k < N; ++k) {
+                  _v[i + N*j] += a._v[i + N*k]*b._v[k + N*j];
+              }
+          }
+      }
+      return *this;
+  }
 
 public:     // Access operators.
 

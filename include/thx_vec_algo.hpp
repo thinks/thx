@@ -245,7 +245,7 @@ vec_add(const vec<4,S> &u, const vec<4,S> &v)
 //! Docs
 template<int64 N, typename S>
 vec<N,S>
-subtract(const vec<N,S> &u, const vec<N,S> &v)
+vec_subtract(const vec<N,S> &u, const vec<N,S> &v)
 { 
   return vec<N,S>(u) -= v; 
 }
@@ -253,7 +253,7 @@ subtract(const vec<N,S> &u, const vec<N,S> &v)
 //! Docs
 template<typename S>
 vec<2,S>
-subtract(const vec<2,S> &u, const vec<2,S> &v)
+vec_subtract(const vec<2,S> &u, const vec<2,S> &v)
 { 
   return vec<2,S>(u[0] - v[0], u[1] - v[1]); 
 }
@@ -261,7 +261,7 @@ subtract(const vec<2,S> &u, const vec<2,S> &v)
 //! Docs
 template<typename S>
 vec<3,S>
-subtract(const vec<3,S> &u, const vec<3,S> &v)
+vec_subtract(const vec<3,S> &u, const vec<3,S> &v)
 { 
   return vec<3,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2]); 
 }
@@ -269,7 +269,7 @@ subtract(const vec<3,S> &u, const vec<3,S> &v)
 //! Docs
 template<typename S>
 vec<4,S>
-subtract(const vec<4,S> &u, const vec<4,S> &v)
+vec_subtract(const vec<4,S> &u, const vec<4,S> &v)
 { 
   return vec<4,S>(u[0] - v[0], u[1] - v[1], u[2] - v[2], u[3] - v[3]); 
 }

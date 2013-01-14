@@ -24,9 +24,7 @@ namespace detail {
 class nonconstructible
 {
 private:
-  nonconstructible();
   nonconstructible(const nonconstructible&);
-  ~nonconstructible();
   nonconstructible& operator=(const nonconstructible&);
 };
 

@@ -53,20 +53,16 @@ BEGIN_THX_NAMESPACE
 //! DOCS
 template<std::size_t N, typename S>
 class vec {
-private:
-  // TODO: find replacement!
-  static_assert(N > 4, "vector dimension must be > 4"); 
-
 public:
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
-  typedef const value_type& const_reference;   
+  typedef value_type const& const_reference;   
   typedef value_type* pointer;
-  typedef const value_type* const_pointer;   
+  typedef value_type const* const_pointer;   
 
   static const size_type linear_size = N;
-  static const size_type dim = N;
+  static const size_type dim = linear_size;
 
 public: // CTOR's.
   //! Default CTOR.
@@ -79,15 +75,15 @@ public: // CTOR's.
 
   //! Array CTOR.
   explicit 
-  vec(const_pointer v) { 
+  vec(const_pointer const v) { 
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] = v[i]; 
     }
   }		
 
-public:		// Operators.
+public: // Operators.
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator+=(vec<linear_size, value_type> const& u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] += u[i]; 
@@ -96,7 +92,7 @@ public:		// Operators.
   }
 
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator-=(vec<linear_size, value_type> const& u) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] -= u[i]; 
@@ -105,7 +101,7 @@ public:		// Operators.
   }
 
   //! Scalar multiplication.
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator*=(value_type const x) {
     for (size_type i = 0; i < linear_size; ++i) { 
       _v[i] *= x; 
@@ -153,12 +149,12 @@ public:
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
-  typedef const value_type& const_reference;   
+  typedef value_type const& const_reference;   
   typedef value_type* pointer;
-  typedef const value_type* const_pointer;   
+  typedef value_type const* const_pointer;   
 
   static const size_type linear_size = 2;
-  static const size_type dim = 2;
+  static const size_type dim = linear_size;
 
 public: // CTOR's.
   //! Default CTOR.
@@ -174,7 +170,7 @@ public: // CTOR's.
   
   //! Array CTOR.
   explicit THX_CONST_EXPR 
-  vec(const_pointer v)
+  vec(const_pointer const v)
 #if 0 // C++11
     : _v{v[0], v[1]}
 #endif
@@ -196,7 +192,7 @@ public: // CTOR's.
 
 public: // Operators.
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator+=(vec<linear_size,value_type> const& u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1];
@@ -204,7 +200,7 @@ public: // Operators.
   }
 
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator-=(vec<linear_size,value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1];
@@ -212,7 +208,7 @@ public: // Operators.
   }
 
   //! Scalar multiplication.
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator*=(S const x) {
     _v[0] *= x; 
     _v[1] *= x;
@@ -259,12 +255,12 @@ public:
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
-  typedef const value_type& const_reference;   
+  typedef value_type const& const_reference;   
   typedef value_type* pointer;
-  typedef const value_type* const_pointer;   
+  typedef value_type const* const_pointer;   
 
   static const size_type linear_size = 3;
-  static const size_type dim = 3;
+  static const size_type dim = linear_size;
 
 public: // CTOR's.
   //! Default CTOR.
@@ -281,7 +277,7 @@ public: // CTOR's.
   
   //! Array CTOR.
   explicit THX_CONST_EXPR
-  vec(const_pointer v)
+  vec(const_pointer const v)
 #if 0 // C++11
     : _v{v[0], v[1], v[2]}
 #endif
@@ -317,7 +313,7 @@ public: // CTOR's.
 
 public: // Operators.
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator+=(vec<linear_size,value_type> const& u) {
     _v[0] += u._v[0]; 
     _v[1] += u._v[1]; 
@@ -326,8 +322,8 @@ public: // Operators.
   }
 
   //! DOCS
-  vec<linear_size,value_type>& 
-  operator-=(vec<linear_size,value_type> const& u) {
+  vec<linear_size, value_type>& 
+  operator-=(vec<linear_size, value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1]; 
     _v[2] -= u._v[2];
@@ -335,7 +331,7 @@ public: // Operators.
   }
 
   //! Scalar multiplication.
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator*=(value_type const x) {
     _v[0] *= x; 
     _v[1] *= x; 
@@ -383,15 +379,14 @@ public:
   typedef typename arithmetic_type<S>::value value_type;
   typedef std::size_t size_type;
   typedef value_type& reference;
-  typedef const value_type& const_reference;   
+  typedef value_type const& const_reference;   
   typedef value_type* pointer;
-  typedef const value_type* const_pointer;   
+  typedef value_type const* const_pointer;   
 
   static const size_type linear_size = 4;
-  static const size_type dim = 4;
+  static const size_type dim = linear_size;
 
 public: // CTOR's.
-
   //! Default CTOR.
   explicit THX_CONST_EXPR
   vec(value_type const x = 0)
@@ -407,7 +402,7 @@ public: // CTOR's.
   
   //! Array CTOR.
   explicit THX_CONST_EXPR 
-  vec(const_pointer v)
+  vec(const_pointer const v)
 #if 0 // C++11
     : _v{v[0], v[1], v[2], v[3]}
 #endif
@@ -459,7 +454,7 @@ public: // Operators.
   }
 
   //! DOCS
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator-=(vec<linear_size, value_type> const& u) {
     _v[0] -= u._v[0]; 
     _v[1] -= u._v[1]; 
@@ -469,7 +464,7 @@ public: // Operators.
   }
 
   //! Scalar multiplication.
-  vec<linear_size,value_type>& 
+  vec<linear_size, value_type>& 
   operator*=(S const x) {
     _v[0] *= x; 
     _v[1] *= x; 
@@ -492,7 +487,6 @@ public: // Access operators.
   }
 
 public: // Data.
-
   //! Const data.
   const_pointer 
   const_data() const { 
@@ -506,7 +500,7 @@ public: // Data.
   }
 
 private:  // Member variables.
-  value_type _v[linear_size];    //!< Data.
+  value_type _v[linear_size]; //!< Data.
 };
 
 //------------------------------------------------------------------------------

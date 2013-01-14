@@ -33,8 +33,7 @@ operator-(vec<N,S> const& v) {
 //! Binary operator: vec<N,S> == vec<N,S>
 template<int64 N, typename S>
 bool
-operator==(const vec<N,S> &u, const vec<N,S> &v)
-{
+operator==(const vec<N,S> &u, const vec<N,S> &v) {
   return vec_equal(u, v);
 }
 
@@ -43,8 +42,7 @@ operator==(const vec<N,S> &u, const vec<N,S> &v)
 //! Binary operator: vec<N,S> != vec<N,S>
 template<int64 N, typename S>
 bool
-operator!=(const vec<N,S> &u, const vec<N,S> &v)
-{	
+operator!=(vec<N,S> const& u, vec<N,S> const& v) {	
   return vec_not_equal(u, v);
 }
 
@@ -53,9 +51,8 @@ operator!=(const vec<N,S> &u, const vec<N,S> &v)
 //! Binary operator: vec<N,S> + vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator+(const vec<N,S> &u, const vec<N,S> &v)
-{ 
-  return add(u, v);
+operator+(const vec<N,S> &u, const vec<N,S> &v) { 
+  return vec_add(u, v);
 }
 
 //------------------------------------------------------------------------------
@@ -63,9 +60,8 @@ operator+(const vec<N,S> &u, const vec<N,S> &v)
 //! Binary operator: vec<N,S> - vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator-(const vec<N,S> &u, const vec<N,S> &v)
-{ 
-  return subtract(u, v);
+operator-(const vec<N,S> &u, const vec<N,S> &v) { 
+  return vec_subtract(u, v);
 }
 
 //------------------------------------------------------------------------------
@@ -161,51 +157,56 @@ operator*(const mat<N,S> &a, const mat<N,S> &b)
 //! Binary operator: mat<N,S> * vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator*(const mat<N,S> &a, const vec<N,S> &v)
-{ 
-    vec<N,S> u(0);
-    for (auto i = 0; i < N; ++i) {
-        for (auto j = 0; j < N; ++j) {
-            u[i] += a(i,j)*v[j];
-        }
+operator*(const mat<N,S> &a, const vec<N,S> &v) { 
+  vec<N,S> u(0);
+  for (auto i = 0; i < N; ++i) {
+    for (auto j = 0; j < N; ++j) {
+      u[i] += a(i,j)*v[j];
     }
-    return u;    
+  }
+  return u;    
 }
 
 
 //! Binary operator: mat<2,S> * vec<2,S>
 template<typename S>
 vec<2,S> 
-operator*(const mat<2,S> &a, const vec<2,S> &v)
-{	
-    return vec<2,S>(
-        a(0,0)*v[0] + a(0,1)*v[1], 
-        a(1,0)*v[0] + a(1,1)*v[1]);
+operator*(const mat<2,S> &a, const vec<2,S> &v) {	
+  return vec<2,S>(
+    a(0,0)*v[0] + a(0,1)*v[1], 
+    a(1,0)*v[0] + a(1,1)*v[1]);
 }
 
 
 //! Binary operator: mat<3,S> * vec<3,S>
 template<typename S>
 vec<3,S> 
-operator*(const mat<3,S> &a, const vec<3,S> &v)
-{	
-    return vec<3,S>(
-        a(0,0)*v[0] + a(0,1)*v[1] + a(0,2)*v[2],
-        a(1,0)*v[0] + a(1,1)*v[1] + a(1,2)*v[2],
-        a(2,0)*v[0] + a(2,1)*v[1] + a(2,2)*v[2]);
+operator*(const mat<3,S> &a, const vec<3,S> &v) {	
+  return vec<3,S>(
+    a(0,0)*v[0] + a(0,1)*v[1] + a(0,2)*v[2],
+    a(1,0)*v[0] + a(1,1)*v[1] + a(1,2)*v[2],
+    a(2,0)*v[0] + a(2,1)*v[1] + a(2,2)*v[2]);
 }
-
 
 //! Binary operator: mat<4,S> * vec<4,S>
 template<typename S>
 vec<4,S> 
-operator*(const mat<4,S> &a, const vec<4,S> &v)
-{	
-    return vec<4,S>(
-        a(0,0)*v[0] + a(0,1)*v[1] + a(0,2)*v[2] + a(0,3)*v[3],
-        a(1,0)*v[0] + a(1,1)*v[1] + a(1,2)*v[2] + a(1,3)*v[3],
-        a(2,0)*v[0] + a(2,1)*v[1] + a(2,2)*v[2] + a(2,3)*v[3],
-        a(3,0)*v[0] + a(3,1)*v[1] + a(3,2)*v[2] + a(3,3)*v[3]);
+operator*(const mat<4,S> &a, const vec<4,S> &v) { 
+  return vec<4,S>(
+    a(0,0)*v[0] + a(0,1)*v[1] + a(0,2)*v[2] + a(0,3)*v[3],
+    a(1,0)*v[0] + a(1,1)*v[1] + a(1,2)*v[2] + a(1,3)*v[3],
+    a(2,0)*v[0] + a(2,1)*v[1] + a(2,2)*v[2] + a(2,3)*v[3],
+    a(3,0)*v[0] + a(3,1)*v[1] + a(3,2)*v[2] + a(3,3)*v[3]);
+}
+
+//! Binary operator: mat<4,S> * vec<3,S> (assume w = 1)
+template<typename S>
+vec<3,S> 
+operator*(const mat<4,S> &a, const vec<3,S> &v) { 
+  return vec<3,S>(
+    a(0,0)*v[0] + a(0,1)*v[1] + a(0,2)*v[2] + a(0,3),
+    a(1,0)*v[0] + a(1,1)*v[1] + a(1,2)*v[2] + a(1,3),
+    a(2,0)*v[0] + a(2,1)*v[1] + a(2,2)*v[2] + a(2,3));
 }
 
 //------------------------------------------------------------------------------

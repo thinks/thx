@@ -9,21 +9,19 @@
 #define THX_ARITHMETIC_TYPE_HPP_INCLUDED
 
 #include "thx_namespace.hpp"
+#include <type_traits>
 
 //------------------------------------------------------------------------------
 
 BEGIN_THX_NAMESPACE
 
 template<typename S>
-struct arithmetic_type
-{
+struct arithmetic_type {
 public:
-
   typedef S value;
 
 private:
-
-  static_assert(std::is_arithmetic<S>::value, "type must be arithmetic");
+  static_assert(std::is_arithmetic<S>::value, "type is not arithmetic");
 };
 
 END_THX_NAMESPACE

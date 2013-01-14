@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 
 #include <thx.hpp>
+#include <gtest/gtest.h>
 #include <iostream>
 #include <limits>
 #include <string>
@@ -17,70 +18,85 @@
 
 //------------------------------------------------------------------------------
 
-#define TEST_THX_TYPES
-#define TEST_THX_VEC
-#define TEST_THX_VEC_ALGO
+namespace {
 
-//------------------------------------------------------------------------------
-
+//! DOCS
 template<typename T>
-struct BitSize 
-{
+struct BitSize {
   static const std::size_t value = 8*sizeof(T);
 };
 
-//------------------------------------------------------------------------------
 
 //! Generic version.
 template<typename S>
-struct ScalarTypeName
-{ static std::string value() { return std::string("S"); } };
+struct ScalarTypeName { 
+  static std::string value() { return std::string("S"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::float64>
-{ static std::string value() { return std::string("float64"); } };
+struct ScalarTypeName<thx::float64> { 
+  static std::string value() { return std::string("float64"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::float32>
-{ static std::string value() { return std::string("float32"); } };
+struct ScalarTypeName<thx::float32> { 
+  static std::string value() { return std::string("float32"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::int8>
-{ static std::string value() { return std::string("int8"); } };
+struct ScalarTypeName<thx::int8> { 
+  static std::string value() { return std::string("int8"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::int16>
-{ static std::string value() { return std::string("int16"); } };
+struct ScalarTypeName<thx::int16> { 
+  static std::string value() { return std::string("int16"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::int32>
-{ static std::string value() { return std::string("int32"); } };
+struct ScalarTypeName<thx::int32> { 
+  static std::string value() { return std::string("int32"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::int64>
-{ static std::string value() { return std::string("int64"); } };
+struct ScalarTypeName<thx::int64> { 
+  static std::string value() { return std::string("int64"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::uint8>
-{ static std::string value() { return std::string("uint8"); } };
+struct ScalarTypeName<thx::uint8> { 
+  static std::string value() { return std::string("uint8"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::uint16>
-{ static std::string value() { return std::string("uint16"); } };
+struct ScalarTypeName<thx::uint16> { 
+  static std::string value() { return std::string("uint16"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::uint32>
-{ static std::string value() { return std::string("uint32"); } };
+struct ScalarTypeName<thx::uint32> { 
+  static std::string value() { return std::string("uint32"); } 
+};
 
+//! DOCS
 template<>
-struct ScalarTypeName<thx::uint64>
-{ static std::string value() { return std::string("uint64"); } };
+struct ScalarTypeName<thx::uint64> { 
+  static std::string value() { return std::string("uint64"); } 
+};
 
-//------------------------------------------------------------------------------
 
+//! DOCS
 template<class V>
-struct VecTypeName
-{
+struct VecTypeName {
   static std::string 
   value() 
   {
@@ -103,8 +119,8 @@ struct VecTypeName
   }
 };
 
-//------------------------------------------------------------------------------
 
+//! DOCS
 template<typename S>
 S
 makeRandScalar(const int offset = 0, const int range = 1000)
@@ -113,6 +129,7 @@ makeRandScalar(const int offset = 0, const int range = 1000)
   return static_cast<S>(r);
 }
 
+//! DOCS
 template<typename V> 
 V 
 makeRandVec(const int offset = 0, const int range = 1000) 
@@ -128,6 +145,7 @@ makeRandVec(const int offset = 0, const int range = 1000)
   return v;
 }
 
+//! DOCS
 template<typename S>
 std::vector<S> 
 makeRandArray(const std::size_t size, 
@@ -144,365 +162,281 @@ makeRandArray(const std::size_t size,
   return v;
 }
 
-//------------------------------------------------------------------------------
-
-template<typename V> 
-void 
-testVecDefaultCtor() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
-
-  typedef typename V::size_type size_type;
-  static const size_type size = typename V::linear_size;
-
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " default CTOR... ";
-    V v;
-    if (v == V(0)) {
-      cout << "OK!\n";  
-    }
-    else {
-      throw logic_error("must initialize elements to zero");
-    }
+//! Define a test fixture class template.
+template <class T>
+class TypeTest : public ::testing::Test {
+protected:
+  TypeTest() {
   }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
+
+  virtual 
+  ~TypeTest() {
   }
+};
+
+//! DOCS
+template<typename T, std::size_t B>
+struct TypeSize {
+  typedef T Type;
+  static const std::size_t Size = B;
+};
+
+//! The list of types we want to test.
+typedef ::testing::Types<
+  TypeSize<thx::float64, 64>,
+  TypeSize<thx::float32, 32>,
+  TypeSize<thx::int8, 8>,
+  TypeSize<thx::int16, 16>,
+  TypeSize<thx::int32, 32>,
+  TypeSize<thx::int64, 64>,
+  TypeSize<thx::uint8, 8>,
+  TypeSize<thx::uint16, 16>,
+  TypeSize<thx::uint32, 32>,
+  TypeSize<thx::uint64, 64>> TypeTestTypes;
+
+//! DOCS
+//! DOCS
+TYPED_TEST_CASE(TypeTest, TypeTestTypes);
+
+//! DOCS
+TYPED_TEST(TypeTest, bitsize) {
+  ASSERT_TRUE(BitSize<TypeParam::Type>::value == TypeParam::Size);
 }
 
-//------------------------------------------------------------------------------
 
-template<typename V> 
-void 
-testVecCopyCtor() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
+//! DOCS
+template <class V>
+struct VecTypes {
+  static const std::size_t Size = V::linear_size;
+  typedef typename V::value_type ValueType;
+};
 
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " copy CTOR... ";
-    V v = makeRandVec<V>();  
-    V u(v); // u is a copy of v. They should be equal.
-    if (u == v) {
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("copy not equal to original");
-    }
+//! DOCS
+template <class V>
+struct Vec {
+  typedef thx::vec<V::Size, typename V::ValueType> Type;
+};
+
+//! Define a test fixture class template.
+template <class T>
+class VecTest : public ::testing::Test {
+protected:
+  VecTest() {
+    srand(1981);
   }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
+
+  virtual 
+  ~VecTest() {
   }
-}
 
-//------------------------------------------------------------------------------
-
-template<typename V> 
-void 
-testVecArrayCtor() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
-
-  try {
-    typedef typename V::value_type value_type;
-    typedef typename V::size_type size_type;
-    static const size_type size = typename V::linear_size;
-
-    std::vector<value_type> randArray = makeRandArray<value_type>(size);
-
-    cout << "Testing " << VecTypeName<V>::value() << " array CTOR... ";
-    V v(&randArray[0]);
-    for (size_type i = 0; i < typename V::linear_size; ++i) {
-      if (v[i] != randArray[i]) {
-        throw logic_error("array copy error");
-      }
-    }
-    cout << "OK!\n";
+#if 0
+  {
+    vec<1,float32> v1; // Should not compile, dimension must be >= 2.
+    vec<2, int*> v; // Should not compile, int* is not an arithmetic type.
   }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
-}
+#endif
+};
 
-//------------------------------------------------------------------------------
 
-template<typename V> 
-void 
-testVecAssign() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
-
-  try {
-    typedef typename V::value_type value_type;
-    typedef typename V::size_type size_type;
-    static const size_type size = typename V::linear_size;
-
-    cout << "Testing " << VecTypeName<V>::value() << " assign... ";
-
-    V v = makeRandVec<V>();
-    V u(0); // Assume u != v.
-
-    u = v;
-    if (u == v) {
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("assign error");
-    }
-  }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
-}
-
-//------------------------------------------------------------------------------
-
+//! DOCS
 template<std::size_t N, typename S>
 struct TestVecValueCtor;
 
+//! DOCS
 template<typename S>
-struct TestVecValueCtor<2, S>
-{
-  TestVecValueCtor()
-  {
-    using std::cout;
-    using std::logic_error;
-    using std::exception;
-
-    try {
-      typedef typename thx::vec<2,S> Vec;
-      typedef Vec::value_type value_type;
-
-      cout << "Testing " << VecTypeName<Vec>::value() << " value CTOR... ";
-
-      const value_type r0 = makeRandScalar<value_type>();  
-      const value_type r1 = makeRandScalar<value_type>();  
-
-      Vec v(r0, r1);
-      if (v[0] == r0 && v[1] == r1) {
-        cout << "OK!\n";  
-      }
-      else {
-        throw logic_error("value copy error");
-      }
-    }
-    catch (exception& ex) {
-      cout << "FAILED: " << ex.what() << "\n";
-    }
+struct TestVecValueCtor<2, S> {
+  static bool
+  test() {
+    typedef typename thx::vec<2,S> Vec;
+    typedef Vec::value_type ValueType;
+    const ValueType r0 = makeRandScalar<ValueType>();  
+    const ValueType r1 = makeRandScalar<ValueType>();  
+    Vec v(r0, r1);
+    return (v[0] == r0 && v[1] == r1);
   }
 };
 
+//! DOCS
 template<typename S>
-struct TestVecValueCtor<3, S>
-{
-  TestVecValueCtor()
-  {
-    using std::cout;
-    using std::logic_error;
-    using std::exception;
-
-    try {
-      typedef typename thx::vec<3,S> Vec;
-      typedef Vec::value_type value_type;
-
-      cout << "Testing " << VecTypeName<Vec>::value() << " value CTOR... ";
-
-      const value_type r0 = makeRandScalar<value_type>();  
-      const value_type r1 = makeRandScalar<value_type>();  
-      const value_type r2 = makeRandScalar<value_type>();  
-
-      Vec v(r0, r1, r2);
-      if (v[0] == r0 && v[1] == r1 && v[2] == r2) {
-        cout << "OK!\n";  
-      }
-      else {
-        throw logic_error("value copy error");
-      }
-    }
-    catch (exception& ex) {
-      cout << "FAILED: " << ex.what() << "\n";
-    }
+struct TestVecValueCtor<3, S> {
+  static bool
+  test() {
+    typedef typename thx::vec<3,S> Vec;
+    typedef Vec::value_type ValueType;
+    const ValueType r0 = makeRandScalar<ValueType>();  
+    const ValueType r1 = makeRandScalar<ValueType>();  
+    const ValueType r2 = makeRandScalar<ValueType>();  
+    Vec v(r0, r1, r2);
+    return (v[0] == r0 && v[1] == r1 && v[2] == r2);
   }
 };
 
+//! DOCS
 template<typename S>
-struct TestVecValueCtor<4, S>
-{
-  TestVecValueCtor()
-  {
-    using std::cout;
-    using std::logic_error;
-    using std::exception;
-
-    try {
-      typedef typename thx::vec<4,S> Vec;
-      typedef Vec::value_type value_type;
-
-      cout << "Testing " << VecTypeName<Vec>::value() << " value CTOR... ";
-
-      const value_type r0 = makeRandScalar<value_type>();  
-      const value_type r1 = makeRandScalar<value_type>();  
-      const value_type r2 = makeRandScalar<value_type>();  
-      const value_type r3 = makeRandScalar<value_type>();  
-
-      Vec v(r0, r1, r2, r3);
-      if (v[0] == r0 && v[1] == r1 && v[2] == r2 && v[3] == r3) {
-        cout << "OK!\n";  
-      }
-      else {
-        throw logic_error("value copy error");
-      }
-    }
-    catch (exception& ex) {
-      cout << "FAILED: " << ex.what() << "\n";
-    }
+struct TestVecValueCtor<4, S> {
+  static bool 
+  test() {
+    typedef typename thx::vec<4,S> Vec;
+    typedef Vec::value_type ValueType;
+    const ValueType r0 = makeRandScalar<ValueType>();  
+    const ValueType r1 = makeRandScalar<ValueType>();  
+    const ValueType r2 = makeRandScalar<ValueType>();  
+    const ValueType r3 = makeRandScalar<ValueType>();  
+    Vec v(r0, r1, r2, r3);
+    return (v[0] == r0 && v[1] == r1 && v[2] == r2 && v[3] == r3);
   }
 };
 
-//------------------------------------------------------------------------------
 
-template<typename V> 
-void 
-testVecAddEquals() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
+//! The list of types we want to test.
+typedef ::testing::Types<
+  VecTypes<thx::vec<2, thx::int32>>,
+  VecTypes<thx::vec<3, thx::int32>>,
+  VecTypes<thx::vec<4, thx::int32>>,
+  VecTypes<thx::vec<5, thx::int32>>,
+  VecTypes<thx::vec<2, thx::float32>>,
+  VecTypes<thx::vec<3, thx::float32>>,
+  VecTypes<thx::vec<4, thx::float32>>,
+  VecTypes<thx::vec<5, thx::float32>>> VecTestTypes;
 
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " += operator... ";
-    V v1(1);
-    V v2(1);
-    v1 += v2;
-    for (auto i = 0; i < typename V::linear_size; ++i) {
-      if (v1[i] != 2) {
-        throw logic_error("invalid element");
-      }
-    }
-    cout << "OK!\n";
+//! DOCS
+TYPED_TEST_CASE(VecTest, VecTestTypes);
+
+//! DOCS
+TYPED_TEST(VecTest, alignment) {
+  typedef Vec<TypeParam>::Type V;
+  ASSERT_TRUE(
+    BitSize<V>::value == V::linear_size*BitSize<V::value_type>::value);
+}
+
+//! DOCS
+TYPED_TEST(VecTest, default_ctor) {
+  Vec<TypeParam>::Type::value_type value = 0;
+  Vec<TypeParam>::Type u(value);
+  Vec<TypeParam>::Type v;
+  ASSERT_TRUE(u == v);
+}
+
+//! DOCS
+TYPED_TEST(VecTest, copy_ctor) {
+  typedef Vec<TypeParam>::Type VecType;
+  VecType v = makeRandVec<VecType>();  
+  VecType u(v); // u is a copy of v. They should be equal.
+  ASSERT_TRUE(u == v);
+}
+
+//! DOCS
+TYPED_TEST(VecTest, array_ctor) {
+  typedef Vec<TypeParam>::Type VecType;
+  typedef VecType::value_type ValueType;
+  typedef VecType::size_type SizeType;
+  static const SizeType size = VecType::linear_size;
+  std::vector<ValueType> randArray = makeRandArray<ValueType>(size);
+  VecType v(&randArray[0]);
+  for (SizeType i = 0; i < size; ++i) {
+    ASSERT_TRUE(v[i] == randArray[i]);
   }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
+}
+
+//! DOCS
+TYPED_TEST(VecTest, value_ctor) {
+  typedef Vec<TypeParam>::Type VecType;
+  typedef VecType::value_type ValueType;
+  ASSERT_TRUE((TestVecValueCtor<2,ValueType>::test()));
+  ASSERT_TRUE((TestVecValueCtor<3,ValueType>::test()));
+  ASSERT_TRUE((TestVecValueCtor<4,ValueType>::test()));
+}
+
+//! DOCS
+TYPED_TEST(VecTest, assign_operator) {
+  typedef Vec<TypeParam>::Type VecType;
+  const VecType u = makeRandVec<VecType>();
+  VecType v(1); // Assume u != v.
+  v = u;
+  ASSERT_TRUE(u == v);
+}
+
+//! DOCS
+TYPED_TEST(VecTest, add_equals_operator) {
+  typedef Vec<TypeParam>::Type VecType;
+  VecType u(1);
+  VecType v(1);
+  u += v;
+  ASSERT_TRUE(u == VecType(2));
+}
+
+//! DOCS
+TYPED_TEST(VecTest, subtract_equal_operator) {
+  typedef Vec<TypeParam>::Type VecType;
+  VecType v(1);
+  v -= v; // Subtract vec from itself. Should be all zeros.
+  ASSERT_TRUE(v == VecType(VecType::value_type(0)));
+}
+
+//! DOCS
+TYPED_TEST(VecTest, multiply_equals_operator) {
+  typedef Vec<TypeParam>::Type VecType;
+  VecType v(1);
+  v *= 2; // Multiply (1,1,1) by 2. Should be (2,2,2).
+  ASSERT_TRUE(v == VecType(2));
 }
 
 //------------------------------------------------------------------------------
 
-template<typename V> 
-void 
-testVecSubtractEquals() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
 
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " -= operator... ";
-    V v1(1);
-    v1 -= v1; // Subtract vec from itself. Should be all zeros.
-    if (v1 == V(0)) {
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("invalid element");
-    }
-  }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
-}
-
-//------------------------------------------------------------------------------
-
-template<typename V> 
-void 
-testVecMultEquals() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
-
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " *= operator... ";
-    V v1(1);
-    v1 *= 2; // Multiply (1,1,1) by 2. Should be (2,2,2).
-    if (v1 == V(2)) {
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("invalid element");
-    }
-  }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
-}
 
 //------------------------------------------------------------------------------
 
 
 
-template<typename V> 
-void 
-testVecEquality() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
 
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " == operator... ";
-    V v;
-    if (v == v) { // Test that instance is equal to itself. 
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("self-equality failed");
-    }
+// The list of types we want to test.
+typedef ::testing::Types<
+  VecTypes<thx::vec<2,thx::int32>>,
+  VecTypes<thx::vec<3,thx::int32>>,
+  VecTypes<thx::vec<4,thx::int32>>,
+  VecTypes<thx::vec<5,thx::int32>>,
+  VecTypes<thx::vec<2,thx::float32>>,
+  VecTypes<thx::vec<3,thx::float32>>,
+  VecTypes<thx::vec<4,thx::float32>>,
+  VecTypes<thx::vec<5,thx::float32>>> VecAlgoTestTypes;
+
+// Define a test fixture class template.
+template <class T>
+class VecAlgoTest : public ::testing::Test {
+protected:
+  VecAlgoTest() {
   }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
+
+  virtual 
+  ~VecAlgoTest() {
   }
+};
+
+TYPED_TEST_CASE(VecAlgoTest, VecAlgoTestTypes);
+
+// Test that vector equality.
+TYPED_TEST(VecAlgoTest, vec_equal) {
+  Vec<TypeParam>::Type v;
+  ASSERT_TRUE(thx::vec_equal(v, v)); 
 }
 
-//------------------------------------------------------------------------------
-
-template<typename V> 
-void 
-testVecInequality() 
-{
-  using std::cout;
-  using std::logic_error;
-  using std::exception;
-
-  try {
-    cout << "Testing " << VecTypeName<V>::value() << " != operator... ";
-    V v(1);
-    V u(2);
-    if (u != v) { 
-      cout << "OK!\n";
-    }
-    else {
-      throw logic_error("inequality failed");
-    }
-  }
-  catch (exception& ex) {
-    cout << "FAILED: " << ex.what() << "\n";
-  }
+// Test that vector inequality.
+TYPED_TEST(VecAlgoTest, vec_not_equal) {
+  Vec<TypeParam>::Type u(1);
+  Vec<TypeParam>::Type v(2);
+  ASSERT_TRUE(thx::vec_not_equal(u, v)); 
 }
 
-//------------------------------------------------------------------------------
+} // Namespace: anonymous
 
 int
-main(int argc, char* argv[])
-{
+main(int argc, char* argv[]) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+
+#if 0
   using std::cerr;
   using std::cout;
   using std::numeric_limits;
@@ -574,127 +508,12 @@ main(int argc, char* argv[])
 #endif
 
 #ifdef TEST_THX_VEC
-  {
-#if 0
-    {
-      vec<1,float32> v1; // Should not compile, dimension must be >= 2.
-      vec<2, int*> v; // Should not compile, int* is not an arithmetic type.
-    }
+    testVec();
 #endif
-
-    static_assert(BitSize<vec<2,float32>>::value == 2*BitSize<float32>::value, 
-                  "thx::vec<N,S> must be perfectly aligned");
-    static_assert(BitSize<vec<3,float32>>::value == 3*BitSize<float32>::value, 
-                  "thx::vec<N,S> must be perfectly aligned");
-    static_assert(BitSize<vec<4,float32>>::value == 4*BitSize<float32>::value, 
-                  "thx::vec<N,S> must be perfectly aligned");
-    static_assert(BitSize<vec<42,float32>>::value == 42*BitSize<float32>::value, 
-                  "thx::vec<N,S> must be perfectly aligned");
-
-    cout
-      << "\n"
-      << "thx::vec<N, S>:\n";
-
-    { // Test vec default CTOR.
-      typedef int32 ValueType;
-      testVecDefaultCtor<vec<5,ValueType>>();
-      testVecDefaultCtor<vec<2,ValueType>>();
-      testVecDefaultCtor<vec<3,ValueType>>();
-      testVecDefaultCtor<vec<4,ValueType>>();
-    }
-
-    { // Test vec copy CTOR.
-      typedef int32 ValueType;
-      testVecCopyCtor<vec<5,ValueType>>();
-      testVecCopyCtor<vec<2,ValueType>>();
-      testVecCopyCtor<vec<3,ValueType>>();
-      testVecCopyCtor<vec<4,ValueType>>();
-    }
-
-    { // Test vec array CTOR.
-      typedef int32 ValueType;
-      testVecArrayCtor<vec<5,ValueType>>();
-      testVecArrayCtor<vec<2,ValueType>>();
-      testVecArrayCtor<vec<3,ValueType>>();
-      testVecArrayCtor<vec<4,ValueType>>();
-    }
-
-    { // Test vec value CTOR. (only applicable to specializations)
-      typedef int32 ValueType;
-      TestVecValueCtor<2,ValueType>();
-      TestVecValueCtor<3,ValueType>();
-      TestVecValueCtor<4,ValueType>();
-    }
-
-    { // Test operator= 
-      typedef int32 ValueType;
-      testVecAssign<vec<5,ValueType>>();
-      testVecAssign<vec<2,ValueType>>();
-      testVecAssign<vec<3,ValueType>>();
-      testVecAssign<vec<4,ValueType>>();
-    }
-
-    { // Test operator+= 
-      typedef int32 ValueType;
-      testVecAddEquals<vec<5,ValueType>>();
-      testVecAddEquals<vec<2,ValueType>>();
-      testVecAddEquals<vec<3,ValueType>>();
-      testVecAddEquals<vec<4,ValueType>>();
-    }
-
-    { // Test operator-= 
-      typedef int32 ValueType;
-      testVecSubtractEquals<vec<5,ValueType>>();
-      testVecSubtractEquals<vec<2,ValueType>>();
-      testVecSubtractEquals<vec<3,ValueType>>();
-      testVecSubtractEquals<vec<4,ValueType>>();
-    }
-
-    { // Test operator*= 
-      typedef int32 ValueType;
-      testVecMultEquals<vec<5,ValueType>>();
-      testVecMultEquals<vec<2,ValueType>>();
-      testVecMultEquals<vec<3,ValueType>>();
-      testVecMultEquals<vec<4,ValueType>>();
-    }
-  }
-#endif // TEST_THX_VEC
 
 #ifdef TEST_THX_VEC_ALGO
-  {
-    { // Test operator!= (equality)
-      typedef int32 ValueType;
-      testVecEquality<vec<5,ValueType>>();
-      testVecEquality<vec<2,ValueType>>();
-      testVecEquality<vec<3,ValueType>>();
-      testVecEquality<vec<4,ValueType>>();
-    }
-
-    { // Test operator== (inequality).
-      typedef int32 ValueType;
-      testVecInequality<vec<5,ValueType>>();
-      testVecInequality<vec<2,ValueType>>();
-      testVecInequality<vec<3,ValueType>>();
-      testVecInequality<vec<4,ValueType>>();
-    }
-
-    {
-    vec3f32 u(1, 1, 1);
-    vec3f32 v(2, 2, 2);
-    cerr 
-        << "u                 : " << u << "\n"
-        << "v                 : " << v << "\n"
-        << "dot(u,v)          : " << dot(u,v) << "\n"
-        << "mag_squared(u)    : " << mag_squared(u) << "\n"
-        << "mag(u)            : " << mag(u) << "\n"
-        << "dist_squared(u,v) : " << dist_squared(u,v) << "\n"
-        << "dist(u,v)         : " << dist(u,v) << "\n"
-        << "normalized(u)     : " << normalized(u) << "\n";
-    }
-  }
+    testVecAlgo();
 #endif
-
-
 
     cout << "\nTest Passed!\n";
     return EXIT_SUCCESS;
@@ -934,7 +753,8 @@ main(int argc, char* argv[])
 #endif
 
     return 0;
-}
+#endif
+
 
 #undef TEST_THX_TYPES
 #undef TEST_THX_VEC

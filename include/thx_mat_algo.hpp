@@ -127,6 +127,19 @@ translation3(vec<3,S> const& t) {
 
 //------------------------------------------------------------------------------
 
+//! 3D scale matrix.
+template<typename S> inline THX_CONST_EXPR
+mat<4,S>
+scale3(vec<3,S> const& s) {
+  return mat<4,S>(
+    s[0], 0,    0,    0,
+    0,    s[1], 0,    0,
+    0,    0,    s[2], 0,
+    0,    0,    0,    1);
+}
+
+//------------------------------------------------------------------------------
+
 namespace detail {
 
 template<typename S> inline THX_CONST_EXPR
