@@ -33,7 +33,7 @@ operator-(vec<N,S> const& v) {
 //! Binary operator: vec<N,S> == vec<N,S>
 template<int64 N, typename S>
 bool
-operator==(const vec<N,S> &u, const vec<N,S> &v) {
+operator==(vec<N,S> const& u, vec<N,S> const& v) {
   return vec_equal(u, v);
 }
 
@@ -51,7 +51,7 @@ operator!=(vec<N,S> const& u, vec<N,S> const& v) {
 //! Binary operator: vec<N,S> + vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator+(const vec<N,S> &u, const vec<N,S> &v) { 
+operator+(vec<N,S> const& u, vec<N,S> const& v) { 
   return vec_add(u, v);
 }
 
@@ -60,7 +60,7 @@ operator+(const vec<N,S> &u, const vec<N,S> &v) {
 //! Binary operator: vec<N,S> - vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator-(const vec<N,S> &u, const vec<N,S> &v) { 
+operator-(vec<N,S> const& u, vec<N,S> const& v) { 
   return vec_subtract(u, v);
 }
 
@@ -69,9 +69,8 @@ operator-(const vec<N,S> &u, const vec<N,S> &v) {
 //! Binary operator: scalar * vec<N,S>
 template<int64 N, typename S>
 vec<N,S>
-operator*(const S s, const vec<N,S> &v)
-{ 
-	return mult(s, v);
+operator*(S const s, vec<N,S> const& v) { 
+	return vec_scale(s, v);
 }
 
 //------------------------------------------------------------------------------
@@ -79,9 +78,8 @@ operator*(const S s, const vec<N,S> &v)
 //! Binary operator: vec<N,S> * scalar
 template<int64 N, typename S>
 vec<N,S>
-operator*(const vec<N,S> &v, const S s)
-{ 
-  return mult(s, v);
+operator*(vec<N,S> const& v, S const s) { 
+  return vec_scale(s, v);
 }
 
 //------------------------------------------------------------------------------
@@ -89,9 +87,8 @@ operator*(const vec<N,S> &v, const S s)
 //! Binary operator: mat<N,S> == mat<N,S>
 template<int64 N, typename S>
 bool
-operator==(const mat<N,S> &a, const mat<N,S> &b)
-{
-  return equal(a, b);
+operator==(mat<N,S> const& a, mat<N,S> const& b) {
+  return mat_equal(a, b);
 }
 
 //------------------------------------------------------------------------------
@@ -99,9 +96,8 @@ operator==(const mat<N,S> &a, const mat<N,S> &b)
 //! Binary operator: mat<N,S> != mat<N,S>
 template<int64 N, typename S>
 bool
-operator!=(const mat<N,S> &a, const mat<N,S> &b)
-{
-  return not_equal(a, b);
+operator!=(mat<N,S> const& a, mat<N,S> const& b) {
+  return mat_not_equal(a, b);
 }
 
 //------------------------------------------------------------------------------
@@ -109,9 +105,8 @@ operator!=(const mat<N,S> &a, const mat<N,S> &b)
 //! Binary operator: mat<N,S> + mat<N,S>
 template<int64 N, typename S>
 mat<N,S>
-operator+(const mat<N,S> &a, const mat<N,S> &b)
-{ 
-  return add(a, b);
+operator+(const mat<N,S> &a, const mat<N,S> &b) { 
+  return mat_add(a, b);
 }
 
 //------------------------------------------------------------------------------
@@ -119,8 +114,7 @@ operator+(const mat<N,S> &a, const mat<N,S> &b)
 //! Binary operator: mat<N,S> - mat<N,S>
 template<int64 N, typename S>
 bool
-operator-(const mat<N,S> &a, const mat<N,S> &b)
-{ 
+operator-(const mat<N,S> &a, const mat<N,S> &b) { 
 	return subtract(a, b); 
 }
 
@@ -129,16 +123,14 @@ operator-(const mat<N,S> &a, const mat<N,S> &b)
 //! Binary operator: scalar * mat<N,S>
 template<int64 N, typename S>
 mat<N,S>
-operator*(const S s, const mat<N,S> &a)
-{ 
+operator*(const S s, const mat<N,S> &a) { 
 	return mult(s, a);
 }
 
 //! Binary operator: mat<N,S> * scalar
 template<int64 N, typename S>
 mat<N,S>
-operator*(const mat<N,S> &a, const S s)
-{ 
+operator*(const mat<N,S> &a, const S s) { 
   return mult(s, a);
 }
 
@@ -334,16 +326,32 @@ BEGIN_STD_NAMESPACE
 //! Binary operator: std::ostream << vec<N,S>
 template<size_t N, typename S>
 ostream&
-operator<<(ostream &os, const thx::vec<N,S> &rhs)
-{
+operator<<(ostream &os, thx::vec<N,S> const& rhs) {
   typedef typename thx::vec<N,S>::size_type size_type;
   static const size_type size = typename thx::vec<N,S>::linear_size;
 
   os  << "[";
   for (size_type i = 0; i < size; ++i) {
-      os << rhs[i] << (i != (size - 1) ? ", " : "");
+    os << rhs[i] << (i != (size - 1) ? ", " : "");
   }
   os << "]";
+  return os;
+}
+
+//! Binary operator: std::ostream << mat<N,S>
+template<size_t N, typename S>
+ostream&
+operator<<(ostream &os, const thx::mat<N,S> &rhs) {
+  typedef typename thx::vec<N,S>::size_type size_type;
+  static const size_type size = typename thx::vec<N,S>::linear_size;
+
+  for (size_type i = 0; i < size; ++i) {
+    os  << "[";
+    for (thx::int64 j = 0; j < size; ++j) {
+      os << rhs(i,j) << (j != (size - 1) ? ", " : "");
+    }
+    os << "]\n";
+  }
   return os;
 }
 

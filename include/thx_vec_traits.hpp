@@ -15,11 +15,11 @@
 
 BEGIN_THX_NAMESPACE
 
-// Not defined.
+//! Not defined.
 template<class V>
 struct vec_traits;
 
-// Specialization for vec.
+//! Specialization for vec.
 template<std::size_t N, typename S>
 struct vec_traits<typename vec<N,S>>
 {
