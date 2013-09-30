@@ -12,12 +12,7 @@
 #include <iostream>
 #include <iomanip>
 
-//------------------------------------------------------------------------------
-
-namespace std
-{
-
-//------------------------------------------------------------------------------
+namespace std {
 
 //! Binary operator: std::ostream << mat<N,S>
 template<thx::int64 N, typename S>
@@ -35,8 +30,6 @@ operator<<(ostream &os, const thx::mat<N,S> &rhs)
     return os;
 }
 
-//------------------------------------------------------------------------------
+} // namespace std
 
-}	// Namespace: std.
-
-#endif	// THX_IO_INCLUDED_HPP
+#endif // THX_IO_INCLUDED_HPP
