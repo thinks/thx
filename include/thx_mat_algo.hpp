@@ -20,7 +20,8 @@ BEGIN_THX_NAMESPACE
 
 namespace detail {
 
-bool
+
+inline bool
 equal_dispatch()
 {
   return false; // TMP!!
@@ -155,10 +156,10 @@ ortho_projection_dispatch(const S l,
   const S inv_t_minus_b = S(1)/(t - b);
   const S inv_f_minus_n = S(1)/(f - n);
   return mat<4,S>(
-    2*inv_r_minus_l, 0, 0,  -(r + l)*inv_r_minus_l,
-    0, 2*inv_t_minus_b, 0,  -(t + b)*inv_t_minus_b,
-    0, 0, -2*inv_f_minus_n, -(f + n)*inv_f_minus_n,
-    0, 0, 0,                1);
+    2*inv_r_minus_l, 0,                0, -(r + l)*inv_r_minus_l,
+    0, 2*inv_t_minus_b,                0, -(t + b)*inv_t_minus_b,
+    0,               0, -2*inv_f_minus_n, -(f + n)*inv_f_minus_n,
+    0,               0,                0,                1);
 }
 
 template<typename S> inline THX_CONST_EXPR
@@ -176,8 +177,8 @@ persp_projection_dispatch(const S l,
   return mat<4,S>(
     (2*n)*inv_r_minus_l, 0,  (r + l)*inv_r_minus_l,   0,
     0, (2*n)*inv_t_minus_b,  (t + b)*inv_t_minus_b,   0,
-    0, 0,                   -(f + n)*inv_f_minus_n, -(2*f*n)*inv_f_minus_n,
-    0, 0,                   -1,                       0);
+    0,                   0, -(f + n)*inv_f_minus_n, -(2*f*n)*inv_f_minus_n,
+    0,                   0, -1,                       0);
 }
 
 } // Namespace: detail.

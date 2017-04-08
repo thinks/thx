@@ -121,7 +121,7 @@ struct VecTypeName {
 
 
 //! DOCS
-template<typename S>
+template<typename S> inline
 S
 makeRandScalar(const int offset = 0, const int range = 1000)
 {

@@ -333,7 +333,7 @@ signum_dispatch(const S x, std::true_type /*is_signed*/) {
 template <typename S> inline THX_CONST_EXPR
 int 
 signum(const S x) {
-  return detail::signum_dispatch(x, std::is_signed<S>());
+  return detail::signum_dispatch(x, std::is_signed<S>::type());
 }
 
 //------------------------------------------------------------------------------
